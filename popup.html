@@ -417,7 +417,7 @@ function sendPage(accountId) {
 }
 
 function readThread(accountId, mailid) {
-    hideMail(mailid);
+    hideMail(accountId, mailid);
     mailAccounts[accountId].readThread(mailid);
 }
 
@@ -435,17 +435,17 @@ function unreadThread(accountId, mailid) {
 }
 
 function archiveThread(accountId, mailid) {
-    hideMail(mailid);
+    hideMail(accountId, mailid);
     mailAccounts[accountId].archiveThread(mailid);
 }
 
 function deleteThread(accountId, mailid) {
-    hideMail(mailid);
+    hideMail(accountId, mailid);
     mailAccounts[accountId].deleteThread(mailid);
 }
 
 function spamThread(accountId, mailid) {
-    hideMail(mailid);
+    hideMail(accountId, mailid);
     mailAccounts[accountId].spamThread(mailid);
 }
 
@@ -616,7 +616,8 @@ function parseMail(accountId) {
 }
 
 // Hides a mail in the mailbox
-function hideMail(mailid) {
+function hideMail(accountId, mailid) {
+    var mailAccount = mailAccounts[accountId];
     mailCount--;
     
     if(mailCount <= 0)
@@ -625,6 +626,12 @@ function hideMail(mailid) {
     var mailElement = document.getElementById(mailid);
     if(mailElement != null) {
         mailElement.style.display = 'none';
+    }
+
+    var inboxLinkElement = $('inboxLink_' + accountId);
+    if(inboxLinkElement != null) {
+        inboxLinkElement.innerText = mailAccount.getInboxLink() + ' (' + (mailAccount.getUnreadCount() - 1).toString() + ')';
+        inboxLinkElement.title = mailAccount.getInboxLink() + ' (' + (mailAccount.getUnreadCount() - 1).toString() + ')';
     }
     
     scrollbar.recalculateLayout(); 
@@ -697,7 +704,7 @@ function init() {
             var i = mailAccounts.indexOf(account);
             bodyElement.innerHTML += 
                 '<div class="mailBox" id="mailBox_' + i + '">' + 
-                    '<div class="inboxLink"><a class="inboxLink" href="javascript:openUnread(' + i + ')" title="' +account.getInboxLink() + '"><img src="img/inbox_hover.png" /></a>&nbsp;<a class="composeLink" href="javascript:composeNew(' + i + ')" title="' + lang.composeLinkTitle + '"><img src="img/compose_hover.png" alt="Compose new" /></a>&nbsp;<a class="sendPageLink" href="javascript:sendPage(' + i + ')" title="' + lang.sendPageLinkTitle + '"><img src="img/send_page_hover.png" alt="' + lang.sendPageLinkTitle + '" /></a>&nbsp;<span><a href="javascript:openUnread(' + i + ')" title="' + account.getInboxLink() + '">' + account.getInboxLink() + '</a></span></div>' +
+                    '<div class="inboxLink"><a class="inboxLink" href="javascript:openUnread(' + i + ')" title="' +account.getInboxLink() + '"><img src="img/inbox_hover.png" /></a>&nbsp;<a class="composeLink" href="javascript:composeNew(' + i + ')" title="' + lang.composeLinkTitle + '"><img src="img/compose_hover.png" alt="Compose new" /></a>&nbsp;<a class="sendPageLink" href="javascript:sendPage(' + i + ')" title="' + lang.sendPageLinkTitle + '"><img src="img/send_page_hover.png" alt="' + lang.sendPageLinkTitle + '" /></a>&nbsp;<span><a id="inboxLink_' + i + '" href="javascript:openUnread(' + i + ')" title="' + account.getInboxLink() + ' (' +  account.getUnreadCount().toString()  + ')' + '">' + account.getInboxLink() + ' (' + account.getUnreadCount().toString() + ')' + '</a></span></div>' +
                 '</div>';
             parseMail(i);
         });

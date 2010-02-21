@@ -293,9 +293,9 @@ function notify(accountWithNewestMail) {
                 new Ajax.Request('http://socialgraph.apis.google.com/otherme?q=' + newestMail.authorMail, {   method:'get',
                     onSuccess: function(transport, json) {
                         var responseJSON = eval('[' + transport.responseText + ']')[0];
-                        myData = JSON.parse(transport.responseText, function (key, value) {
-                            if (value && typeof value === 'object' && key == 'attributes') {
-                                profilePhotos[newestMail.authorMail] = value.photo;
+                        JSON.parse(transport.responseText, function (key, value) {
+                            if (value && typeof value === 'string' && key == 'photo') {
+                                profilePhotos[newestMail.authorMail] = value;
                             }
                             return value;
                         });

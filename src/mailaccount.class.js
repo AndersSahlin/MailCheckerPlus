@@ -556,7 +556,7 @@ function MailAccount(domain) {
 	
 	// Returns the "Gmail - Inbox for..." link
 	this.getInboxLink = function() {
-		return mailTitle + " (" + Number(unreadCount) + ")";
+		return mailTitle;
 	}
 	
 	// Returns the mail array
