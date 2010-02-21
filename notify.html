@@ -157,9 +157,9 @@ img.sup {
     text-decoration: none;
 }
 </style> 
-<script type="text/javascript" src="i18n.js"></script>
-<script type="text/javascript" src="date.js"></script>
-<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript" src="src/i18n.js"></script>
+<script type="text/javascript" src="src/date.js"></script>
+<script type="text/javascript" src="src/prototype.js"></script>
 <script type="text/javascript">
 var newMail;
 
@@ -201,7 +201,7 @@ function init() {
                 "</div>" +
                 "<div class=\"mailContainer\">" +
                 //"<img id=\"icon\" src=\"" + mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1" +"\" />" +
-                "<img id=\"icon\" src=\"icon_48.png\" />" +
+                "<img id=\"icon\" src=\"img/icon_48.png\" />" +
                     "<div class=\"mailBody\">";
                         if(mail.summary != null && mail.summary.length > 0) {
                             mailElement +=

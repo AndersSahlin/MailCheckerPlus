@@ -10,14 +10,14 @@
    }, 
    "content_scripts": [ {
       "all_frames": true,
-      "js": [ "mailto.js" ],
+      "js": [ "src/mailto.js" ],
       "matches": [ "http://*/*" ]
    } ],
    "description": "Displays the number of unread messages in your Gmail and Google Apps inbox. Preview mail, read, delete, archive and mark as spam!",
    "icons": {
-        "32": "icon_32.png",
-        "48": "icon_48.png",
-        "128": "icon_128.png"
+        "32": "img/icon_32.png",
+        "48": "img/icon_48.png",
+        "128": "img/icon_128.png"
    },
    "name": "Google Mail Checker Plus",
    "options_page": "options.html",
