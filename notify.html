@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<style type="text/css">
+
+html {
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: arial,sans-serif;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#icon {
+    float: left;
+    margin: 4px;
+    opacity: 1;
+    width: 48px;
+    height: 48px;
+    /*border: 1px solid #7799bb;*/
+    -webkit-border-radius: 5px;
+}
+
+.mailBox {
+    float: left;
+    clear: both;
+    width: 100%;
+    padding-top: 0px;    
+    margin: 0;
+    background-color: #fff;
+    /*-webkit-border-radius: 5px;  */
+    /*background: transparent url("img/mailbox_bg.png") no-repeat bottom left; */
+}
+
+.mailEntry {
+    float: left;
+    clear: both;
+    background-color: transparent;
+    font-size: 8pt;  
+    width: 100%;
+    position: relative;
+}
+
+.mailHeader {
+    float: left;
+    background: #7799bb url("img/popup_title_bg.png") repeat-x top left;
+    color: white;
+    width: 100%;
+    height: 18px;
+    padding-top: 0px;
+}
+
+img {
+    vertical-align:bottom;    
+}
+
+.mailContainer {
+    float: left;
+    /*border-left: 3px solid #5983ae;
+    border-right: 3px solid #5983ae;*/
+    padding-top: 0;
+    padding-bottom: 0;  
+    width: 100%;    
+}
+
+.mailBody {
+    float: left;
+    width: 230px;
+    margin-left: 2px;
+    margin-bottom: 5px;
+}
+
+.authorName {
+    float: left;
+    font-weight: bold;
+    margin: 2px;
+    margin-left: 4px;
+}
+
+.issued {
+    float: right;
+    font-weight: bold;
+    margin: 2px;
+    margin-right: 5px;
+}
+
+div.title {
+    clear:both;
+    float: left;
+    font-weight: bold;
+    margin: 0;
+    margin-left: 0px;
+    font-weight: bold;
+}
+
+.title span {
+    margin: 2px;
+    margin-left: 0px;
+    float: left;
+}
+
+.title a {
+    color: black;
+}
+
+.title-link {
+    display: inline-block;
+    float: left;
+    margin-top: 1px;
+}
+
+.summary {
+    clear: both;
+    float: left;
+    color: #000;
+    border-top: 1px dashed #93afcb;
+    overflow: auto;
+    background-color: #ffffff;
+}
+
+.summary div {
+    margin: 3px 3px 0 0;
+    float: left;
+}
+
+.tooltip {
+    cursor: help;
+}
+
+.lowerright {
+    float: right !important;
+    margin: 2px;
+}
+
+.hidden {
+    display: none;
+}
+
+img.sup {
+    vertical-align:super;  	
+}
+
+.nohover:hover {
+    text-decoration: none;
+}
+</style> 
+<script type="text/javascript" src="i18n.js"></script>
+<script type="text/javascript" src="date.js"></script>
+<script type="text/javascript" src="prototype.js"></script>
+<script type="text/javascript">
+var newMail;
+
+// The ID of the extension we want to talk to.
+var mainExtensionId = "mhlfklnpologjjemndepajbhhaedlacg";
+
+function init() {
+    chrome.extension.sendRequest(mainExtensionId, {getNewMail: true},
+      function(response) {
+        if (response != null) {
+            newMail = response.newMail;
+            var mail = newMail;
+            var mailURL = response.mailURL;
+            var profilePhotos = response.profilePhotos;
+
+            var issued = (new Date()).setISO8601(newMail.issued);
+            var today = new Date();
+            var datetime;
+            var fullDateTime = issued.toLocaleString();
+                            
+            if(issued.getFullYear() == today.getFullYear() &&
+                issued.getMonth() == today.getMonth() &&
+                issued.getDate() == today.getDate()) {
+                // Mail was issued today, display time
+                var hour = issued.getHours();
+                var min = issued.getMinutes();
+                datetime = ((hour < 10) ? "0" : "") + hour + ":" + ((min < 10) ? "0" : "") + min;
+            } else {
+                // Old mail, only display date
+                //datetime = dateFormat(issued, "d mmm");
+                datetime = issued.getDate() + ' ' + lang.months[issued.getMonth()];
+            }
+
+            var mailElement = 
+            "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
+                "<div class=\"mailHeader\">" +                    
+                    "<span class=\"authorName\">&bull;&nbsp;<a class=\"nohover\">" + mail.authorName + "</a></span>" +  
+                    "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
+                "</div>" +
+                "<div class=\"mailContainer\">" +
+                //"<img id=\"icon\" src=\"" + mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1" +"\" />" +
+                "<img id=\"icon\" src=\"icon_48.png\" />" +
+                    "<div class=\"mailBody\">";
+                        if(mail.summary != null && mail.summary.length > 0) {
+                            mailElement +=
+                            "<div class=\"title\">" + 
+                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + lang.openLinkTitle + "\">" + mail.title + "</a></span>" +
+                            "</div>" +
+                            "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
+                        } else {
+                            mailElement +=
+                            "<div class=\"title\">" + 
+                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + lang.openLinkTitle + "\">" + mail.title + "</a></span>" +
+                            "</div>";
+                        }
+                    mailElement +=
+                    "</div>" +
+                "</div>" +
+            "</div>";
+            document.getElementById('mailBox').innerHTML += mailElement;
+            //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
+            if(profilePhotos[mail.authorMail] != null) {
+                $('icon').src = profilePhotos[mail.authorMail];
+            }
+        }
+    });    
+}
+
+// Opens a mail and closes this window
+function openMail() {
+    window.close();
+    chrome.extension.sendRequest(mainExtensionId, {openNewestMail: true});
+}
+</script>
+</head>
+<body id="body" onload="init()">
+    <div class="mailBox" id="mailBox"></div>
+</body>
+</html>

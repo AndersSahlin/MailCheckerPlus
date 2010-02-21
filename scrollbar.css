@@ -1,0 +1,32 @@
+#scrollbar_container {  
+    position:relative;  
+    width:495px;  
+} 
+ 
+#scrollbar_track {  
+    position:absolute;  
+    top:0;  
+    right:3px;  
+    height:100%;  
+    width:10px;  
+    background-color:transparent;  
+    cursor:move;  
+} 
+ 
+#scrollbar_handle {  
+	margin-top: 5px;
+	margin-bottom: 5px;
+    width:12px;  
+    background-color:#6d93b8;  
+    cursor:move;  
+    -moz-border-radius: 5px;  
+    -webkit-border-radius: 5px;  
+    opacity:0.9;  
+    -moz-opacity:0.9;  
+} 
+ 
+#scrollbar_content {  
+    overflow:hidden;  
+    width:480px;  
+    max-height:400px;  
+}  
