@@ -167,6 +167,8 @@ var newMail;
 var mainExtensionId = "kpcdikpbihaaeoekccglnmcancpddpel";
 
 function init() {
+
+    var backgroundPage = chrome.extension.getBackgroundPage();
     chrome.extension.sendRequest(mainExtensionId, {getNewMail: true},
       function(response) {
         if (response != null) {

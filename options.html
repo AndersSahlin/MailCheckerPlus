@@ -294,11 +294,12 @@ function restore_options() {
     }
     
     var langSel = document.getElementById("languages");
-    for(var i in languages) {   
-        langSel.add(new Option(languages[i].what, languages[i].id, (languages[i].id == localStorage["gc_language"])), languages[i].id);
+    for(var i in languages) {
+        langSel.add(new Option(languages[i].what, languages[i].id), languages[i].id);
     }
+    langSel.value = localStorage["gc_language"];
     
-    sortlist(langSel);    
+    sortlist(langSel);
     
     var acc_sel = document.getElementById("accounts");
     for(var i in accounts) {
@@ -403,8 +404,11 @@ function checkUserPermission() {
                     <option id="poll_30000" value="30000">30 seconds</option>
                     <option id="poll_60000" value="60000">1 minute</option>
                     <option id="poll_300000" value="300000">5 minutes</option>
-                    <option id="poll_600000" value="600000">10 minutes</option>
                     <option id="poll_900000" value="900000">15 minutes</option>
+                    <option id="poll_1800000" value="1800000">30 minutes</option>
+                    <option id="poll_3600000" value="3600000">1 hour</option>
+                    <option id="poll_7200000" value="7200000">2 hours</option>
+                    <option id="poll_18000000" value="18000000">5 hours</option>
                 </select>
                 <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>
             </td>

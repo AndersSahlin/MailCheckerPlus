@@ -106,15 +106,6 @@ function init() {
 }
 
 function reloadSettings() {
-    /*if(pingSound == null) {
-     try {
-     pingSound = document.createElement('audio');
-     pingSound.setAttribute('src', chrome.extension.getURL('ping.wav'));
-     pingSound.setAttribute('id', 'ping');
-     //pingSound.load();
-     }
-     catch(e) { }
-     }*/
     unreadCount = 0;
 
     if (localStorage["gc_poll"] == null) {
@@ -131,6 +122,7 @@ function reloadSettings() {
     setIcon(img_notLoggedInSrc);
     chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 255]});
     chrome.browserAction.setBadgeText({text:"?"});
+    chrome.browserAction.setTitle({title:"Loading settings..."});
 
     if (localStorage["gc_preview_setting"] == null ||
         localStorage["gc_preview_setting"] == "") {
@@ -145,13 +137,11 @@ function reloadSettings() {
 
 
     if (accounts != null) {
-        for (var i in accounts) {
-            if (accounts[i] != null) {
-                accounts[i].stopScheduler();
-                accounts[i] = null;
-                delete accounts[i];
-            }
-        }
+        accounts.each(function(account) {
+            account.stopScheduler();
+            account = null;
+            delete account;
+        });
     }
     accounts = new Array();
     profilePhotos = {};
@@ -167,15 +157,15 @@ function reloadSettings() {
 
     if (localStorage["gc_accounts"] != null) {
         var savedAccounts = eval(localStorage["gc_accounts"]);
-        for (var i in savedAccounts) {
-            if (savedAccounts[i] == null || savedAccounts[i].domain == null)
-                break;
+        savedAccounts.each(function(savedAccount) {
+            if (savedAccount.domain == null)
+                return;
 
-            var acc = new MailAccount(savedAccounts[i].domain);
+            var acc = new MailAccount(savedAccount.domain);
             acc.onError = mailError;
             acc.onUpdate = mailUpdate;
             accounts.push(acc);
-        }
+        });
     }
 
     stopAnimateLoop();
