@@ -40,10 +40,10 @@ function rewriteMailtosOnPage() {
   for (var i = 0; i < nodes.length; i++) {
     var mailto_str = nodes[i].getAttribute('href');
     mailto_str = rewriteMailtoToGMailUrl(mailto_str);
+    nodes[i].setAttribute('title', "[GMCP] Compose a new mail to " + nodes[i].innerText);
     if(openInTab) {
         nodes[i].setAttribute('href', mailto_str);
         nodes[i].setAttribute('target', '_blank');
-        nodes[i].setAttribute('title', "[GMCP] Compose a new mail to " + nodes[i].innerText);
     } else {
         //nodes[i].setAttribute('href', "javascript:window.open('" + mailto_str + "','Compose new message','width=640,height=480')");
         nodes[i].setAttribute('href', "javascript:void(0)");
