@@ -254,7 +254,7 @@ function playSound() {
         return;
 
     try {
-        document.getElementById('notify_sound').currentTime = 0;
+        document.getElementById('notify_sound').load();
         document.getElementById('notify_sound').play();
     }
     catch(e) {
