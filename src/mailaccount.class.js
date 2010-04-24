@@ -81,7 +81,7 @@ function MailAccount(domain) {
 	this.isDefault;
 	
 	// Debug output (if enabled, might cause memory leaks)
-	var verbose = true;
+	var verbose = false;
 	
 	// Without this/that, no internal calls to onUpdate or onError can be made...
 	var that = this;
