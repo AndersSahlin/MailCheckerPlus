@@ -1052,7 +1052,7 @@ languages["id"] = {
 // Japanese
 languages["ja"] = {
     "id" : "ja",
-    "what" : "Japanese",
+    "what" : "日本語",
     "months" : new Array("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"),
     "readLink" : "既読",
     "readLinkTitle" : "既読にする",
