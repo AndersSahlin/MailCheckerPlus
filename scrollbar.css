@@ -44,18 +44,18 @@
 }
 
 ::-webkit-scrollbar-track-piece {
-    background-color: #3b3b3b;
+    background-color: transparent;
     -webkit-border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:vertical {
     height: 50px;
-    background-color: #666;
+    background-color: #6d93b8;
     -webkit-border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
     width: 50px;
-    background-color: #666;
+    background-color: #6d93b8;
     -webkit-border-radius: 3px;
 }
