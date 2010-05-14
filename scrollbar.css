@@ -38,7 +38,7 @@
 
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment {
-    height: 10px;
+    height: 6px;
     display: block;
     background-color: transparent;
 }
