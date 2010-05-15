@@ -192,7 +192,7 @@ function init() {
             } else {
                 // Old mail, only display date
                 //datetime = dateFormat(issued, "d mmm");
-                datetime = issued.getDate() + ' ' + lang.months[issued.getMonth()];
+                datetime = issued.getDate() + ' ' + i18n.selected_lang.months[issued.getMonth()];
             }
 
             var mailElement = 
@@ -208,13 +208,13 @@ function init() {
                         if(mail.summary != null && mail.summary.length > 0) {
                             mailElement +=
                             "<div class=\"title\">" + 
-                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + lang.openLinkTitle + "\">" + mail.title + "</a></span>" +
+                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
                             "</div>" +
                             "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
                         } else {
                             mailElement +=
                             "<div class=\"title\">" + 
-                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + lang.openLinkTitle + "\">" + mail.title + "</a></span>" +
+                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
                             "</div>";
                         }
                     mailElement +=
