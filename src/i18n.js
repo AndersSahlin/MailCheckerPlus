@@ -85,6 +85,7 @@ languages["en"] = {
     "fullLinkTitle" : "Show full message",
     "refreshLinkTitle" : "Refresh all mailboxes",
     "optionsLinkTitle" : "Go to the options page",
+    "sendPageLinkTitle" : "Send page link",
     "composeLinkTitle" : "Compose new mail",
     "noUnreadText" : "No unread mail",
     "oneUnreadText" : "unread mail", // One unread item: "1 unread mail"
