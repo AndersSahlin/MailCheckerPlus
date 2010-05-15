@@ -91,7 +91,6 @@ languages["en"] = {
     "oneUnreadText" : "unread mail", // One unread item: "1 unread mail"
     "severalUnreadText" : "unread mail", // Several unread items: "3 unread mail"
     "popupText" : "You have received new mail!",
-    "sendPageLinkTitle" : "Send link"
 };
 
 // French - Français
