@@ -85,6 +85,7 @@ languages["en"] = {
     "fullLinkTitle" : "Show full message",
     "refreshLinkTitle" : "Refresh all mailboxes",
     "optionsLinkTitle" : "Go to the options page",
+    "sendPageLinkTitle" : "Send page link",
     "composeLinkTitle" : "Compose new mail",
     "noUnreadText" : "No unread mail",
     "oneUnreadText" : "unread mail", // One unread item: "1 unread mail"
@@ -436,6 +437,7 @@ languages["sv"] = {
     "optionsLinkTitle" : "Gå till inställningssidan",
     "composeLinkTitle" : "Skapa nytt mail",  
     "noUnreadText" : "Inga olästa mail",
+    "sendPageLinkTitle" : "Skicka länk till sidan",
     "oneUnreadText" : "oläst mail", // One unread item: "1 unread mail"
     "severalUnreadText" : "olästa mail", // Several unread items: "3 unread mail"
     "popupText" : "Du har oläst mail!"
