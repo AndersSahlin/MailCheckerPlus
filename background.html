@@ -215,17 +215,17 @@ function mailUpdate(_account) {
         case 0:
             setIcon(img_noNewSrc);
             chrome.browserAction.setBadgeBackgroundColor({color:[110, 140, 180, 255]});
-            chrome.browserAction.setTitle({title: lang.noUnreadText});
+            chrome.browserAction.setTitle({title: i18n.get('noUnreadText')});
             break;
         case 1:
             setIcon(img_newSrc);
             chrome.browserAction.setBadgeBackgroundColor({color:[200, 100, 100, 255]});
-            chrome.browserAction.setTitle({title:newUnreadCount + " " + ((lang.oneUnreadText) ? lang.oneUnreadText : lang.severalUnreadText)});
+            chrome.browserAction.setTitle({title:newUnreadCount + " " + ((i18n.get('oneUnreadText')) ? i18n.get('oneUnreadText') : i18n.get('severalUnreadText'))});
             break;
         default:
             setIcon(img_newSrc);
             chrome.browserAction.setBadgeBackgroundColor({color:[200, 100, 100, 255]});
-            chrome.browserAction.setTitle({title:newUnreadCount + " " + lang.severalUnreadText});
+            chrome.browserAction.setTitle({title:newUnreadCount + " " + i18n.get('severalUnreadText')});
             break;
     }
 
