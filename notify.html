@@ -163,13 +163,10 @@ img.sup {
 <script type="text/javascript">
 var newMail;
 
-// The ID of the extension we want to talk to.
-var mainExtensionId = "kpcdikpbihaaeoekccglnmcancpddpel";
-
 function init() {
 
     var backgroundPage = chrome.extension.getBackgroundPage();
-    chrome.extension.sendRequest(mainExtensionId, {getNewMail: true},
+    chrome.extension.sendRequest({getNewMail: true},
       function(response) {
         if (response != null) {
             newMail = response.newMail;
