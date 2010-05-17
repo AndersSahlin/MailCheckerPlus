@@ -4,7 +4,7 @@ var openInTab = false;
 chrome.extension.sendRequest({command: "getURL"}, function(response) {
   mailUrl = response.URL + "?view=cm&fs=1&tf=1&to=";
   openInTab = response.openTab;
-  rewriteMailtosOnPage();
+  setTimeout(rewriteMailtosOnPage(), 500);
 });
 
 function rewriteMailtoToGMailUrl(inUrl) {
