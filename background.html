@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <script type="text/javascript" src="src/i18n.js"></script>
 <script type="text/javascript" src="src/mailaccount.class.js"></script>
-<script type="text/javascript" src="src/prototype.min.js"></script>
+<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
 <script type="text/javascript">
 var img_notLoggedInSrc = "not_logged_in";
 var img_noNewSrc = "no_new";
@@ -108,16 +108,14 @@ function init() {
 function reloadSettings() {
     unreadCount = 0;
 
-    if (localStorage["gc_poll"] == null) {
+    if (localStorage["gc_poll"] == null) 
         localStorage["gc_poll"] = 15000;
-    }
 
     reloadLanguage();
 
     iconSet = localStorage["gc_icon_set"];
-    if (iconSet == null || iconSet == "") {
+    if (iconSet == null || iconSet == "")
         iconSet = localStorage["gc_icon_set"] = "set1";
-    }
 
     setIcon(img_notLoggedInSrc);
     chrome.browserAction.setBadgeBackgroundColor({color:[190, 190, 190, 255]});
@@ -125,7 +123,8 @@ function reloadSettings() {
     chrome.browserAction.setTitle({title:"Loading settings..."});
 
     if (localStorage["gc_preview_setting"] == null ||
-        localStorage["gc_preview_setting"] == "") {
+        localStorage["gc_preview_setting"] == "") 
+    {
         localStorage["gc_preview_setting"] = "1";
     }
 
@@ -137,7 +136,7 @@ function reloadSettings() {
 
 
     if (accounts != null) {
-        accounts.each(function(account) {
+        $.each(accounts, function(i, account) {
             account.stopScheduler();
             account = null;
             delete account;
@@ -157,7 +156,7 @@ function reloadSettings() {
 
     if (localStorage["gc_accounts"] != null) {
         var savedAccounts = eval(localStorage["gc_accounts"]);
-        savedAccounts.each(function(savedAccount) {
+        $.each(savedAccounts, function(i, savedAccount) {
             if (savedAccount.domain == null)
                 return;
 
@@ -184,7 +183,7 @@ function setIcon(iconName) {
 
 // Request loop starter
 function startRequest() {
-    accounts.each(function(account) {
+    $.each(accounts, function(i, account) {
         if (account != null)
             account.startScheduler();
     });
@@ -196,7 +195,7 @@ function mailUpdate(_account) {
     var hideCount = localStorage["gc_hide_count"];
 
     var newUnreadCount = 0;
-    accounts.each(function(account) {
+    $.each(accounts, function(i, account) {
         if (account != null && account.getUnreadCount() > 0) {
             newUnreadCount += account.getUnreadCount();
             if (account.getNewestMail() != null) {
@@ -278,25 +277,49 @@ function notify(accountWithNewestMail) {
                 notification.show();
                 setTimeout(function() {
                     notification.cancel();
-                }, timeout * 1000);
+                },
+                timeout * 1000);
             } else {
-                new Ajax.Request('http://socialgraph.apis.google.com/otherme?q=' + newestMail.authorMail, {   method:'get',
-                    onSuccess: function(transport, json) {
-                        var responseJSON = eval('[' + transport.responseText + ']')[0];
-                        JSON.parse(transport.responseText, function (key, value) {
-                            if (value && typeof value === 'string' && key == 'photo') {
-                                profilePhotos[newestMail.authorMail] = value;
-                            }
-                            return value;
-                        });
+                // new Ajax.Request('http://socialgraph.apis.google.com/otherme?q=' + newestMail.authorMail, {   method:'get',
+                //     onSuccess: function(transport, json) {
+                //         var responseJSON = eval('[' + transport.responseText + ']')[0];
+                //         JSON.parse(transport.responseText, function (key, value) {
+                //             if (value && typeof value === 'string' && key == 'photo') {
+                //                 profilePhotos[newestMail.authorMail] = value;
+                //             }
+                //             return value;
+                //         });
+                //     },
+                //     onComplete: function() {
+                //         notification.show();
+                //         setTimeout(function() {
+                //             notification.cancel();
+                //         }, timeout * 1000);
+                //     }
+                // });
+                //
+                $.ajax({
+                url: 'http://socialgraph.apis.google.com/otherme?q=' + newestMail.authorMail,
+
+                success: function(transport, status, error) {
+                    var responseJSON = eval('[' + transport + ']')[0];
+                    JSON.parse(transport,
+                    function(key, value) {
+                        if (value && typeof value === 'string' && key == 'photo') {
+                            profilePhotos[newestMail.authorMail] = value;
+                        }
+                        return value;
+                    });
+                },
+
+                onComplete: function(request, status) {
+                    notification.show();
+                    setTimeout(function() {
+                        notification.cancel();
                     },
-                    onComplete: function() {
-                        notification.show();
-                        setTimeout(function() {
-                            notification.cancel();
-                        }, timeout * 1000);
-                    }
-                });
+                    timeout * 1000);
+                }}
+                );
             }
 
         } catch(e) {

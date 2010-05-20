@@ -381,16 +381,16 @@ function MailAccount(domain) {
 	this.openInbox = function() {        
 		// See if there is any Gmail tab open
 		chrome.tabs.getAllInWindow(null, function tabSearch(tabs) {
-			tabs.each(function(tab) {
+			$.each(tabs, function(i, tab) {
 				if(tab.url.indexOf(mailURL) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
-					return;
+					return false;
 				}
 			});
 			chrome.tabs.create({url: mailURL + inboxLabel});
@@ -402,19 +402,19 @@ function MailAccount(domain) {
 		// See if there is any Gmail tab open
 		chrome.tabs.getAllInWindow(null, function tabSearch(tabs) {
             var openTabFound = false;
-			tabs.each(function(tab) {
+			$.each(tabs, function(i, tab) {
 				if(tab.url.indexOf(mailURL) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
-					return;
+					return false;
 				}
 			});
             if(!openTabFound)
