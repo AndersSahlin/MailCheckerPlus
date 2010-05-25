@@ -165,7 +165,6 @@ function getThread(accountId, mailid) {
 }
 
 function showBody(mailid, mailbody) {
-    //showElement(mailid + "_reply-link");
     showElement(mailid + "_less-link");
     hideElement(mailid + "_more-link");
     
@@ -174,40 +173,28 @@ function showBody(mailid, mailbody) {
     if( mailSummaryElement.html() != null)
     {
     	mailSummaryElement.html(mailbody);
-        mailSummaryElement.oninvalid = mailSummaryElement.onclick;
-        mailSummaryElement.onclick = null;
-        mailSummaryElement.style.cursor = "auto";
+        mailSummaryElement.attr('style','cursor: text');
         mailCache.push({"id":mailid, "body":mailbody});
+        mailSummaryElement.removeClass('collapsed');
     }
-    
-    // var mailSummaryElement = document.getElementById(mailid + "_summary");
-    // if(mailSummaryElement != null) {
-    //     mailSummaryElement.innerHTML = mailbody;
-    //     mailSummaryElement.oninvalid = mailSummaryElement.onclick;
-    //     mailSummaryElement.onclick = null;
-    //     mailSummaryElement.style.cursor = "auto";
-    //     mailCache.push({"id":mailid, "body":mailbody});
-    // }
 }
 
 function hideBody(mailid) {
     //hideElement(mailid + "_reply-link");
     hideElement(mailid + "_less-link");
     showElement(mailid + "_more-link");
+    
     var mailSummaryElement = document.getElementById(mailid + "_summary");
-    if(mailSummaryElement != null) {
+    var mailSummaryElement = $('#' + mailid + "_summary");
+    
+    if(mailSummaryElement.html() != null) {
         $.each(allMail, function(i, mail) {
 		    if(mail.id == mailid) {
-                mailSummaryElement.innerHTML = mail.summary;
+                mailSummaryElement.html(mail.summary);
+                mailSummaryElement.addClass('collapsed');
                 return false;
             }
         });
-        mailSummaryElement.onclick = mailSummaryElement.oninvalid;
-        mailSummaryElement.oninvalid = null;
-        
-        //  this is really bad ui-wise. instead, we should tint the box or something of 
-        //  the sort to indicate to user that the box is clickable
-        // mailSummaryElement.style.cursor = "N-resize";
     }
 }
 
@@ -265,7 +252,7 @@ function parseMail(accountId) {
                                 "<span class=\"lowerright hidden\" id=\"" + mail.id + "_less-link\"><a href=\"javascript:hideBody('" + mail.id + "');\" title=\"" + i18n.get('summaryLinkTitle') + "\" class=\"less-link\"><img src=\"img/less_hover.png\" class=\"hidden\" /></a></span>" +
                                 "<span class=\"lowerright\" id=\"" + mail.id + "_more-link\"><a href=\"javascript:getThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('fullLinkTitle') + "\" class=\"more-link\"><img src=\"img/more_hover.png\" class=\"hidden\" /></a></span>" +
                             "</div>" +
-                            "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\" style=\"cursor: default\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
+                            "<div class=\"summary" + ((mail.summary == null || mail.summary.length == 0)?" hidden":"") + "\"><div class=\"collapsed\" id=\"" + mail.id + "_summary\" style=\"cursor: default\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
                         } else {
                             mailElement +=
                             "<div class=\"title\">" + 
