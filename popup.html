@@ -175,7 +175,7 @@ function showBody(mailid, mailbody) {
     	mailSummaryElement.html(mailbody);
         mailSummaryElement.attr('style','cursor: text');
         mailCache.push({"id":mailid, "body":mailbody});
-        mailSummaryElement.removeClass('collapsed');
+        mailSummaryElement.removeClass('collapsed highlight');
     }
 }
 
@@ -372,6 +372,18 @@ function init() {
         document.getElementById('refresh').setAttribute('title', i18n.get('refreshLinkTitle'))
         document.getElementById('options').setAttribute('title', i18n.get('optionsLinkTitle'))
     }
+    
+    $(".summary > .collapsed").hover(
+    	function () {
+    		if ($(this).hasClass('collapsed'))
+    		{
+    			$(this).addClass('highlight');
+			}
+		},
+		function () {
+    		$(this).removeClass('highlight');
+		}
+);
 }
 </script>
 </head>
