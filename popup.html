@@ -13,6 +13,16 @@
 <script type="text/javascript" src="src/livepipe.js" />
 <script type="text/javascript" src="src/slider.js" />
 <script type="text/javascript" src="src/scrollbar.js" />
+=======
+
+<link rel="stylesheet" type="text/css" media="screen" href="scrollbar.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="popup.css" /> 
+
+<script type="text/javascript" src="src/i18n.js"></script>
+<script type="text/javascript" src="src/date.js"></script>
+<script type="text/javascript" src="src/mailaccount.class.js"></script>
+
+<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
 
 <script type="text/javascript">
 var backgroundPage = chrome.extension.getBackgroundPage();
@@ -27,16 +37,14 @@ function hideElement(id) {
     var element = document.getElementById(id);
     if(element != null) {
         element.style.display = 'none';
-    }
-    scrollbar.recalculateLayout();  
+    } 
 }
 
 function showElement(id) {
     var element = document.getElementById(id);
     if(element != null) {
         element.style.display = 'inline';
-    }
-    scrollbar.recalculateLayout();  
+    } 
 }
 
 // Opens a mail and closes this window
@@ -49,10 +57,10 @@ function openInbox(accountId) {
     window.close();
     if(accountId == null) {
         // Open first inbox with unread items
-        mailAccounts.each(function(account) {
+        $.each(mailAccounts, function(i, account) {
             if(account.getUnreadCount() > 0) {
                     account.openInbox();
-                    return;
+                    return false;
                 }
         });
         accountId = 0;
@@ -119,7 +127,7 @@ function starThread(accountId, mailid) {
 }
 
 function replyTo(accountId, mailid) {
-	allMail.each(function(mail) {
+	$.each(allMail, function(i, mail) {
 		if(mail.id == mailid) {
 			mailAccounts[accountId].replyTo(mail);
 			break;
@@ -145,11 +153,11 @@ function sendReply(mailid) {
 }
 
 function getThread(accountId, mailid) {
-    mailCache.each(function(mail) {
+    $.each(mailCache, function(i, mail) {
         if(mail.id == mailid) {
             // Mail already fetched, read from cache instead
             showBody(mailid, mail.body);
-            return;
+            return false;
         }
     });
     
@@ -169,16 +177,17 @@ function getThread(accountId, mailid) {
 }
 
 function showBody(mailid, mailbody) {
-    //showElement(mailid + "_reply-link");
     showElement(mailid + "_less-link");
     hideElement(mailid + "_more-link");
-    var mailSummaryElement = document.getElementById(mailid + "_summary");
-    if(mailSummaryElement != null) {
-        mailSummaryElement.innerHTML = mailbody;
-        mailSummaryElement.oninvalid = mailSummaryElement.onclick;
-        mailSummaryElement.onclick = null;
-        mailSummaryElement.style.cursor = "auto";
+    
+    mailSummaryElement = $('#' + mailid + "_summary");
+    
+    if( mailSummaryElement.html() != null)
+    {
+    	mailSummaryElement.html(mailbody);
+        mailSummaryElement.attr('style','cursor: text');
         mailCache.push({"id":mailid, "body":mailbody});
+        mailSummaryElement.removeClass('collapsed highlight');
     }
 }
 
@@ -186,17 +195,18 @@ function hideBody(mailid) {
     //hideElement(mailid + "_reply-link");
     hideElement(mailid + "_less-link");
     showElement(mailid + "_more-link");
+    
     var mailSummaryElement = document.getElementById(mailid + "_summary");
-    if(mailSummaryElement != null) {
-        allMail.each(function(mail) {
+    var mailSummaryElement = $('#' + mailid + "_summary");
+    
+    if(mailSummaryElement.html() != null) {
+        $.each(allMail, function(i, mail) {
 		    if(mail.id == mailid) {
-                mailSummaryElement.innerHTML = mail.summary;
-                break;
+                mailSummaryElement.html(mail.summary);
+                mailSummaryElement.addClass('collapsed');
+                return false;
             }
         });
-        mailSummaryElement.onclick = mailSummaryElement.oninvalid;
-        mailSummaryElement.oninvalid = null;
-        mailSummaryElement.style.cursor = "N-resize";
     }
 }
 
@@ -204,7 +214,7 @@ function hideBody(mailid) {
 function parseMail(accountId) {
     //document.getElementById('mailBox_' + accountId).innerHTML = "";
     var mailArray = mailAccounts[accountId].getMail();
-    mailArray.each(function(mail) {
+    $.each(mailArray, function(i, mail) {
         allMail.push(mail);
         mailCount++;
                    
@@ -254,7 +264,7 @@ function parseMail(accountId) {
                                 "<span class=\"lowerright hidden\" id=\"" + mail.id + "_less-link\"><a href=\"javascript:hideBody('" + mail.id + "');\" title=\"" + i18n.get('summaryLinkTitle') + "\" class=\"less-link\"><img src=\"img/less_hover.png\" class=\"hidden\" /></a></span>" +
                                 "<span class=\"lowerright\" id=\"" + mail.id + "_more-link\"><a href=\"javascript:getThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('fullLinkTitle') + "\" class=\"more-link\"><img src=\"img/more_hover.png\" class=\"hidden\" /></a></span>" +
                             "</div>" +
-                            "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\" style=\"cursor: N-resize\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
+                            "<div class=\"summary" + ((mail.summary == null || mail.summary.length == 0)?" hidden":"") + "\"><div class=\"collapsed\" id=\"" + mail.id + "_summary\" style=\"cursor: default\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
                         } else {
                             mailElement +=
                             "<div class=\"title\">" + 
@@ -295,7 +305,6 @@ function hideMail(accountId, mailid) {
         inboxLinkElement.title = mailAccount.getInboxLink() + ' (' + (mailAccount.getUnreadCount() - 1).toString() + ')';
     }
     
-    scrollbar.recalculateLayout(); 
 }
 
 // Shows a hidden mail in the mailbox
@@ -305,7 +314,6 @@ function showMail(mailid) {
         mailElement.style.display = 'block';
     }
     
-    scrollbar.recalculateLayout(); 
 }
 
 function replyTextKeyPress(event, mailid) {
@@ -316,7 +324,7 @@ function replyTextKeyPress(event, mailid) {
 }
 
 function refreshMail() {
-     mailAccounts.each(function(account) {
+     $.each(mailAccounts, function(i, account) {
         account.refreshInbox();
     });
     
@@ -332,7 +340,7 @@ function openOptions() {
 function init() {
     var unreadCount = 0;
     allMail = new Array();
-    mailAccounts.each(function(account) {
+    $.each(mailAccounts, function(i, account) {
         if(account.getUnreadCount() > 0)
             unreadCount += account.getUnreadCount();  
     });
@@ -351,16 +359,25 @@ function init() {
     } else if(previewSetting == "2" && unreadCount == 0) {	
         // Preview setting set to "Always on" + no unread mail =
         // Display an error text
+<<<<<<< HEAD
 		$('scrollbar_container').innerHTML = "<br /><h4>An error occured</h4><p>No active account was found!</p>";
 		$('scrollbar_container').innerHTML += "<p><a href='https://mail.google.com/' target='_blank' title='Log in to Gmail'>Log in to Gmail</a></p>";
 		$('scrollbar_container').style.width = "300px"; 
 		$('scrollbar_container').style.textAlign = "center"; 
 		$('scrollbar_container').style.fontSize = "80%"; 
 	} else {   
+=======
+		$('#content').html("<br /><h3>Error</h3><p>No active account was found</p>" +
+			"<p><a href='https://mail.google.com/' target='_blank' title='Log in to Gmail'>Log in to Gmail</a></p>");
+			
+		$('#content').width(300);
+		$('#content').css({"textAlign":"center","fontSize":"80%"}); 
+    } else {   
+>>>>>>> 823b433738692ee6ba5a7ab4edf858fbcf7d784d
         backgroundPage.stopAnimateLoop();
     
         // Fill page with some nice HTML    
-        var bodyElement = document.getElementById('scrollbar_content');
+        var bodyElement = document.getElementById('content');
         bodyElement.innerHTML = '';
         /*bodyElement.innerHTML = '<div id="menu">' + 
                                 '<a href="javascript:refreshMail()" id="refresh" title="' + i18n.get('refreshLinkTitle') + '"><img src="img/refresh.png" /></a>' +
@@ -368,6 +385,7 @@ function init() {
                                 '<img src="img/logo.png" />' +
                               '</div>';*/
 
+<<<<<<< HEAD
 		mailAccounts.each(function(account) {
 			account.getNewAt();
 			var i = mailAccounts.indexOf(account);
@@ -394,6 +412,36 @@ function init() {
 
 	$('refresh').title = i18n.get('refreshLinkTitle');
 	$('options').title = i18n.get('optionsLinkTitle');
+=======
+		$.each(mailAccounts,
+		function(i, account) {
+		    account.getNewAt();
+		    var i = mailAccounts.indexOf(account);
+		    bodyElement.innerHTML +=
+		    '<div class="mailBox" id="mailBox_' + i + '">' +
+		    '<div class="inboxLink"><a class="inboxLink" href="javascript:openUnread(' + i + ')" title="' + account.getInboxLink() + '"><img src="img/inbox_hover.png" /></a>&nbsp;<a class="composeLink" href="javascript:composeNew(' + i + ')" title="' + i18n.get('composeLinkTitle') + '"><img src="img/compose_hover.png" alt="Compose new" /></a>&nbsp;<a class="sendPageLink" href="javascript:sendPage(' + i + ')" title="' + i18n.get('sendPageLinkTitle') + '"><img src="img/send_page_hover.png" alt="' + i18n.get('sendPageLinkTitle') + '" /></a>&nbsp;<span><a id="inboxLink_' + i + '" href="javascript:openUnread(' + i + ')" title="' + account.getInboxLink() + ' (' + account.getUnreadCount().toString() + ')' + '">' + account.getInboxLink() + ' (' + account.getUnreadCount().toString() + ')' + '</a></span></div>' +
+		    '</div>';
+		    parseMail(i);
+		});
+        
+
+        /* Should probably use jQuery for this */
+        document.getElementById('refresh').setAttribute('title', i18n.get('refreshLinkTitle'))
+        document.getElementById('options').setAttribute('title', i18n.get('optionsLinkTitle'))
+    }
+    
+    $(".summary > .collapsed").hover(
+    	function () {
+    		if ($(this).hasClass('collapsed'))
+    		{
+    			$(this).addClass('highlight');
+			}
+		},
+		function () {
+    		$(this).removeClass('highlight');
+		}
+);
+>>>>>>> 823b433738692ee6ba5a7ab4edf858fbcf7d784d
 }
 </script>
 </head>
@@ -404,10 +452,7 @@ function init() {
         <a href="javascript:openOptions()" id="options" class="squareLink"><img src="img/wrench.png" class="hidden" /></a>
         <a href="http://www.gmail.com" target="_blank" title="Gmail.com"><img src="img/logo.png" /></a>
     </div>
-    <div id="scrollbar_container">  
-        <div id="scrollbar_track"><div id="scrollbar_handle"></div></div>  
-        <div id="scrollbar_content"></div>  
-    </div> 
+    <div id="content"></div> 
 </body>
 
 </html>

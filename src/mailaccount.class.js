@@ -385,13 +385,13 @@ function MailAccount(domain) {
 				var tab = tabs[i];
 				if(tab.url.indexOf(mailURL) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
-					return;
+					return false;
 				}
 			};
 			chrome.tabs.create({url: mailURL + inboxLabel});
@@ -408,15 +408,15 @@ function MailAccount(domain) {
 				if(tab.url.indexOf(mailURL) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
-					return;
+					return false;
 				} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
-					return;
+					return false;
 				}
 			};
             if(!openTabFound)
