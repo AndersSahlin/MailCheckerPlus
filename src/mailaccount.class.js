@@ -381,7 +381,8 @@ function MailAccount(domain) {
 	this.openInbox = function() {        
 		// See if there is any Gmail tab open
 		chrome.tabs.getAllInWindow(null, function tabSearch(tabs) {
-			tabs.each(function(tab) {
+			for(var i in tabs) {
+				var tab = tabs[i];
 				if(tab.url.indexOf(mailURL) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
 					return;
@@ -392,7 +393,7 @@ function MailAccount(domain) {
 					chrome.tabs.update(tab.id, {selected:true});
 					return;
 				}
-			});
+			};
 			chrome.tabs.create({url: mailURL + inboxLabel});
 		});
 	};
@@ -402,7 +403,8 @@ function MailAccount(domain) {
 		// See if there is any Gmail tab open
 		chrome.tabs.getAllInWindow(null, function tabSearch(tabs) {
             var openTabFound = false;
-			tabs.each(function(tab) {
+			for(var i in tabs) {
+				var tab = tabs[i];
 				if(tab.url.indexOf(mailURL) >= 0) {
 					chrome.tabs.update(tab.id, {selected:true});
                     openTabFound = true;
@@ -416,7 +418,7 @@ function MailAccount(domain) {
                     openTabFound = true;
 					return;
 				}
-			});
+			};
             if(!openTabFound)
 			    chrome.tabs.create({url: mailURL + unreadLabel});
 		});
