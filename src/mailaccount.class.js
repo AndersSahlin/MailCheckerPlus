@@ -5,6 +5,10 @@
 	http://chrome.google.com/extensions/detail/gffjhibehnempbkeheiccaincokdjbfe
 */
 
+String.prototype.htmlEntities = function () {
+   return this.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+};
+
 /*
  Internet Timestamp Parser
  Copyright (c) 2009 Sebastiaan Deckers
@@ -109,7 +113,7 @@ function MailAccount(domain) {
                             
 						try {
 							var entry = mailEntries[i];
-							var title = entry.getElementsByTagName("title")[0].textContent;
+							var title = entry.getElementsByTagName("title")[0].textContent.htmlEntities();
 							var summary = entry.getElementsByTagName("summary")[0].textContent;
 							var link = entry.getElementsByTagName("link")[0].attributes.getNamedItem("href").value;
 							var issued = entry.getElementsByTagName("issued")[0].textContent;
