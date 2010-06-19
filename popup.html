@@ -175,7 +175,7 @@ function showBody(mailid, mailbody) {
     	mailSummaryElement.html(mailbody);
         mailSummaryElement.attr('style','cursor: text');
         mailCache.push({"id":mailid, "body":mailbody});
-        mailSummaryElement.removeClass('collapsed highlight');
+        mailSummaryElement.parent().removeClass('collapsed highlight');
     }
 }
 
@@ -191,7 +191,7 @@ function hideBody(mailid) {
         $.each(allMail, function(i, mail) {
 		    if(mail.id == mailid) {
                 mailSummaryElement.html(mail.summary);
-                mailSummaryElement.addClass('collapsed');
+                mailSummaryElement.parent().addClass('collapsed');
                 return false;
             }
         });
@@ -252,7 +252,7 @@ function parseMail(accountId) {
                                 "<span class=\"lowerright hidden\" id=\"" + mail.id + "_less-link\"><a href=\"javascript:hideBody('" + mail.id + "');\" title=\"" + i18n.get('summaryLinkTitle') + "\" class=\"less-link\"><img src=\"img/less_hover.png\" class=\"hidden\" /></a></span>" +
                                 "<span class=\"lowerright\" id=\"" + mail.id + "_more-link\"><a href=\"javascript:getThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('fullLinkTitle') + "\" class=\"more-link\"><img src=\"img/more_hover.png\" class=\"hidden\" /></a></span>" +
                             "</div>" +
-                            "<div class=\"summary" + ((mail.summary == null || mail.summary.length == 0)?" hidden":"") + "\"><div class=\"collapsed\" id=\"" + mail.id + "_summary\" style=\"cursor: default\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
+                            "<div class=\"summary collapsed" + ((mail.summary == null || mail.summary.length == 0)?" hidden":"") + "\"><div id=\"" + mail.id + "_summary\" style=\"cursor: default\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
                         } else {
                             mailElement +=
                             "<div class=\"title\">" + 
@@ -374,7 +374,7 @@ function init() {
         document.getElementById('options').setAttribute('title', i18n.get('optionsLinkTitle'))
     }
     
-    $(".summary > .collapsed").hover(
+    $(".summary.collapsed").hover(
     	function () {
 	if ($(this).hasClass('collapsed'))
 	{
