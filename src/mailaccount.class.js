@@ -575,10 +575,38 @@ function MailAccount(domain) {
 		return newestMail;
 	}
 
-    // Opens the newest thread
+	// Opens the newest thread
 	this.openNewestMail = function() {        
 		if(newestMail != null) {
 			that.openThread(newestMail.id);
+		}
+	}
+	
+	// Reads the newest thread
+	this.readNewestMail = function() {        
+		if(newestMail != null) {
+			that.readThread(newestMail.id);
+		}
+	}
+	
+	// Spams the newest thread
+	this.spamNewestMail = function() {        
+		if(newestMail != null) {
+			that.spamThread(newestMail.id);
+		}
+	}
+	
+	// Deletes the newest thread
+	this.deleteNewestMail = function() {        
+		if(newestMail != null) {
+			that.deleteThread(newestMail.id);
+		}
+	}
+	
+	// Archive the newest thread
+	this.archiveNewestMail = function() {        
+		if(newestMail != null) {
+			that.archiveThread(newestMail.id);
 		}
 	}
     
