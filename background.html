@@ -87,9 +87,16 @@ chrome.extension.onRequest.addListener(
                 sendResponse({newMail: accountWithNewestMail.getNewestMail(), mailURL: accountWithNewestMail.getURL(), profilePhotos: profilePhotos});
             else if (request.command == "getURL" && !disableMailTo)
                 sendResponse({URL: accounts[0].getURL(), openTab: openInTab});
-            else if (request.openNewestMail != null) {
+            else if (request.openNewestMail) {
                 accountWithNewestMail.openNewestMail();
-                //chrome.tabs.create({url: request.openURL});
+            } else if (request.readNewestMail) {
+                accountWithNewestMail.readNewestMail();
+            } else if (request.spamNewestMail) {
+                accountWithNewestMail.spamNewestMail();
+            } else if (request.deleteNewestMail) {
+                accountWithNewestMail.deleteNewestMail();
+            } else if (request.archiveNewestMail) {
+                accountWithNewestMail.archiveNewestMail();
             }
         }
 );
@@ -266,11 +273,8 @@ function notify(accountWithNewestMail) {
     if (localStorage["gc_show_notification"] != null && localStorage["gc_show_notification"] == "true") {
         try {
             var newestMail = accountWithNewestMail.getNewestMail();
-            //newestMailText = "<" + newMail.authorMail + "> " + newMail.title;
-            //var popupBody = newestMailText = "<" + newMail.authorMail + "> " + newMail.title;
-            //var notification = webkitNotifications.createNotification(null, lang.popupText, popupBody);
             var notification = webkitNotifications.createHTMLNotification(chrome.extension.getURL("notify.html"));
-            var timeout = 10;
+            var timeout = 15;
 
 
             if (profilePhotos[newestMail] != null) {
@@ -279,46 +283,27 @@ function notify(accountWithNewestMail) {
                     notification.cancel();
                 },
                 timeout * 1000);
-            } else {
-                // new Ajax.Request('http://socialgraph.apis.google.com/otherme?q=' + newestMail.authorMail, {   method:'get',
-                //     onSuccess: function(transport, json) {
-                //         var responseJSON = eval('[' + transport.responseText + ']')[0];
-                //         JSON.parse(transport.responseText, function (key, value) {
-                //             if (value && typeof value === 'string' && key == 'photo') {
-                //                 profilePhotos[newestMail.authorMail] = value;
-                //             }
-                //             return value;
-                //         });
-                //     },
-                //     onComplete: function() {
-                //         notification.show();
-                //         setTimeout(function() {
-                //             notification.cancel();
-                //         }, timeout * 1000);
-                //     }
-                // });
-                //
-                $.ajax({
-                url: 'http://socialgraph.apis.google.com/otherme?q=' + newestMail.authorMail,
-
-                success: function(transport, status, error) {
-                    var responseJSON = eval('[' + transport + ']')[0];
-                    JSON.parse(transport,
-                    function(key, value) {
-                        if (value && typeof value === 'string' && key == 'photo') {
-                            profilePhotos[newestMail.authorMail] = value;
-                        }
-                        return value;
-                    });
-                },
-
-                onComplete: function(request, status) {
-                    notification.show();
-                    setTimeout(function() {
-                        notification.cancel();
-                    },
-                    timeout * 1000);
-                }}
+            } else {		
+                $.ajax(
+		{
+			url: "http://socialgraph.apis.google.com/otherme?q=" + newestMail.authorMail,
+			success: function(data) {
+			    JSON.parse(data.toString(),
+			    function(key, value) {
+				if (value && typeof value === 'string' && key == 'photo') {
+				    profilePhotos[newestMail.authorMail] = value;
+				}
+				return value;
+			    });
+			},
+			complete: function(request, status) {
+			    notification.show();
+			    setTimeout(function() {
+				notification.cancel();
+			    },
+			    timeout * 1000);
+			}
+		}
                 );
             }
 
