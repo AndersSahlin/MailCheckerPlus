@@ -34,6 +34,25 @@ a:hover {
     -webkit-border-radius: 5px;
 }
 
+.actions {
+    display: block;
+    float: right;
+    padding: 2px;
+    border-top: 1px solid black;
+    width: 100%;
+    text-align: right;
+    margin-top: 10px;
+}
+
+.actions a {
+    margin: 5px;
+    color: black;
+}
+
+.archive {
+    font-weight: bold;
+}
+
 .mailBox {
     float: left;
     clear: both;
@@ -159,7 +178,7 @@ img.sup {
 </style> 
 <script type="text/javascript" src="src/i18n.js"></script>
 <script type="text/javascript" src="src/date.js"></script>
-<script type="text/javascript" src="src/prototype.min.js"></script>
+<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
 <script type="text/javascript">
 var newMail;
 
@@ -216,12 +235,18 @@ function init() {
                         }
                     mailElement +=
                     "</div>" +
-                "</div>" +
+                "</div>" +		
+		"<span class=\"actions\">" + 
+                        "<span class=\"read\"><a id=\"" + mail.id + "_read-link\" href=\"javascript:readMail();\" title=\"" + i18n.get('readLinkTitle') + "\">" + i18n.get('readLink') + "</a></span>" +
+                        "<span class=\"delete\"><a href=\"javascript:deleteMail();\" title=\"" + i18n.get('deleteLinkTitle') + "\">" + i18n.get('deleteLink') + "</a></span>" + 
+                        "<span class=\"spam\"><a href=\"javascript:spamMail();\" title=\"" + i18n.get('spamLinkTitle') + "\">" + i18n.get('spamLink') + "</a></span>" +
+                        "<span class=\"archive\"><a href=\"javascript:archiveMail();\" title=\"" + i18n.get('archiveLinkTitle') + "\">" + i18n.get('archiveLink') + "</a></span>" +
+		"</span>" +
             "</div>";
             document.getElementById('mailBox').innerHTML += mailElement;
             //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
             if(profilePhotos[mail.authorMail] != null) {
-                $('icon').src = profilePhotos[mail.authorMail];
+                $('#icon').get(0).src = profilePhotos[mail.authorMail];
             }
         }
     });    
@@ -230,7 +255,27 @@ function init() {
 // Opens a mail and closes this window
 function openMail() {
     window.close();
-    chrome.extension.sendRequest(mainExtensionId, {openNewestMail: true});
+    chrome.extension.sendRequest({openNewestMail: true});
+}
+// Marks mail as read and closes this window
+function readMail() {
+    window.close();
+    chrome.extension.sendRequest({readNewestMail: true});
+}
+// Deletes mail and closes this window
+function deleteMail() {
+    window.close();
+    chrome.extension.sendRequest({deleteNewestMail: true});
+}
+// Marks mail as spam and closes this window
+function spamMail() {
+    window.close();
+    chrome.extension.sendRequest({spamNewestMail: true});
+}
+// Archives mail and closes this window
+function archiveMail() {
+    window.close();
+    chrome.extension.sendRequest({archiveNewestMail: true});
 }
 </script>
 </head>
