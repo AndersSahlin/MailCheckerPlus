@@ -367,8 +367,7 @@ function MailAccount(domain) {
         
         delete that;
 	}
-	
-	// Opens the inbox
+		// Opens the inbox
 	this.openInbox = function() {        
 		// See if there is any Gmail tab open	
 		chrome.windows.getAll({populate: true}, function(windows) {
@@ -413,6 +412,7 @@ function MailAccount(domain) {
 			chrome.tabs.create({url: mailURL + unreadLabel});
 		});
 	}
+	
 	// Opens a thread
 	this.openThread = function(threadid) {        
 		if(threadid != null) {
