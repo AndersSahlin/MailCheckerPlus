@@ -117,21 +117,8 @@ function MailAccount(domain) {
 							var summary = entry.getElementsByTagName("summary")[0].textContent;
 							var link = entry.getElementsByTagName("link")[0].attributes.getNamedItem("href").value;
 							var issued = entry.getElementsByTagName("issued")[0].textContent;
-                            
-							var authorName = "(unknown sender)";                            
-                            try {
-                                authorName = entry.getElementsByTagName("name")[0].textContent;
-                            } catch(e) {
-                                authorName = "(unknown sender)";
-                            }
-                            
-							var authorMail = "(unknown sender)";
-                            try {
-                                authorMail = entry.getElementsByTagName("email")[0].textContent;
-                            } catch(e) {
-                                authorMail = "(unknown sender)";
-                            }
-                            
+							var authorName = entry.getElementsByTagName("name")[0].textContent;
+							var authorMail = entry.getElementsByTagName("email")[0].textContent;
 							var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
 							
 							if(title == null || title.length < 1)
@@ -383,50 +370,49 @@ function MailAccount(domain) {
 	
 	// Opens the inbox
 	this.openInbox = function() {        
-		// See if there is any Gmail tab open
-		chrome.tabs.getAllInWindow(null, function tabSearch(tabs) {
-			for(var i in tabs) {
-				var tab = tabs[i];
-				if(tab.url.indexOf(mailURL) >= 0) {
-					chrome.tabs.update(tab.id, {selected:true});
-					return false;
-				} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
-					chrome.tabs.update(tab.id, {selected:true});
-					return false;
-				} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
-					chrome.tabs.update(tab.id, {selected:true});
-					return false;
+		// See if there is any Gmail tab open	
+		chrome.windows.getAll({populate: true}, function(windows) {
+			for(var w in windows) {
+				for(var i in windows[w].tabs) {
+					var tab = windows[w].tabs[i];
+					if(tab.url.indexOf(mailURL) >= 0) {
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					}
 				}
-			};
+			}
 			chrome.tabs.create({url: mailURL + inboxLabel});
 		});
-	};
-    
+	}
+	
 	// Opens unread label
 	this.openUnread = function() {        
-		// See if there is any Gmail tab open
-		chrome.tabs.getAllInWindow(null, function tabSearch(tabs) {
-            var openTabFound = false;
-			for(var i in tabs) {
-				var tab = tabs[i];
-				if(tab.url.indexOf(mailURL) >= 0) {
-					chrome.tabs.update(tab.id, {selected:true});
-                    openTabFound = true;
-					return false;
-				} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
-					chrome.tabs.update(tab.id, {selected:true});
-                    openTabFound = true;
-					return false;
-				} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
-					chrome.tabs.update(tab.id, {selected:true});
-                    openTabFound = true;
-					return false;
+		// See if there is any Gmail tab open		
+		chrome.windows.getAll({populate: true}, function(windows) {
+			for(var w in windows) {
+				for(var i in windows[w].tabs) {
+					var tab = windows[w].tabs[i];
+					if(tab.url.indexOf(mailURL) >= 0) {
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					} else if(tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					} else if(tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
+						chrome.tabs.update(tab.id, {selected:true});
+						return;
+					}
 				}
-			};
-            if(!openTabFound)
-			    chrome.tabs.create({url: mailURL + unreadLabel});
+			}
+			chrome.tabs.create({url: mailURL + unreadLabel});
 		});
-	};
+	}
 	// Opens a thread
 	this.openThread = function(threadid) {        
 		if(threadid != null) {
@@ -575,38 +561,10 @@ function MailAccount(domain) {
 		return newestMail;
 	}
 
-	// Opens the newest thread
+    // Opens the newest thread
 	this.openNewestMail = function() {        
 		if(newestMail != null) {
 			that.openThread(newestMail.id);
-		}
-	}
-	
-	// Reads the newest thread
-	this.readNewestMail = function() {        
-		if(newestMail != null) {
-			that.readThread(newestMail.id);
-		}
-	}
-	
-	// Spams the newest thread
-	this.spamNewestMail = function() {        
-		if(newestMail != null) {
-			that.spamThread(newestMail.id);
-		}
-	}
-	
-	// Deletes the newest thread
-	this.deleteNewestMail = function() {        
-		if(newestMail != null) {
-			that.deleteThread(newestMail.id);
-		}
-	}
-	
-	// Archive the newest thread
-	this.archiveNewestMail = function() {        
-		if(newestMail != null) {
-			that.archiveThread(newestMail.id);
 		}
 	}
     
@@ -630,20 +588,6 @@ function MailAccount(domain) {
 		    chrome.tabs.create({url: mailURL + "?view=cm&fs=1&tf=1"});
         } else {
             window.open(mailURL + "?view=cm&fs=1&tf=1",'Compose new message','width=640,height=480');
-        }
-	}
-
-    // Opens the Compose window and embeds the current page title and URL
-	this.sendPage = function(tab) {  		
-		var body = encodeURIComponent(unescape(tab.url));
-		var subject = encodeURIComponent(unescape(tab.title));		
-		subject = subject.replace('%AB', '%2D'); // Special case: escape for %AB
-		var urlToOpen = mailURL + "?view=cm&fs=1&tf=1" +  "&su=" + subject + "&body=" + body;
-		
-        if(openInTab) {
-		    chrome.tabs.create({url: urlToOpen});
-        } else {
-            window.open(urlToOpen,'Compose new message','width=640,height=480');
         }
 	}
 	
@@ -675,7 +619,7 @@ function MailAccount(domain) {
                 break;
             }
         }
-
+        
         if(mail == null)
             return;
     
