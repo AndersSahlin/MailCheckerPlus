@@ -81,25 +81,25 @@ function doAnimate() {
 }
 
 chrome.extension.onRequest.addListener(
-        function(request, sender, sendResponse) {
-            var openInTab = (localStorage["gc_open_tabs"] != null && localStorage["gc_open_tabs"] == "true");
-            var disableMailTo = (localStorage["gc_no_mailto"] != null && localStorage["gc_no_mailto"] == "true");
-            if (request.getNewMail)
-                sendResponse({newMail: accountWithNewestMail.getNewestMail(), mailURL: accountWithNewestMail.getURL(), profilePhotos: profilePhotos});
-            else if (request.command == "getURL" && !disableMailTo)
-                sendResponse({URL: accounts[0].getURL(), openTab: openInTab});
-            else if (request.openNewestMail) {
-                accountWithNewestMail.openNewestMail();
-            } else if (request.readNewestMail) {
-                accountWithNewestMail.readNewestMail();
-            } else if (request.spamNewestMail) {
-                accountWithNewestMail.spamNewestMail();
-            } else if (request.deleteNewestMail) {
-                accountWithNewestMail.deleteNewestMail();
-            } else if (request.archiveNewestMail) {
-                accountWithNewestMail.archiveNewestMail();
-            }
+    function(request, sender, sendResponse) {
+        var openInTab = (localStorage["gc_open_tabs"] != null && localStorage["gc_open_tabs"] == "true");
+        var disableMailTo = (localStorage["gc_no_mailto"] != null && localStorage["gc_no_mailto"] == "true");
+        if (request.getNewMail)
+            sendResponse({newMail: accountWithNewestMail.getNewestMail(), mailURL: accountWithNewestMail.getURL(), profilePhotos: profilePhotos});
+        else if (request.command == "getURL" && !disableMailTo && accounts != null && accounts.length > 0)
+            sendResponse({URL: accounts[0].getURL(), openTab: openInTab});
+        else if (request.openNewestMail) {
+            accountWithNewestMail.openNewestMail();
+        } else if (request.readNewestMail) {
+            accountWithNewestMail.readNewestMail();
+        } else if (request.spamNewestMail) {
+            accountWithNewestMail.spamNewestMail();
+        } else if (request.deleteNewestMail) {
+            accountWithNewestMail.deleteNewestMail();
+        } else if (request.archiveNewestMail) {
+            accountWithNewestMail.archiveNewestMail();
         }
+    }
 );
 
 function init() {
