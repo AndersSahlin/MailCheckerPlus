@@ -41,7 +41,7 @@ a:hover {
     border-top: 1px solid black;
     width: 100%;
     text-align: right;
-    margin-top: 10px;
+    margin-top: 1px;
 }
 
 .actions a {
@@ -197,6 +197,10 @@ function init() {
             var today = new Date();
             var datetime;
             var fullDateTime = issued.toLocaleString();
+            
+            if(mail.title.length > 50) {
+                mail.title = mail.title.substr(0, 50) + "...";
+            }
                             
             if(issued.getFullYear() == today.getFullYear() &&
                 issued.getMonth() == today.getMonth() &&

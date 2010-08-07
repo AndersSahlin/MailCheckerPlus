@@ -2,9 +2,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="src/date.js"></script>
 <script type="text/javascript" src="src/i18n.js"></script>
 <script type="text/javascript" src="src/mailaccount.class.js"></script>
-<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
 <script type="text/javascript">
 var img_notLoggedInSrc = "not_logged_in";
 var img_noNewSrc = "no_new";
@@ -107,9 +108,6 @@ function init() {
     gfx = document.getElementById('gfx');
 
     reloadSettings();
-
-    // Start request loop
-    window.setTimeout(startRequest, 0);
 }
 
 function reloadSettings() {
@@ -132,16 +130,21 @@ function reloadSettings() {
     if (localStorage["gc_preview_setting"] == null ||
         localStorage["gc_preview_setting"] == "") 
     {
-        localStorage["gc_preview_setting"] = "1";
+        localStorage["gc_preview_setting"] = "2";
+    }
+    
+    if (localStorage["gc_show_notification"] == null ||
+        localStorage["gc_show_notification"] == "") 
+    {
+        localStorage["gc_show_notification"] = "true";
     }
 
     if (localStorage["gc_version"] == null ||
-        localStorage["gc_version"] != "1.1.7") {
-        localStorage["gc_version"] = "1.1.7";
+        localStorage["gc_version"] != "1.1.8") {
+        localStorage["gc_version"] = "1.1.8";
         chrome.tabs.create({url : "about.html"});
     }
-
-
+    
     if (accounts != null) {
         $.each(accounts, function(i, account) {
             account.stopScheduler();
@@ -154,28 +157,59 @@ function reloadSettings() {
 
     if (localStorage["gc_check_gmail_off"] == null ||
         localStorage["gc_check_gmail_off"] == "false") {
-        // Create standard Gmail account
-        var acc = new MailAccount();
-        acc.onError = mailError;
-        acc.onUpdate = mailUpdate;
-        accounts.push(acc);
+        // Check if user has enabled multiple sessions
+        $.ajax({
+            url: "https://www.google.com/accounts/AddSession",
+            success: function(data) {
+                // Multiple accounts active
+                var matches = data.match(/<li>([\s\S]*?)<\/li>/ig);
+				//console.log(matches);
+                
+				if(matches != null && matches.length > 0) {
+                    for(var n = 0; n < matches.length; n++) {
+                        var acc = new MailAccount({accountNr: n});
+                        acc.onError = mailError;
+                        acc.onUpdate = mailUpdate;
+                        accounts.push(acc);
+                    }
+				}
+                
+                reloadSettings_complete();
+            },
+            error: function(objRequest) {  
+                // No multiple accounts - just check default Gmail
+                var acc = new MailAccount({});
+                acc.onError = mailError;
+                acc.onUpdate = mailUpdate;
+                accounts.push(acc);
+                reloadSettings_complete();
+            }            
+        });
+    } else {
+        reloadSettings_complete();
     }
-
+}
+    
+function reloadSettings_complete() {
     if (localStorage["gc_accounts"] != null) {
         var savedAccounts = eval(localStorage["gc_accounts"]);
         $.each(savedAccounts, function(i, savedAccount) {
             if (savedAccount.domain == null)
                 return;
 
-            var acc = new MailAccount(savedAccount.domain);
+            var acc = new MailAccount({domain : savedAccount.domain});
             acc.onError = mailError;
             acc.onUpdate = mailUpdate;
             accounts.push(acc);
         });
     }
 
+    console.log(accounts.length);
     stopAnimateLoop();
     gfx.src = "icons/" + iconSet + "/new" + iconFormat;
+    
+    // Start request loop
+    window.setTimeout(startRequest, 0);
 }
 
 // Sets the browser action icon
@@ -191,8 +225,9 @@ function setIcon(iconName) {
 // Request loop starter
 function startRequest() {
     $.each(accounts, function(i, account) {
-        if (account != null)
-            account.startScheduler();
+        if (account != null) {
+            window.setTimeout(account.startScheduler, 1500 * i);
+        }
     });
 }
 
@@ -205,11 +240,12 @@ function mailUpdate(_account) {
     $.each(accounts, function(i, account) {
         if (account != null && account.getUnreadCount() > 0) {
             newUnreadCount += account.getUnreadCount();
-            if (account.getNewestMail() != null) {
-                accountWithNewestMail = account;
-            }
         }
     });
+
+    if (_account.getNewestMail() != null) {
+        accountWithNewestMail = _account;
+    }
 
     if (hideCount == "true" || newUnreadCount < 1)
         chrome.browserAction.setBadgeText({text:""});
@@ -284,27 +320,25 @@ function notify(accountWithNewestMail) {
                 },
                 timeout * 1000);
             } else {		
-                $.ajax(
-		{
-			url: "http://socialgraph.apis.google.com/otherme?q=" + newestMail.authorMail,
-			success: function(data) {
-			    JSON.parse(data.toString(),
-			    function(key, value) {
-				if (value && typeof value === 'string' && key == 'photo') {
-				    profilePhotos[newestMail.authorMail] = value;
-				}
-				return value;
-			    });
-			},
-			complete: function(request, status) {
-			    notification.show();
-			    setTimeout(function() {
-				notification.cancel();
-			    },
-			    timeout * 1000);
-			}
-		}
-                );
+                $.ajax({
+					url: "http://socialgraph.apis.google.com/otherme?q=" + newestMail.authorMail,
+					success: function(data) {
+						JSON.parse(data.toString(),
+						function(key, value) {
+						if (value && typeof value === 'string' && key == 'photo') {
+							profilePhotos[newestMail.authorMail] = value;
+						}
+						return value;
+						});
+					},
+					complete: function(request, status) {
+						notification.show();
+						setTimeout(function() {
+						notification.cancel();
+						},
+						timeout * 1000);
+					}
+				});
             }
 
         } catch(e) {
@@ -313,6 +347,24 @@ function notify(accountWithNewestMail) {
     }
 }
 
+function getLabels(mailURL, callback) {
+	var getURL = mailURL + "h/" + Math.ceil(1000000*Math.random()) + "/?v=prl";	
+    $.ajax({
+        url: getURL,
+        success: function(data) {
+			var labelArray = new Array();
+            var labelPage = $(data);
+            var labels = $("div.prf > table > tbody > tr > td > b > a", labelPage);
+            labels.each(function(i) {
+                labelArray.push($(this)[0].innerText);
+            });
+			
+			if(callback != null) {
+				setTimeout(callback(labelArray), 0);
+			}
+        }
+    });
+}
 </script>
 </head>
 <body onload="init()">

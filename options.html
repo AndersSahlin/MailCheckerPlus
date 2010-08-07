@@ -1,384 +1,23 @@
-<html>
+<!DOCTYPE html>
 <head>
-<title>Google Mail Checker Plus</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
-<script type="text/javascript" src="src/i18n.js"></script>
-<script type="text/javascript" src="src/mailaccount.class.js"></script>
-<style type="text/css">
-/* CSS for Gmail Checker options.html */
+	<title>Options for Google Mail Checker Plus</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-body {
-    font-family: arial, sans-serif;
-    font-size: 80%;
-    background: #6BACCF url("img/options_bg.png") repeat-x top left;
-    color: #fff;
-}
+	<link rel="stylesheet" type="text/css" media="screen" href="general.css" />
 
-body a, body a:visited {
-    color: #fff;
-    text-decoration: none;
-    border-bottom: 1px dotted #fff;
-}
-
-body a:hover {
-    border-bottom: 1px solid #fff;
-}
-
-h1 {
-    margin-top: 0;
-}
-
-#optionsBox {
-    margin: 0 auto;
-    margin-top: 30px;
-    text-align: center;
-}
-
-#optionsBox img {
-    vertical-align: text-bottom;
-}
-
-#optionsBox input {
-    margin-top: 5px;
-}
-
-#save {
-    clear: both;
-    float: right;
-    margin: 0;
-    padding: 0;
-    text-align: right;
-    font-size: 70%;
-    font-weight: bold;
-}
-
-span.field {
-    padding-top:8px;
-    clear:both;
-    float:left;
-    text-align:right;
-    width: 80px;
-}
-
-table {
-	border-width: 5px;
-	border-style: outset;
-	border-color: gray;
-	border-collapse: separate;
-    background-color: #fff;
-    color: #000;
-    font-size: 90%;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-}
-
-table a, table a:visited {
-    color: #000;
-    text-decoration: none;
-    border-bottom: 1px dotted #000;
-}
-
-table a:hover {
-    border-bottom: 1px solid #000;
-}
-
-table td {
-	border-width: 1px;
-	padding: 10px;
-	border-style: dashed;
-	border-color: #ccc;
-	background-color: white;
-}
-
-table td:hover {
-	background-color: #fff8dc;
-}
-
-td.left_column {
-    text-align: right;
-    width: 100px;
-}
-
-form {
-    width: 700px;
-    margin: 0 auto;
-    padding: 0;
-}
-
-#languages {
-    font-size: 80%;
-    height: 20px;
-}
-
-.left{
-    float: left;
-    margin-top: 5px;
-    margin-left: 5px;
-    font-weight: bold;
-}
-
-.top_right {
-    right: 15px;
-    top: 5px;
-    position: absolute;
-}
-</style> 
-<script type="text/javascript">
-function serialize(_obj)
-{
-   // Let Gecko browsers do this the easy way
-   if (typeof _obj.toSource !== 'undefined' && typeof _obj.callee === 'undefined')
-   {
-      return _obj.toSource();
-   }
-   // Other browsers must do it the hard way
-   switch (typeof _obj)
-   {
-      // numbers, booleans, and functions are trivial:
-      // just return the object itself since its default .toString()
-      // gives us exactly what we want
-      case 'number':
-      case 'boolean':
-      case 'function':
-         return _obj;
-         break;
-      // for JSON format, strings need to be wrapped in quotes
-      case 'string':
-         return '\'' + _obj + '\'';
-         break;
-      case 'object':
-         var str;
-         if (_obj.constructor === Array || typeof _obj.callee !== 'undefined')
-         {
-            str = '[';
-            var i, len = _obj.length;
-            for (i = 0; i < len-1; i++) { str += serialize(_obj[i]) + ','; }
-            str += serialize(_obj[i]) + ']';
-         }
-         else
-         {
-            str = '{';
-            var key;
-            for (key in _obj) { str += key + ':' + serialize(_obj[key]) + ','; }
-            str = str.replace(/\,$/, '') + '}';
-         }
-         return str;
-         break;
-      default:
-         return 'UNKNOWN';
-         break;
-   }
-}
-
-function sortlist(lb) { 
-    var arrTexts = new Array(); 
-    for(i=0; i<lb.length; i++) { 
-        arrTexts[i] = lb.options[i].text+':'+lb.options[i].value+':'+lb.options[i].selected; 
-    } 
-    arrTexts.sort(charOrdA); 
-    for(i=0; i<lb.length; i++) { 
-        var el = arrTexts[i].split(':'); 
-        lb.options[i].text = el[0]; 
-        lb.options[i].value = el[1]; 
-        lb.options[i].selected = (el[2] == "true") ? true : false;
-    } 
-} 
-
-function charOrdA(a, b) { 
-    a = a.toLowerCase(); 
-    b = b.toLowerCase(); 
-    if (a>b) return 1; 
-    if (a <b) return -1; 
-    return 0; 
-}
-
-// Saves options to localStorage.
-var boolIdArray = new Array( "hide_count", "check_all", "force_ssl", "check_gmail_off", "open_tabs", "archive_read", "no_mailto", "sound_off", "animate_off", "show_notification" );
-var accounts;
-
-function save_options() {
-    for(var i in boolIdArray) {
-        var id = boolIdArray[i];
-        var element = document.getElementById(id);
-        var value = element.checked;
-        localStorage["gc_" + id] = value;
-        
-        console.log("saved: " + id + " as " + value);
-    }
-    
-    var iconRadios = document.forms[0].icon_set;
-    for(var i in iconRadios) {
-        if(iconRadios[i].checked) {
-            localStorage["gc_icon_set"] = iconRadios[i].value;
-            break;
-        }
-    }
-    
-    var previewRadios = document.forms[0].preview_setting;
-    for(var i in previewRadios) {
-        if(previewRadios[i].checked) {
-            localStorage["gc_preview_setting"] = previewRadios[i].value;
-            break;
-        }
-    }
-    
-    delete localStorage["gc_poll"]; 
-    delete localStorage["gc_accounts"];   
-    
-    localStorage["gc_poll"] = parseInt(document.getElementById("poll").value);
-    localStorage["gc_language"] = document.getElementById("languages").value;
-    
-    if(accounts.length > 0) {
-        localStorage["gc_accounts"] = serialize(accounts);
-    }
-    
-    var backgroundPage = chrome.extension.getBackgroundPage();
-    backgroundPage.init();
-}
-
-// Restores input states to saved values from localStorage.
-function restore_options() {    
-    for(var i in boolIdArray) {
-        var id = boolIdArray[i];
-        var value = localStorage["gc_" + id];
-
-        if(value == "true") {
-            var element = document.getElementById(id);
-            element.checked = true;
-        }
-        
-        console.log("restored: " + id + " as " + value);
-    }
-    
-    spawnIconRow("set1", "Default");
-    spawnIconRow("set2", "Default Grey");
-    spawnIconRow("set3", "Default White");
-    spawnIconRow("set8", "Gmail Glossy");
-    spawnIconRow("set9", "Gmail Mini");
-    spawnIconRow("set10", "Gmail Monochrome");
-    spawnIconRow("set4", "Alternative 1");
-    spawnIconRow("set5", "Alternative 2");
-    spawnIconRow("set6", "Chromified Classic");
-    spawnIconRow("set7", "Chromified Grey");
-    
-    var iconRadios = document.forms[0].icon_set;
-    var iconFound = false;
-    for(var i in iconRadios) {
-        if(iconRadios[i].value == localStorage["gc_icon_set"]) {
-            iconRadios[i].checked = true;
-            iconFound = true;
-            break;
-        }
-    }
-    if(!iconFound) {
-        iconRadios[0].checked = true;
-    }
-    
-    var previewRadios = document.forms[0].preview_setting;
-    for(var i in previewRadios) {
-        if(previewRadios[i].value == localStorage["gc_preview_setting"]) {
-            previewRadios[i].checked = true;
-            break;
-        }
-    }
-       
-    if(localStorage["gc_poll"] != null) {
-        document.getElementById("poll_" + localStorage["gc_poll"]).selected = true;
-    }
-    
-    if(localStorage["gc_accounts"] != null) {
-        accounts = eval(localStorage["gc_accounts"]);
-    } else {
-        accounts = new Array();
-    }
-    
-    var langSel = document.getElementById("languages");
-    for(var i in languages) {
-        langSel.add(new Option(languages[i].what, languages[i].id), languages[i].id);
-    }
-    langSel.value = localStorage["gc_language"];
-    
-    sortlist(langSel);
-    
-    var acc_sel = document.getElementById("accounts");
-    for(var i in accounts) {
-        if(accounts[i] == null || accounts[i].domain == null)
-            break;
-        acc_sel.add(new Option(accounts[i].domain), null);
-    }
-    acc_sel.size = accounts.length + 1;
-}
-
-function spawnIconRow(value, description) {
-    var selectionElement = document.getElementById("icon_selection");
-    selectionElement.innerHTML += '<span><input type="radio" name="icon_set" value="' + value + '" id="icon_set' + value +'" /><label for="icon_set' + value +'"><img src="icons/' + value + '/not_logged_in.png" /><img src="icons/' + value + '/no_new.png" /><img src="icons/' + value + '/new.png" /> <small>' + description + '</small></span></label><br />';
-}
-
-function add_account() {
-    var newacc_domain = prompt("Enter the domain name for your GAFYD account", "yourdomain.com");
-    
-    if(newacc_domain != null && newacc_domain != "" && newacc_domain != "yourdomain.com") {
-        document.getElementById("check_gmail_off").checked = "true";
-        accounts.push({"domain":newacc_domain}); 
-        
-        var acc_sel = document.getElementById("accounts");   
-        acc_sel.add(new Option(newacc_domain), null);
-        acc_sel.size = accounts.length + 1;        
-    }
-}
-
-function remove_account() {
-    var acc_sel = document.getElementById("accounts");
-    var acc_todel;
-    
-    if(acc_sel.selectedIndex > -1 && acc_sel.options[acc_sel.selectedIndex] != null) {
-        acc_todel = acc_sel.options[acc_sel.selectedIndex];
-        
-        for(var i in accounts) {
-            if(accounts[i].domain == acc_todel.text) {
-                console.log("removing account: " + accounts[i].domain);
-                accounts.splice(i, 1);                
-                break;
-            }
-        }
-        acc_sel.remove(acc_sel.selectedIndex);
-        acc_sel.size = accounts.length + 1;
-    }
-}
-
-function requestUserPermission() {
-    try {
-        var checkboxUserPermission = document.getElementById('show_notification');
-        if(checkboxUserPermission.checked) {
-            if (checkUserPermission())
-                return;
-
-            if (typeof webkitNotifications != "undefined") {
-                webkitNotifications.requestPermission(function(){
-                    var permissionGranted = checkUserPermission();
-                    checkboxUserPermission.checked = permissionGranted;
-                });
-            }
-        }
-    } catch(e) { checkboxUserPermission.checked = false; }
-}
-
-function checkUserPermission() {
-    try {
-	    return (webkitNotifications.checkPermission() == 0);
-    } catch(e) { return false; }
-}
-</script>
+	<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="src/i18n.js"></script>
+	<script type="text/javascript" src="src/mailaccount.class.js"></script>
+	<script type="text/javascript" src="src/options.js"></script>
 </head>
 <body onload="restore_options()">
 
-<div id="optionsBox">
-    <h1>Google Mail Checker Plus</h1>
+<div id="main">
+    <h1 class="title">Google Mail Checker Plus</h1>
     <form>
     <table>
         <tr>
-            <td colspan="3" style="background-color: #ffffff">                
+            <td style="background-color: #ffffff">                
                 <span class="top_right"><img src="img/icon_48.png"></span>
                 <h1>Options</h1>
                 <p>Please take a moment and configure the extension to fit your needs. If you have an account at a Google Apps domain, fill in the correct URL in the Account-section below.</p>
@@ -386,63 +25,82 @@ function checkUserPermission() {
             </td>
         </tr>
         <tr>
-            <td width="40%" valign="top">
-                <h3>General</h3>
-                <input type="checkbox" id="show_notification" onchange="requestUserPermission()" /> <label for="show_notification"><strong>Show desktop notifications</strong></label>  <a title="Enable this setting to show a notification when new mail arrives" style="cursor: help">?</a>
-                <br /><br /><input type="checkbox" id="archive_read" /> <label for="archive_read">Archive marks as read</label>  <a title="Enable this setting to mark a mail as read when you archive it" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="force_ssl" /> <label for="force_ssl">Always use SSL</label> <a title="Enable this setting to always use SSL when accessing Google Mail" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="open_tabs" /> <label for="open_tabs">Open compose in tab</label>  <a title="Enable this setting to open mail composing in a new tab instead of a new window (also applies to mailto-links)" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="no_mailto" /> <label for="no_mailto">Ignore mailto-links</label> <a title="Enable this setting to ignore parsing of mailto-links and open them in your regular mail client instead" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="sound_off" /> <label for="sound_off">Turn <strong>off</strong> notification sound</label> <a title="Disables notification sound when new mail arrives" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="animate_off" /> <label for="animate_off">Turn <strong>off</strong> icon animation</label> <a title="Disables animation of the icon when there is new mail" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="check_all" /> <label for="check_all">Check all folders for unread mail</label> <a title="Enable this setting to check all folders, not only your inbox, for unread mail" style="cursor: help">?</a>
-                <br /><input type="checkbox" id="hide_count" /> <label for="hide_count">Hide unread mail count</label> <a title="Enable this setting to hide the unread count number from the browser action icon" style="cursor: help">?</a>
-                <br /><br />
-                Polling interval:  
-                <select id="poll">
-                    <option id="poll_15000" value="15000">15 seconds</option>
-                    <option id="poll_30000" value="30000">30 seconds</option>
-                    <option id="poll_60000" value="60000">1 minute</option>
-                    <option id="poll_300000" value="300000">5 minutes</option>
-                    <option id="poll_900000" value="900000">15 minutes</option>
-                    <option id="poll_1800000" value="1800000">30 minutes</option>
-                    <option id="poll_3600000" value="3600000">1 hour</option>
-                    <option id="poll_7200000" value="7200000">2 hours</option>
-                    <option id="poll_18000000" value="18000000">5 hours</option>
-                </select>
-                <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>
-            </td>
-            <td valign="top">
-                <h3>Preview window</h3>
-                <input type="radio" name="preview_setting" id="preview_setting0" value="0" /> <label for="preview_setting0">Always off</label> <a title="Disables the preview popup window (not recommended) and opens the first account with unread mail" style="cursor: help">?</a>
-                <br />
-                <input type="radio" name="preview_setting" id="preview_setting1" value="1" /> <label for="preview_setting1">Automatic</label> <a title="Only shows the preview window when there's unread mail" style="cursor: help">?</a>
-                <br />
-                <input type="radio" name="preview_setting" id="preview_setting2" value="2" /> <label for="preview_setting2">Always on</label> <a title="Always shows the preview window" style="cursor: help">?</a>
-                <h3>Language</h3>
-                <select id="languages">
-                </select>
-                <a title="Select the language of the extension" style="cursor: help">?</a>
-                <p><a href="http://chrome.desc.se/forum/viewtopic.php?id=28" title="Help translate the extension" target="_blank">Missing your language?</a></p>
-
-            </td>
-            <td width="33%" valign="top">
-                <h3>Icon selection</h3>
-                <div id="icon_selection"></div>
-            </td>
-        </tr>    
+		<td  style="padding: 0">
+			<ul class="menu">
+				<li><a href="javascript:showContent(0)" title="View general settings">General</a></li>
+				<li><a href="javascript:showContent(1)" title="View account settings">Accounts</a></li>
+				<li><a href="javascript:showContent(2)" title="View visual settings">Visual</a></li>
+				<li><a href="javascript:showContent(3)" title="View extension icon settings">Icon</a></li>
+			</ul>
+			<div id="content_0" class="content invisible">
+				<h2>General settings</h2>
+				<input type="checkbox" id="show_notification" onchange="requestUserPermission()" /> <label for="show_notification"><strong>Show desktop notifications</strong></label>  <a title="Enable this setting to show a notification when new mail arrives" style="cursor: help">?</a>
+				<br /><br /><input type="checkbox" id="archive_read" /> <label for="archive_read">Archive marks as read</label>  <a title="Enable this setting to mark a mail as read when you archive it" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="force_ssl" /> <label for="force_ssl">Always use SSL</label> <a title="Enable this setting to always use SSL when accessing Google Mail" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="open_tabs" /> <label for="open_tabs">Open compose in tab</label>  <a title="Enable this setting to open mail composing in a new tab instead of a new window (also applies to mailto-links)" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="no_mailto" /> <label for="no_mailto">Ignore mailto-links</label> <a title="Enable this setting to ignore parsing of mailto-links and open them in your regular mail client instead" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="sound_off" /> <label for="sound_off">Turn <strong>off</strong> notification sound</label> <a title="Disables notification sound when new mail arrives" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="animate_off" /> <label for="animate_off">Turn <strong>off</strong> icon animation</label> <a title="Disables animation of the icon when there is new mail" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="hide_count" /> <label for="hide_count">Hide unread mail count</label> <a title="Enable this setting to hide the unread count number from the browser action icon" style="cursor: help">?</a>
+			</div>
+			<div id="content_1" class="content invisible">
+				<h2>Account settings</h2>
+				<p>
+					<select id="accounts"></select><br />
+					<a href="javascript:add_account()" title="Add a new account">Add</a> | <a href="javascript:remove_account()" title="Remove selected account">Remove</a>
+				</p>	
+				<input type="checkbox" id="check_gmail_off" /> <label for="check_gmail_off">Turn off regular Gmail checking</label> <a title="Enable this setting if you don't have an account at gmail.com" style="cursor: help">?</a>
+				<br /><input type="checkbox" id="check_all" /> <label for="check_all">Check all folders for unread mail</label> <a title="Enable this setting to check all folders, not only your inbox, for unread mail" style="cursor: help">?</a>
+				<!--<br /><input type="checkbox" id="is_default" /> <label for="is_default">This is my default account</label> <a title="Your default account will be used when clicking on mailto-links" style="cursor: help">?</a>!-->
+				<!--<p>
+					<span><strong>Label whitelist</strong> <a title="Add all labels here that you want to check for new mail" style="cursor: help">?</a></span>
+					<select id="labels" multiple style="width: 100%"></select>
+					<span style="float: right; clear: both;"><a href="javascript:add_label()" title="Add new label to whitelist">Add</a> | <a href="javascript:remove_label()" title="Remove selected label from whitelist">Remove</a></span>
+				</p>!-->	
+				<br /><br />
+				Polling interval:  
+				<select id="poll">
+				    <option id="poll_15000" value="15000">15 seconds</option>
+				    <option id="poll_30000" value="30000">30 seconds</option>
+				    <option id="poll_60000" value="60000">1 minute</option>
+				    <option id="poll_300000" value="300000">5 minutes</option>
+				    <option id="poll_900000" value="900000">15 minutes</option>
+				    <option id="poll_1800000" value="1800000">30 minutes</option>
+				    <option id="poll_3600000" value="3600000">1 hour</option>
+				    <option id="poll_7200000" value="7200000">2 hours</option>
+				    <option id="poll_18000000" value="18000000">5 hours</option>
+				</select>
+                <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>		
+			</div>
+			<div id="content_2" class="content invisible">
+				<h2>Visual settings</h2>
+				<h3>Preview window</h3>
+				<input type="radio" name="preview_setting" id="preview_setting0" value="0" /> <label for="preview_setting0">Always off</label> <a title="Disables the preview popup window (not recommended) and opens the first account with unread mail" style="cursor: help">?</a>
+				<br />
+				<input type="radio" name="preview_setting" id="preview_setting1" value="1" /> <label for="preview_setting1">Automatic</label> <a title="Only shows the preview window when there's unread mail" style="cursor: help">?</a>
+				<br />
+				<input type="radio" name="preview_setting" id="preview_setting2" value="2" /> <label for="preview_setting2">Always on</label> <a title="Always shows the preview window" style="cursor: help">?</a>
+				<h3>Language</h3>
+				<select id="languages">
+				</select>
+				<a title="Select the language of the extension" style="cursor: help">?</a>
+				<p><a href="http://chrome.desc.se/forum/viewtopic.php?id=28" title="Help translate the extension" target="_blank">Missing your language?</a></p>
+			</div>
+			<div id="content_3" class="content invisible">
+				<h2>Icon selection settings</h2>
+				<div id="icon_selection"></div>
+			</div>
+		</td>
+        </tr>
         <tr>
-            <td colspan="3" style="background-color: #e2ffe3">
-            <h3>Google Apps For Your Domain - Accounts</h3>
-            <p><input type="checkbox" id="check_gmail_off" /> <label for="check_gmail_off">Turn off regular Gmail checking</label> <a title="Enable this setting if you don't have an account at gmail.com" style="cursor: help">?</a></p>
-            <p>
-                <select id="accounts" multiple style="width: 100%"></select>
-                <span style="float: right; clear: both;"><a href="javascript:add_account()" title="Add new GAFYD account">Add</a> | <a href="javascript:remove_account()" title="Remove selected account">Remove</a></span>
-            </p>
+            <td>
+                <h1 style="margin-bottom: 0"><img src="img/information_big.png" alt="" />&nbsp;&nbsp;<a href="about.html" title="Go to the about page">About &raquo;</a></h1>
             </td>
         </tr>
     </table>
-    <span class="left"><a href="about.html" title="Open about page">About</a></span>
+    <span class="left">
+	<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=10581461" title="Donate via PayPal" target="_blank" style="border: 0"><img src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" alt="PayPal - The safer, easier way to pay online!"></a>
+   </span>
     <button onclick="save_options()" style="width: 130px;height: 30px; float: right; margin-top: 4px;">Save &amp; Reload</button>
     </form>
 </div>
