@@ -195,10 +195,8 @@ function init() {
     var today = new Date();
     var datetime;
     var fullDateTime = issued.toLocaleString();
-    
-    if(mail.title.length > 50) {
-        mail.title = mail.title.substr(0, 50) + "...";
-    }
+    var fullTitle = mail.title;    
+    var shortTitle = (fullTitle.length > 50) fullTitle.substr(0, 50) + "..." : fullTitle;
                     
     if(issued.getFullYear() == today.getFullYear() &&
         issued.getMonth() == today.getMonth() &&
@@ -231,13 +229,13 @@ function init() {
             "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
         "</div>" +
         "<div class=\"mailContainer\">" +
-        "<img id=\"icon\" src=\"" + mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail) + "\" />" +
+        "<img id=\"icon\" src=\"" + mailURL.replace('http:', 'https:') + "photos/" + encodeURIComponent(mail.authorMail) + "\" />" +
         //"<img id=\"icon\" src=\"img/icon_48.png\" />" +
             "<div class=\"mailBody\">";
                 if(mail.summary != null && mail.summary.length > 0) {
                     mailElement +=
                     "<div class=\"title\">" + 
-                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
+                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + shortTitle + "</a></span>" +
                     "</div>" +
                     "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
                 } else {
