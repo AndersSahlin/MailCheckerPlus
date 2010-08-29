@@ -84,8 +84,14 @@ chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
         var openInTab = (localStorage["gc_open_tabs"] != null && localStorage["gc_open_tabs"] == "true");
         var disableMailTo = (localStorage["gc_no_mailto"] != null && localStorage["gc_no_mailto"] == "true");
-        if (request.getNewMail)
-            sendResponse({newMail: accountWithNewestMail.getNewestMail(), mailURL: accountWithNewestMail.getURL(), profilePhotos: profilePhotos});
+        if (request.getNewMail) {
+            sendResponse({
+                mailAccount: accountWithNewestMail,
+                newMail: accountWithNewestMail.getNewestMail(), 
+                mailURL: accountWithNewestMail.getURL(), 
+                profilePhotos: profilePhotos
+            });
+        }
         else if (request.command == "getURL" && !disableMailTo && accounts != null && accounts.length > 0)
             sendResponse({URL: accounts[0].getURL(), openTab: openInTab});
         else if (request.openNewestMail) {
@@ -204,7 +210,7 @@ function reloadSettings_complete() {
         });
     }
 
-    console.log(accounts.length);
+    //console.log(accounts.length);
     stopAnimateLoop();
     gfx.src = "icons/" + iconSet + "/new" + iconFormat;
     
@@ -308,18 +314,18 @@ function playSound() {
 function notify(accountWithNewestMail) {
     if (localStorage["gc_show_notification"] != null && localStorage["gc_show_notification"] == "true") {
         try {
-            var newestMail = accountWithNewestMail.getNewestMail();
             var notification = webkitNotifications.createHTMLNotification(chrome.extension.getURL("notify.html"));
             var timeout = 15;
+            
+            notification.show();
+            setTimeout(function() {
+                notification.cancel();
+            },
+            timeout * 1000);
 
-
-            if (profilePhotos[newestMail] != null) {
-                notification.show();
-                setTimeout(function() {
-                    notification.cancel();
-                },
-                timeout * 1000);
-            } else {		
+            //if (profilePhotos[newestMail] != null) {
+                
+            /*} else {		
                 $.ajax({
 					url: "http://socialgraph.apis.google.com/otherme?q=" + newestMail.authorMail,
 					success: function(data) {
@@ -339,7 +345,11 @@ function notify(accountWithNewestMail) {
 						timeout * 1000);
 					}
 				});
-            }
+                notification.show();
+                setTimeout(function() {
+                    notification.cancel();
+                }, timeout * 1000);
+            }*/
 
         } catch(e) {
             console.error(e);

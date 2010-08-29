@@ -179,107 +179,114 @@ img.sup {
 <script type="text/javascript" src="src/i18n.js"></script>
 <script type="text/javascript" src="src/date.js"></script>
 <script type="text/javascript" src="src/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="src/mailaccount.class.js"></script>
 <script type="text/javascript">
-var newMail;
+var mailAccount;
 
 function init() {
-
     var backgroundPage = chrome.extension.getBackgroundPage();
-    chrome.extension.sendRequest({getNewMail: true},
-      function(response) {
-        if (response != null) {
-            newMail = response.newMail;
-            var mail = newMail;
-            var mailURL = response.mailURL;
-            var profilePhotos = response.profilePhotos;
+    
+    mailAccount = backgroundPage.accountWithNewestMail;
+    var mail = backgroundPage.accountWithNewestMail.getNewestMail();
+    var mailURL = backgroundPage.accountWithNewestMail.getURL();
+    var profilePhotos = backgroundPage.profilePhotos;
 
-            var issued = (new Date()).setISO8601(newMail.issued);
-            var today = new Date();
-            var datetime;
-            var fullDateTime = issued.toLocaleString();
-            
-            if(mail.title.length > 50) {
-                mail.title = mail.title.substr(0, 50) + "...";
-            }
-                            
-            if(issued.getFullYear() == today.getFullYear() &&
-                issued.getMonth() == today.getMonth() &&
-                issued.getDate() == today.getDate()) {
-                // Mail was issued today, display time
-                var hour = issued.getHours();
-                var min = issued.getMinutes();
-                datetime = ((hour < 10) ? "0" : "") + hour + ":" + ((min < 10) ? "0" : "") + min;
-            } else {
-                // Old mail, only display date
-                //datetime = dateFormat(issued, "d mmm");
-                datetime = issued.getDate() + ' ' + i18n.selected_lang.months[issued.getMonth()];
-            }
+    var issued = (new Date()).setISO8601(mail.issued);
+    var today = new Date();
+    var datetime;
+    var fullDateTime = issued.toLocaleString();
+    
+    if(mail.title.length > 50) {
+        mail.title = mail.title.substr(0, 50) + "...";
+    }
+                    
+    if(issued.getFullYear() == today.getFullYear() &&
+        issued.getMonth() == today.getMonth() &&
+        issued.getDate() == today.getDate()) {
+        // Mail was issued today, display time
+        var hour = issued.getHours();
+        var min = issued.getMinutes();
+        datetime = ((hour < 10) ? "0" : "") + hour + ":" + ((min < 10) ? "0" : "") + min;
+    } else {
+        // Old mail, only display date
+        //datetime = dateFormat(issued, "d mmm");
+        datetime = issued.getDate() + ' ' + i18n.selected_lang.months[issued.getMonth()];
+    }
+    
+    /*$.ajax({
+        url: mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail),
+        success: function(data) {
+            console.log(data);
+        },
+        complete: function(request, status) {
+            console.log(request);
+            console.log(status);
+        }
+    });*/
 
-            var mailElement = 
-            "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
-                "<div class=\"mailHeader\">" +                    
-                    "<span class=\"authorName\">&bull;&nbsp;<a class=\"nohover\">" + mail.authorName + "</a></span>" +  
-                    "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
-                "</div>" +
-                "<div class=\"mailContainer\">" +
-                //"<img id=\"icon\" src=\"" + mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1" +"\" />" +
-                "<img id=\"icon\" src=\"img/icon_48.png\" />" +
-                    "<div class=\"mailBody\">";
-                        if(mail.summary != null && mail.summary.length > 0) {
-                            mailElement +=
-                            "<div class=\"title\">" + 
-                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
-                            "</div>" +
-                            "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
-                        } else {
-                            mailElement +=
-                            "<div class=\"title\">" + 
-                                "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
-                            "</div>";
-                        }
+    var mailElement = 
+    "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
+        "<div class=\"mailHeader\">" +                    
+            "<span class=\"authorName\">&bull;&nbsp;<a class=\"nohover\">" + mail.authorName + "</a></span>" +  
+            "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
+        "</div>" +
+        "<div class=\"mailContainer\">" +
+        "<img id=\"icon\" src=\"" + mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail) + "\" />" +
+        //"<img id=\"icon\" src=\"img/icon_48.png\" />" +
+            "<div class=\"mailBody\">";
+                if(mail.summary != null && mail.summary.length > 0) {
                     mailElement +=
+                    "<div class=\"title\">" + 
+                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
                     "</div>" +
-                "</div>" +		
-		"<span class=\"actions\">" + 
+                    "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
+                } else {
+                    mailElement +=
+                    "<div class=\"title\">" + 
+                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
+                    "</div>";
+                }
+            mailElement +=
+            "</div>" +
+        "</div>" +		
+        "<span class=\"actions\">" + 
                         "<span class=\"read\"><a id=\"" + mail.id + "_read-link\" href=\"javascript:readMail();\" title=\"" + i18n.get('readLinkTitle') + "\">" + i18n.get('readLink') + "</a></span>" +
                         "<span class=\"delete\"><a href=\"javascript:deleteMail();\" title=\"" + i18n.get('deleteLinkTitle') + "\">" + i18n.get('deleteLink') + "</a></span>" + 
                         "<span class=\"spam\"><a href=\"javascript:spamMail();\" title=\"" + i18n.get('spamLinkTitle') + "\">" + i18n.get('spamLink') + "</a></span>" +
                         "<span class=\"archive\"><a href=\"javascript:archiveMail();\" title=\"" + i18n.get('archiveLinkTitle') + "\">" + i18n.get('archiveLink') + "</a></span>" +
-		"</span>" +
-            "</div>";
-            document.getElementById('mailBox').innerHTML += mailElement;
-            //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
-            if(profilePhotos[mail.authorMail] != null) {
-                $('#icon').get(0).src = profilePhotos[mail.authorMail];
-            }
-        }
-    });    
+        "</span>" +
+    "</div>";
+    document.getElementById('mailBox').innerHTML += mailElement;
+    //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
+    /*if(profilePhotos[mail.authorMail] != null) {
+        $('#icon').get(0).src = profilePhotos[mail.authorMail];
+    }*/  
 }
 
 // Opens a mail and closes this window
 function openMail() {
     window.close();
-    chrome.extension.sendRequest({openNewestMail: true});
+    mailAccount.openNewestMail();
 }
 // Marks mail as read and closes this window
 function readMail() {
     window.close();
-    chrome.extension.sendRequest({readNewestMail: true});
+    mailAccount.readNewestMail();
 }
 // Deletes mail and closes this window
 function deleteMail() {
     window.close();
-    chrome.extension.sendRequest({deleteNewestMail: true});
+    mailAccount.deleteNewestMail();
 }
 // Marks mail as spam and closes this window
 function spamMail() {
     window.close();
-    chrome.extension.sendRequest({spamNewestMail: true});
+    mailAccount.spamNewestMail();
 }
 // Archives mail and closes this window
 function archiveMail() {
     window.close();
-    chrome.extension.sendRequest({archiveNewestMail: true});
+    mailAccount.archiveNewestMail();
 }
 </script>
 </head>

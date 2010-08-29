@@ -90,18 +90,28 @@ function MailAccount(settingsObj) {
 							var summary = entry.getElementsByTagName("summary")[0].textContent;
 							var link = entry.getElementsByTagName("link")[0].attributes.getNamedItem("href").value;
 							var issued = entry.getElementsByTagName("issued")[0].textContent;
-							var authorName = entry.getElementsByTagName("name")[0].textContent;
-							var authorMail = entry.getElementsByTagName("email")[0].textContent;
+							
+							var authorName = "(unknown sender)";                            
+                            try {
+                                var _authorName = entry.getElementsByTagName("name")[0].textContent;
+								if(_authorName != null && _authorName.length > 0)
+									authorName = _authorName;
+                            } catch(e) { }
+                            
+							var authorMail = "(unknown sender)";
+                            try {
+                                var _authorMail = entry.getElementsByTagName("email")[0].textContent;
+								if(_authorMail != null && _authorMail.length > 0)
+									authorMail = _authorMail;
+                            } catch(e) { }
+							
+                                
+							
 							var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
 							
 							if(title == null || title.length < 1)
 								title = "(No subject)";
                                 
-                            if(authorName == null || authorName.length < 1)
-								authorName = "(unknown sender)";
-                                
-                            if(authorMail == null || authorMail.length < 1)
-								authorMail = "(unknown sender)";
 							 
 							/*if(summary != null && (title.length + summary.length) > 100) {
 								summary += "<span class=\"lowerright\">[<a href=\"javascript:getThread('" + id + "');\" title=\"View entire message\">more</a>]</span>";
@@ -540,6 +550,34 @@ function MailAccount(settingsObj) {
 			that.openThread(newestMail.id);
 		}
 	}
+	
+	// Reads the newest thread
+	this.readNewestMail = function() {        
+		if(newestMail != null) {
+			that.readThread(newestMail.id);
+		}
+	}
+	
+	// Spams the newest thread
+	this.spamNewestMail = function() {        
+		if(newestMail != null) {
+			that.spamThread(newestMail.id);
+		}
+	}
+	
+	// Deletes the newest thread
+	this.deleteNewestMail = function() {        
+		if(newestMail != null) {
+			that.deleteThread(newestMail.id);
+		}
+	}
+	
+	// Archive the newest thread
+	this.archiveNewestMail = function() {        
+		if(newestMail != null) {
+			that.archiveThread(newestMail.id);
+		}
+	}
     
     // Returns the mail URL
 	this.getURL = function() {
@@ -561,6 +599,20 @@ function MailAccount(settingsObj) {
 		    chrome.tabs.create({url: mailURL + "?view=cm&fs=1&tf=1"});
         } else {
             window.open(mailURL + "?view=cm&fs=1&tf=1",'Compose new message','width=640,height=480');
+        }
+	}
+	
+	// Opens the Compose window and embeds the current page title and URL
+	this.sendPage = function(tab) {  		
+		var body = encodeURIComponent(unescape(tab.url));
+		var subject = encodeURIComponent(unescape(tab.title));		
+		subject = subject.replace('%AB', '%2D'); // Special case: escape for %AB
+		var urlToOpen = mailURL + "?view=cm&fs=1&tf=1" +  "&su=" + subject + "&body=" + body;
+		
+        if(openInTab) {
+		    chrome.tabs.create({url: urlToOpen});
+        } else {
+            window.open(urlToOpen,'Compose new message','width=640,height=480');
         }
 	}
 	
