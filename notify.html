@@ -196,7 +196,7 @@ function init() {
     var datetime;
     var fullDateTime = issued.toLocaleString();
     var fullTitle = mail.title;    
-    var shortTitle = (fullTitle.length > 50) fullTitle.substr(0, 50) + "..." : fullTitle;
+    var shortTitle = (fullTitle.length > 50) ? fullTitle.substr(0, 50) + "..." : fullTitle;
                     
     if(issued.getFullYear() == today.getFullYear() &&
         issued.getMonth() == today.getMonth() &&
