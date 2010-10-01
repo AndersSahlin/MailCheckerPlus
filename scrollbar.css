@@ -1,35 +1,28 @@
-#content {  
-    overflow:scroll;
-    width:500px;  
-    max-height:400px;  
-} 
-
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
     background-color: transparent;
+    padding-left: 2px;
 }
 
 ::-webkit-scrollbar-button:start:decrement,
 ::-webkit-scrollbar-button:end:increment {
-    height: 6px;
+    height: 0px;
     display: block;
     background-color: transparent;
 }
 
 ::-webkit-scrollbar-track-piece {
     background-color: transparent;
-    -webkit-border-radius: 6px;
+    -webkit-border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:vertical {
     height: 50px;
     background-color: #6d93b8;
-    -webkit-border-radius: 6px;
+    -webkit-border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
-    width: 50px;
-    background-color: #6d93b8;
-    -webkit-border-radius: 3px;
+    visibility: hidden;
 }

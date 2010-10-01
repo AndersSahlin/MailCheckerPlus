@@ -1,401 +1,104 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<link rel="stylesheet" type="text/css" media="screen" href="scrollbar.css" />
-<link rel="stylesheet" type="text/css" media="screen" href="popup.css" /> 
+    <link rel="stylesheet" type="text/css" media="screen" href="scrollbar.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="popup.css" />
 
-<script type="text/javascript" src="src/i18n.js"></script>
-<script type="text/javascript" src="src/date.js"></script>
-<script type="text/javascript" src="src/mailaccount.class.js"></script>
+    <script type="text/javascript" src="src/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="src/date.js"></script>
+    <script type="text/javascript" src="src/template-engine.js"></script>
+    <script type="text/javascript" src="src/i18n.js"></script>
+    <script type="text/javascript" src="src/mailaccount.class.js"></script>
+    <script type="text/javascript" src="src/popup.js"></script>
 
-<script type="text/javascript" src="src/jquery-1.4.2.js"></script>
-
-<script type="text/javascript">
-var backgroundPage = chrome.extension.getBackgroundPage();
-var mailAccounts = backgroundPage.accounts;
-//var mailArray = mailAccount.getMail();
-var mailCount = 0;
-var mailCache = new Array();
-var allMail;
-var scrollbar;
-
-function hideElement(id) {
-    var element = document.getElementById(id);
-    if(element != null) {
-        element.style.display = 'none';
-    } 
-}
-
-function showElement(id) {
-    var element = document.getElementById(id);
-    if(element != null) {
-        element.style.display = 'inline';
-    } 
-}
-
-// Opens a mail and closes this window
-function openMail(accountId, mailid) {
-    window.close();
-    mailAccounts[accountId].openThread(mailid);
-}
-
-function openInbox(accountId) {
-    window.close();
-    if(accountId == null) {
-        // Open first inbox with unread items
-        $.each(mailAccounts, function(i, account) {
-            if(account.getUnreadCount() > 0) {
-                    account.openInbox();
-                    return false;
-                }
-        });
-        accountId = 0;
-    }
-    mailAccounts[accountId].openInbox();   
-}
-
-function openUnread(accountId) {
-    window.close();
-    mailAccounts[accountId].openUnread();   
-}
-
-function composeNew(accountId) {
-    window.close();
-    mailAccounts[accountId].composeNew();   
-}
-
-function sendPage(accountId) {	
-	chrome.tabs.getSelected(null, function(tab) {
-		window.close();
-		mailAccounts[accountId].sendPage(tab);   		
-	});
-}
-
-function readThread(accountId, mailid) {
-    hideMail(accountId, mailid);
-    mailAccounts[accountId].readThread(mailid);
-}
-
-function unreadThread(accountId, mailid) {
-    mailAccounts[accountId].unreadThread(mailid);
-    var mailElement = document.getElementById(mailid);
-    if(mailElement != null) {
-        var mailHeaderReadLink = document.getElementById(mailid + "_read-link");
-        if(mailHeaderReadLink != null) {
-            mailHeaderReadLink.href = "javascript:readThread('" + accountId + "', '" + mailid + "');";
-            mailHeaderReadLink.innerHTML = i18n.get('readLink');
-            mailHeaderReadLink.title = i18n.get('readLinkTitle');
-        }
-    }
-}
-
-function archiveThread(accountId, mailid) {
-    hideMail(accountId, mailid);
-    mailAccounts[accountId].archiveThread(mailid);
-}
-
-function deleteThread(accountId, mailid) {
-    hideMail(accountId, mailid);
-    mailAccounts[accountId].deleteThread(mailid);
-}
-
-function spamThread(accountId, mailid) {
-    hideMail(accountId, mailid);
-    mailAccounts[accountId].spamThread(mailid);
-}
-
-function starThread(accountId, mailid) {
-    mailAccounts[accountId].starThread(mailid);
-    var starLink = document.getElementById(mailid + "_star-link");
-    if(starLink != null) {
-        starLink.style.background = "url(img/star_hover.png)";
-    }
-}
-
-function replyTo(accountId, mailid) {
-	$.each(allMail, function(i, mail) {
-		if(mail.id == mailid) {
-			mailAccounts[accountId].replyTo(mail);
-			break;
-		}
-	});
-}
-
-function showReply(mailid) {
-    var replyBox = document.getElementById(mailid + "_reply");
-    //replyBox.style.display = 'block';
-}
-
-function hideReply(mailid) {
-    var replyBox = document.getElementById(mailid + "_reply");
-    //replyBox.style.display = 'none';
-}
-
-function sendReply(mailid) {
-    var replyTextArea = document.getElementById(mailid + "_replytext");
-    var replyText = replyTextArea.value;
-    hideReply(mailid);
-    mailAccount.replyToThread({"id":mailid, "body":replyText});
-}
-
-function getThread(accountId, mailid) {
-    $.each(mailCache, function(i, mail) {
-        if(mail.id == mailid) {
-            // Mail already fetched, read from cache instead
-            showBody(mailid, mail.body);
-            return false;
-        }
-    });
-    
-    if(accountId != null) {
-        mailAccounts[accountId].getThread(mailid, showBody);
-        
-        var mailElement = document.getElementById(mailid);
-        if(mailElement != null) {
-            var mailHeaderReadLink = document.getElementById(mailid + "_read-link");
-            if(mailHeaderReadLink != null) {
-                mailHeaderReadLink.href = "javascript:unreadThread('" + accountId + "', '" + mailid + "');";
-                mailHeaderReadLink.innerHTML = i18n.get('unreadLink');
-                mailHeaderReadLink.title = i18n.get('unreadLinkTitle');
-            }
-        }    
-    }
-}
-
-function showBody(mailid, mailbody) {
-    showElement(mailid + "_less-link");
-    hideElement(mailid + "_more-link");
-    
-    mailSummaryElement = $('#' + mailid + "_summary");
-    
-    if( mailSummaryElement.html() != null)
-    {
-    	mailSummaryElement.html(mailbody);
-        mailSummaryElement.attr('style','cursor: text');
-        mailCache.push({"id":mailid, "body":mailbody});
-        mailSummaryElement.parent().removeClass('collapsed highlight');
-    }
-}
-
-function hideBody(mailid) {
-    //hideElement(mailid + "_reply-link");
-    hideElement(mailid + "_less-link");
-    showElement(mailid + "_more-link");
-    
-    var mailSummaryElement = document.getElementById(mailid + "_summary");
-    var mailSummaryElement = $('#' + mailid + "_summary");
-    
-    if(mailSummaryElement.html() != null) {
-        $.each(allMail, function(i, mail) {
-		    if(mail.id == mailid) {
-                mailSummaryElement.html(mail.summary);
-                mailSummaryElement.parent().addClass('collapsed');
-                return false;
-            }
-        });
-    }
-}
-
-// Parses mail into HTML elements
-function parseMail(accountId) {
-    //document.getElementById('mailBox_' + accountId).innerHTML = "";
-    var mailArray = mailAccounts[accountId].getMail();
-    $.each(mailArray, function(i, mail) {
-        allMail.push(mail);
-        mailCount++;
-                   
-        if(mail.title.length > 70)
-            mail.title = mail.title.substr(0, 65) + "...";
-
-
-        var i = mailArray.indexOf(mail);
-            
-        var issued = (new Date()).setISO8601(mail.issued);
-        var today = new Date();
-        var datetime;
-        var fullDateTime = issued.toLocaleString();
-                        
-        if(issued.getFullYear() == today.getFullYear() &&
-            issued.getMonth() == today.getMonth() &&
-            issued.getDate() == today.getDate()) {
-            // Mail was issued today, display time
-            var hour = issued.getHours();
-            var min = issued.getMinutes();
-            var datetime = ((hour < 10) ? "0" : "") + hour + ":" + ((min < 10) ? "0" : "") + min;
-        } else {
-            // Old mail, only display date
-            //datetime = dateFormat(issued, "d mmm");
-            datetime = issued.getDate() + ' ' + i18n.selected_lang.months[issued.getMonth()];
-        }
-        
-        var mailElement = 
-            "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
-                "<div class=\"mailHeader\">" +                    
-                    "<span class=\"authorName\">&bull;&nbsp;<a class=\"tooltip nohover\" title=\"" + mail.authorMail + "\">" + mail.authorName + "</a></span>" +  
-                    "<span class=\"actions\">" + 
-                        "<span class=\"read\"><a id=\"" + mail.id + "_read-link\" href=\"javascript:readThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('readLinkTitle') + "\">" + i18n.get('readLink') + "</a></span>" +
-                        "<span class=\"delete\"><a href=\"javascript:deleteThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('deleteLinkTitle') + "\">" + i18n.get('deleteLink') + "</a></span>" + 
-                        "<span class=\"spam\"><a href=\"javascript:spamThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('spamLinkTitle') + "\">" + i18n.get('spamLink') + "</a></span>" +
-                        "<span class=\"archive\"><a href=\"javascript:archiveThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('archiveLinkTitle') + "\">" + i18n.get('archiveLink') + "</a></span>" +
-                    "</span>" +         
-                    "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
-                "</div>" +
-                "<div class=\"mailContainer\">" +
-                    "<div class=\"mailBody\">";
-                        if(mail.summary != null && mail.summary.length > 0) {
-                            mailElement +=
-                            "<div class=\"title\">" + 
-                                "<span><a href=\"javascript:starThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('starLinkTitle') + "\" class=\"star-link\" id=\"" + mail.id + "_star-link\"><img src=\"img/star_hover.png\" alt=\"" + i18n.get('starLinkTitle') + "\" class=\"hidden\"/></a><a href=\"javascript:openMail('" + accountId + "','" + mail.id + "');\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
-                                "<span class=\"lowerright\"><a href=\"javascript:replyTo('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('replyLinkTitle') + "\" class=\"reply-link\"><img src=\"img/reply.png\" alt=\"" + i18n.get('replyLinkTitle') + "\" class=\"hidden\" /></a></span>" +
-                                "<span class=\"lowerright hidden\" id=\"" + mail.id + "_less-link\"><a href=\"javascript:hideBody('" + mail.id + "');\" title=\"" + i18n.get('summaryLinkTitle') + "\" class=\"less-link\"><img src=\"img/less_hover.png\" class=\"hidden\" /></a></span>" +
-                                "<span class=\"lowerright\" id=\"" + mail.id + "_more-link\"><a href=\"javascript:getThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('fullLinkTitle') + "\" class=\"more-link\"><img src=\"img/more_hover.png\" class=\"hidden\" /></a></span>" +
-                            "</div>" +
-                            "<div class=\"summary collapsed" + ((mail.summary == null || mail.summary.length == 0)?" hidden":"") + "\"><div id=\"" + mail.id + "_summary\" style=\"cursor: default\" onclick=\"getThread('" + accountId + "','" + mail.id + "')\">" + mail.summary + "</div></div>";
-                        } else {
-                            mailElement +=
-                            "<div class=\"title\">" + 
-                                "<span><a href=\"javascript:starThread('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('starLinkTitle') + "\" class=\"star-link\" id=\"" + mail.id + "_star-link\"><img src=\"img/star_hover.png\" alt=\"" + i18n.get('starLinkTitle') + "\" class=\"hidden\"/></a><a href=\"javascript:openMail('" + accountId + "','" + mail.id + "');\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
-                                "<span class=\"lowerright\"><a href=\"javascript:replyTo('" + accountId + "','" + mail.id + "');\" title=\"" + i18n.get('replyLinkTitle') + "\" class=\"reply-link\"><img src=\"img/reply.png\" alt=\"" + i18n.get('replyLinkTitle') + "\" class=\"hidden\" /></a></span>" +
-                            "</div>";
-                        }
-                        /*"<span class=\"lowerright hidden\" id=\"" + mail.id + "_reply-link\">[<a href=\"javascript:showReply('" + mail.id + "');\" title=\"Write quick reply\">reply</a>]</span>" + */
-                        /*"<div class=\"mailReply hidden\" id=\"" + mail.id + "_reply\">" +
-                            "<textarea id=\"" + mail.id + "_replytext\" rows=\"5\" onKeyPress=\"replyTextKeyPress(event, '" + mail.id + "')\"></textarea>" +
-                            "<span class=\"lowerright\"><a href=\"javascript:sendReply('" + mail.id + "');\" title=\"Send quick reply\">&raquo;&nbsp;Send (shift-enter)</a></span>" + 
-                        "</div>" +*/
-                    mailElement +=
-                    "</div>" +
-                "</div>" +
-            "</div>";
-        
-        document.getElementById('mailBox_' + accountId).innerHTML += mailElement;
-    });
-}
-
-// Hides a mail in the mailbox
-function hideMail(accountId, mailid) {
-    var mailAccount = mailAccounts[accountId];
-    mailCount--;
-    
-    if(mailCount <= 0)
-        window.close();
-    
-    var mailElement = document.getElementById(mailid);
-    if(mailElement != null) {
-        mailElement.style.display = 'none';
-    }
-
-    var inboxLinkElement = $('inboxLink_' + accountId);
-    if(inboxLinkElement != null) {
-        inboxLinkElement.innerText = mailAccount.getInboxLink() + ' (' + (mailAccount.getUnreadCount() - 1).toString() + ')';
-        inboxLinkElement.title = mailAccount.getInboxLink() + ' (' + (mailAccount.getUnreadCount() - 1).toString() + ')';
-    }
-    
-}
-
-// Shows a hidden mail in the mailbox
-function showMail(mailid) {
-    var mailElement = document.getElementById(mailid);
-    if(mailElement != null) {
-        mailElement.style.display = 'block';
-    }
-    
-}
-
-function replyTextKeyPress(event, mailid) {
-    if(event.shiftKey == 1 && event.keyCode == 13) {
-        // User pressed shift-enter inside textarea
-        sendReply(mailid);
-    }
-}
-
-function refreshMail() {
-     $.each(mailAccounts, function(i, account) {
-        account.refreshInbox();
-    });
-    
-    //window.location.reload();
-    //history.go(0);
-    init();
-}
-
-function openOptions() {
-    chrome.tabs.create({url: "options.html"});
-}
-
-function init() {
-    var unreadCount = 0;
-    allMail = new Array();
-    $.each(mailAccounts, function(i, account) {
-        unreadCount += account.getUnreadCount();  
-    });
-    
-    var previewSetting = localStorage["gc_preview_setting"];
-    
-    if(previewSetting == "0") {
-        // Preview setting set to "Always off" =
-        // Go to first mail inbox with unread items
-        openInbox();
-    }
-    if(previewSetting == "1" && unreadCount == 0) {
-        // Preview setting set to "Automatic" + no unread mail =
-        // Go to first mail inbox
-        openInbox(0);
-    } else if(previewSetting == "2" && unreadCount == -1) {	
-        // Preview setting set to "Always on" + no mail found =
-        // Display an error text
-	$('#content').html("<br /><h3>Error</h3><p>No active account was found</p>" +
-		"<p><a href='https://mail.google.com/' target='_blank' title='Log in to Gmail'>Log in to Gmail</a></p>");
-		
-	$('#content').width(300);
-	$('#content').css({"textAlign":"center","fontSize":"80%"}); 
-    } else {   
-        backgroundPage.stopAnimateLoop();
-    
-        // Fill page with some nice HTML    
-        var bodyElement = document.getElementById('content');
-        bodyElement.innerHTML = '';
-
-	$.each(mailAccounts,
-	function(i, account) {
-	    account.getNewAt();
-	    var i = mailAccounts.indexOf(account);
-	    bodyElement.innerHTML +=
-	    '<div class="mailBox" id="mailBox_' + i + '">' +
-		'<div class="inboxLink"><a class="inboxLink" href="javascript:openUnread(' + i + ')" title="' + account.getInboxLink() + '"><img src="img/inbox_hover.png" /></a>&nbsp;<a class="composeLink" href="javascript:composeNew(' + i + ')" title="' + i18n.get('composeLinkTitle') + '"><img src="img/compose_hover.png" alt="Compose new" /></a>&nbsp;<a class="sendPageLink" href="javascript:sendPage(' + i + ')" title="' + i18n.get('sendPageLinkTitle') + '"><img src="img/send_page_hover.png" alt="' + i18n.get('sendPageLinkTitle') + '" /></a>&nbsp;<span><a id="inboxLink_' + i + '" href="javascript:openUnread(' + i + ')" title="' + account.getInboxLink() + ' (' + account.getUnreadCount().toString() + ')' + '">' + account.getInboxLink() + ' (' + account.getUnreadCount().toString() + ')' + '</a></span></div>' +
-	    '</div>';
-	    parseMail(i);
-	});        
-
-        /* Should probably use jQuery for this */
-        document.getElementById('refresh').setAttribute('title', i18n.get('refreshLinkTitle'))
-        document.getElementById('options').setAttribute('title', i18n.get('optionsLinkTitle'))
-    }
-    
-    $(".summary.collapsed").hover(
-    	function () {
-	if ($(this).hasClass('collapsed'))
-	{
-		$(this).addClass('highlight');
-		}
-	},
-	function () {
-	$(this).removeClass('highlight');
-	}
-	);
-}
-</script>
+    <title>Google Mail Checker Plus - Popup page</title>
 </head>
+<body id="body">
+    <!-- Template for an account !-->
+    <script id="AccountTemplate" type="text/html">
+    <# 
+      var cssClass = (account.id == 0) ? ' margin' : '';
+    #>
+    <div class="indicator i<#= account.id % 4 #>">
+       <div id="inbox_<#= account.id #>" class="vbox rounded <#= cssClass #>">
+           <div class="hbox">
+               <div class="hbox wide padded inbox-link">
+                   <a class="inboxlink" accountId="<#= account.id #>" href="#" title="<#= account.getInboxLink() #>"><#= account.getInboxLink() #></a>
+               </div>
+               <div class="hbox padded">
+                   <a class="composelink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><#= i18n.get('composeLinkTitle') #></a>
+                   &nbsp;
+                   <a class="sendpagelink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('sendPageLinkTitle') #>"><#= i18n.get('sendPageLinkTitle') #></a>
+               </div>
+           </div>
+       </div>
+    </div>
+    </script>
+    
+   <!-- Template for a mail !-->
+   <script id="MailTemplate" type="text/html">
+<div class="vbox" id="<#= mail.id #>"> 
+   <div class="hbox border-top sender">
+      <div class="hbox wide padded">
+            <label class="author" title="<#= mail.authorMail  #>"><#= mail.authorName  #></label>
+      </div>
+      <div class="hbox padded">
+            <a class="readLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
+            &nbsp;
+            <a class="deleteLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
+            &nbsp;
+            <a class="spamLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
+            &nbsp;
+            <a class="archiveLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
+      </div>
+   </div>  
 
-<body id="body" onload="init()">
+   <div class="hbox border-top title">
+      <!--<div class="hbox padded">
+            <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
+      </div>!-->
+      <div class="hbox wide padded">
+            <label><#= mail.title #></label>
+      </div>
+      <div class="hbox padded">
+            <label><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
+      </div>
+   </div> 
+
+   <div class="hbox">
+      <div class="hbox wide border-top padded summary" mailId="<#= mail.id #>">
+         <#= mail.summary #>
+         <div class="hbox padded hiddenActions">
+            <a class="fullLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><#= i18n.get('fullLinkTitle') #></a>
+            &nbsp;
+            <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
+            &nbsp;
+            <a class="replyLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('replyLinkTitle') #>"><#= i18n.get('replyLinkTitle') #></a>
+         </div>
+      </div>
+   </div>
+</div>
+   </script>
+    
+    <div id="fullscreenContainer">
+        <div id="fullscreenControls">
+            <label>Close window</label>
+        </div>
+    </div>
+
+    <div id="title">Google Mail Checker Plus</div>
+
     <div id="menu">
-        <a href="javascript:refreshMail()" id="refresh" class="squareLink"><img src="img/refresh.png" class="hidden" /></a>
-        <a href="javascript:openOptions()" id="options" class="squareLink"><img src="img/wrench.png" class="hidden" /></a>
+        <a href="javascript:refreshMail()" id="refresh" class="squareLink"><img src="img/refresh.png" class="hidden" /></a> 
+        <a href="javascript:openOptions()" id="options" class="squareLink"><img src="img/wrench.png" class="hidden" /></a> 
         <a href="http://www.gmail.com" target="_blank" title="Gmail.com"><img src="img/logo.png" /></a>
     </div>
-    <div id="content"></div> 
+    
+<!--    <div id="resize">
+        <a href="javascript:resizeWindow()" id="resizeLink" class="squareLink"><img src="img/resize.png" class="hidden" /></a>
+    </div>-->
+    <div id="content"></div>
 </body>
-
 </html>
