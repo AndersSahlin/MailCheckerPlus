@@ -1,265 +1,105 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<link rel="stylesheet" type="text/css" media="screen" href="popup.css" />
 <style type="text/css">
-
-html {
-    padding: 0;
-    overflow: hidden;
+   body { margin: 0; padding: 0; width: 100%; }
+   .border, .rounded { border: 0; }
+   .indicator { border-radius: 0; }
+   /*.sender {
+      background-image: -webkit-gradient(linear,
+          left bottom,
+          left top,
+          color-stop(0.1, rgb(245,66,66)),
+          color-stop(0.8, rgb(252,136,136))
+      );
+   .sender, .sender a {
+      color: White;
+   }
+   }*/
 }
-
-body {
-    font-family: arial,sans-serif;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
-
-a {
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-#icon {
-    float: left;
-    margin: 4px;
-    opacity: 1;
-    width: 48px;
-    height: 48px;
-    /*border: 1px solid #7799bb;*/
-    -webkit-border-radius: 5px;
-}
-
-.actions {
-    display: block;
-    float: right;
-    padding: 2px;
-    border-top: 1px solid black;
-    width: 100%;
-    text-align: right;
-    margin-top: 1px;
-}
-
-.actions a {
-    margin: 5px;
-    color: black;
-}
-
-.archive {
-    font-weight: bold;
-}
-
-.mailBox {
-    float: left;
-    clear: both;
-    width: 100%;
-    padding-top: 0px;    
-    margin: 0;
-    background-color: #fff;
-    /*-webkit-border-radius: 5px;  */
-    /*background: transparent url("img/mailbox_bg.png") no-repeat bottom left; */
-}
-
-.mailEntry {
-    float: left;
-    clear: both;
-    background-color: transparent;
-    font-size: 8pt;  
-    width: 100%;
-    position: relative;
-}
-
-.mailHeader {
-    float: left;
-    background: #7799bb url("img/popup_title_bg.png") repeat-x top left;
-    color: white;
-    width: 100%;
-    height: 18px;
-    padding-top: 0px;
-}
-
-img {
-    vertical-align:bottom;    
-}
-
-.mailContainer {
-    float: left;
-    /*border-left: 3px solid #5983ae;
-    border-right: 3px solid #5983ae;*/
-    padding-top: 0;
-    padding-bottom: 0;  
-    width: 100%;    
-}
-
-.mailBody {
-    float: left;
-    width: 230px;
-    margin-left: 2px;
-    margin-bottom: 5px;
-}
-
-.authorName {
-    float: left;
-    font-weight: bold;
-    margin: 2px;
-    margin-left: 4px;
-}
-
-.issued {
-    float: right;
-    font-weight: bold;
-    margin: 2px;
-    margin-right: 5px;
-}
-
-div.title {
-    clear:both;
-    float: left;
-    font-weight: bold;
-    margin: 0;
-    margin-left: 0px;
-    font-weight: bold;
-}
-
-.title span {
-    margin: 2px;
-    margin-left: 0px;
-    float: left;
-}
-
-.title a {
-    color: black;
-}
-
-.title-link {
-    display: inline-block;
-    float: left;
-    margin-top: 1px;
-}
-
-.summary {
-    clear: both;
-    float: left;
-    color: #000;
-    border-top: 1px dashed #93afcb;
-    overflow: auto;
-    background-color: #ffffff;
-}
-
-.summary div {
-    margin: 3px 3px 0 0;
-    float: left;
-}
-
-.tooltip {
-    cursor: help;
-}
-
-.lowerright {
-    float: right !important;
-    margin: 2px;
-}
-
-.hidden {
-    display: none;
-}
-
-img.sup {
-    vertical-align:super;  	
-}
-
-.nohover:hover {
-    text-decoration: none;
-}
-</style> 
+</style>
 <script type="text/javascript" src="src/i18n.js"></script>
 <script type="text/javascript" src="src/date.js"></script>
 <script type="text/javascript" src="src/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="src/template-engine.js"></script>
 <script type="text/javascript" src="src/mailaccount.class.js"></script>
 <script type="text/javascript">
 var mailAccount;
 
-function init() {
-    var backgroundPage = chrome.extension.getBackgroundPage();
-    
-    mailAccount = backgroundPage.accountWithNewestMail;
-    var mail = backgroundPage.accountWithNewestMail.getNewestMail();
-    var mailURL = backgroundPage.accountWithNewestMail.getURL();
-    var profilePhotos = backgroundPage.profilePhotos;
+$(document).ready(function () {
+   var backgroundPage = chrome.extension.getBackgroundPage();
 
-    var issued = (new Date()).setISO8601(mail.issued);
-    var today = new Date();
-    var datetime;
-    var fullDateTime = issued.toLocaleString();
-    var fullTitle = mail.title;    
-    var shortTitle = (fullTitle.length > 50) fullTitle.substr(0, 50) + "..." : fullTitle;
-                    
-    if(issued.getFullYear() == today.getFullYear() &&
-        issued.getMonth() == today.getMonth() &&
-        issued.getDate() == today.getDate()) {
-        // Mail was issued today, display time
-        var hour = issued.getHours();
-        var min = issued.getMinutes();
-        datetime = ((hour < 10) ? "0" : "") + hour + ":" + ((min < 10) ? "0" : "") + min;
-    } else {
-        // Old mail, only display date
-        //datetime = dateFormat(issued, "d mmm");
-        datetime = issued.getDate() + ' ' + i18n.selected_lang.months[issued.getMonth()];
-    }
-    
-    /*$.ajax({
-        url: mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail),
-        success: function(data) {
-            console.log(data);
-        },
-        complete: function(request, status) {
-            console.log(request);
-            console.log(status);
-        }
-    });*/
+   mailAccount = backgroundPage.accountWithNewestMail;
 
-    var mailElement = 
-    "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
-        "<div class=\"mailHeader\">" +                    
-            "<span class=\"authorName\">&bull;&nbsp;<a class=\"nohover\">" + mail.authorName + "</a></span>" +  
-            "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
-        "</div>" +
-        "<div class=\"mailContainer\">" +
-        "<img id=\"icon\" src=\"" + mailURL.replace('http:', 'https:') + "photos/" + encodeURIComponent(mail.authorMail) + "\" />" +
-        //"<img id=\"icon\" src=\"img/icon_48.png\" />" +
-            "<div class=\"mailBody\">";
-                if(mail.summary != null && mail.summary.length > 0) {
-                    mailElement +=
-                    "<div class=\"title\">" + 
-                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + shortTitle + "</a></span>" +
-                    "</div>" +
-                    "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0)?"hidden":"") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
-                } else {
-                    mailElement +=
-                    "<div class=\"title\">" + 
-                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
-                    "</div>";
-                }
-            mailElement +=
-            "</div>" +
-        "</div>" +		
-        "<span class=\"actions\">" + 
-                        "<span class=\"read\"><a id=\"" + mail.id + "_read-link\" href=\"javascript:readMail();\" title=\"" + i18n.get('readLinkTitle') + "\">" + i18n.get('readLink') + "</a></span>" +
-                        "<span class=\"delete\"><a href=\"javascript:deleteMail();\" title=\"" + i18n.get('deleteLinkTitle') + "\">" + i18n.get('deleteLink') + "</a></span>" + 
-                        "<span class=\"spam\"><a href=\"javascript:spamMail();\" title=\"" + i18n.get('spamLinkTitle') + "\">" + i18n.get('spamLink') + "</a></span>" +
-                        "<span class=\"archive\"><a href=\"javascript:archiveMail();\" title=\"" + i18n.get('archiveLinkTitle') + "\">" + i18n.get('archiveLink') + "</a></span>" +
-        "</span>" +
-    "</div>";
-    document.getElementById('mailBox').innerHTML += mailElement;
-    //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
-    /*if(profilePhotos[mail.authorMail] != null) {
-        $('#icon').get(0).src = profilePhotos[mail.authorMail];
-    }*/  
-}
+   mailAccount.id = backgroundPage.accounts.indexOf(mailAccount);
+   var mail = backgroundPage.accountWithNewestMail.getNewestMail();
+   var mailURL = backgroundPage.accountWithNewestMail.getURL();
+   var profilePhotos = backgroundPage.profilePhotos;
+
+   var fullDateTime = mail.issued.toLocaleString();
+   var fullTitle = mail.title;
+   var shortTitle = (fullTitle.length > 50) ? fullTitle.substr(0, 50) + "..." : fullTitle;
+   var datetime = formatDateTime(mail.issued, i18n.selected_lang.months);
+
+   var mailHtml = parseTemplate($("#MailTemplate").html(), {
+      account: mailAccount,
+      mail: mail,
+      i18n: i18n
+   });
+
+   $('body').append(mailHtml);
+
+   /*$.ajax({
+   url: mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail),
+   success: function(data) {
+   console.log(data);
+   },
+   complete: function(request, status) {
+   console.log(request);
+   console.log(status);
+   }
+   });*/
+
+   //    var mailElement =
+   //    "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
+   //        "<div class=\"mailHeader\">" +
+   //            "<span class=\"authorName\">&bull;&nbsp;<a class=\"nohover\">" + mail.authorName + "</a></span>" +
+   //            "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
+   //        "</div>" +
+   //        "<div class=\"mailContainer\">" +
+   //        "<img id=\"icon\" src=\"" + mailURL.replace('http:', 'https:') + "photos/" + encodeURIComponent(mail.authorMail) + "\" />" +
+   //    //"<img id=\"icon\" src=\"img/icon_48.png\" />" +
+   //            "<div class=\"mailBody\">";
+   //    if (mail.summary != null && mail.summary.length > 0) {
+   //        mailElement +=
+   //                    "<div class=\"title\">" +
+   //                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + shortTitle + "</a></span>" +
+   //                    "</div>" +
+   //                    "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0) ? "hidden" : "") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
+   //    } else {
+   //        mailElement +=
+   //                    "<div class=\"title\">" +
+   //                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
+   //                    "</div>";
+   //    }
+   //    mailElement +=
+   //            "</div>" +
+   //        "</div>" +
+   //        "<span class=\"actions\">" +
+   //                        "<span class=\"read\"><a id=\"" + mail.id + "_read-link\" href=\"javascript:readMail();\" title=\"" + i18n.get('readLinkTitle') + "\">" + i18n.get('readLink') + "</a></span>" +
+   //                        "<span class=\"delete\"><a href=\"javascript:deleteMail();\" title=\"" + i18n.get('deleteLinkTitle') + "\">" + i18n.get('deleteLink') + "</a></span>" +
+   //                        "<span class=\"spam\"><a href=\"javascript:spamMail();\" title=\"" + i18n.get('spamLinkTitle') + "\">" + i18n.get('spamLink') + "</a></span>" +
+   //                        "<span class=\"archive\"><a href=\"javascript:archiveMail();\" title=\"" + i18n.get('archiveLinkTitle') + "\">" + i18n.get('archiveLink') + "</a></span>" +
+   //        "</span>" +
+   //    "</div>";
+   //    document.getElementById('mailBox').innerHTML += mailElement;
+   //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
+   /*if(profilePhotos[mail.authorMail] != null) {
+   $('#icon').get(0).src = profilePhotos[mail.authorMail];
+   }*/
+});
 
 // Opens a mail and closes this window
 function openMail() {
@@ -288,7 +128,49 @@ function archiveMail() {
 }
 </script>
 </head>
-<body id="body" onload="init()">
-    <div class="mailBox" id="mailBox"></div>
+<body id="body">
+   <!-- Template for a mail !-->
+   <script id="MailTemplate" type="text/html">
+
+<div class="indicator i<#= account.id % 4 #>">
+   <div id="inbox_<#= account.id #>" class="vbox rounded">
+      <div class="vbox" id="<#= mail.id #>"> 
+         <div class="hbox sender">
+            <div class="hbox wide padded">
+               <a class="author" href="javascript:openMail();" title="<#= mail.authorMail  #>"><#= mail.authorName  #></a>
+            </div>
+         </div>  
+
+         <div class="hbox border-top title">
+            <div class="hbox wide padded">
+                  <label><#= mail.title #></label>
+            </div>
+            <div class="hbox padded">
+                  <label><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
+            </div>
+         </div> 
+
+         <div class="hbox">
+            <div class="hbox wide border-top padded summary" mailId="<#= mail.id #>">
+               <#= mail.summary #>
+            </div>
+         </div>
+
+         <div class="hbox">         
+            <div class="hbox wide padded"></div>
+            <div class="hbox padded">
+                  <a class="readLink" mailId="<#= mail.id #>" href="javascript:readMail();" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
+                  &nbsp;
+                  <a class="deleteLink" mailId="<#= mail.id #>" href="javascript:deleteMail();" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
+                  &nbsp;
+                  <a class="spamLink" mailId="<#= mail.id #>" href="javascript:spamMail();" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
+                  &nbsp;
+                  <a class="archiveLink" mailId="<#= mail.id #>" href="javascript:archiveMail();" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
+            </div>
+         </div>  
+      </div>
+   </div>
+</div>
+   </script>
 </body>
 </html>
