@@ -115,7 +115,10 @@ function MailAccount(settingsObj) {
                             var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
 
                             if (title == null || title.length < 1)
-                                title = "(No subject)";
+                               title = "(No subject)";
+
+                            if (summary == null || summary.length < 1)
+                               summary = "(No message)";
 
 
                             /*if(summary != null && (title.length + summary.length) > 100) {

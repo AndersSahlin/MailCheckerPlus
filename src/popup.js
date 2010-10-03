@@ -370,38 +370,63 @@ $(document).ready(function () {
          account.getNewAt();
          account.id = i;
 
+         // Render account
          var accountHtml = parseTemplate($("#AccountTemplate").html(), {
             account: account,
             i18n: i18n
          });
 
+         // Add to page
          $(accountHtml).fadeIn("fast").appendTo("#content");
 
          $.each(account.getMail(), function (j, mail) {
             allMail[mail.id] = mail;
 
+            // Render mail
             var mailHtml = parseTemplate($("#MailTemplate").html(), {
                account: account,
                mail: mail,
                i18n: i18n
             });
 
+            // Add to account element
             $(mailHtml).fadeIn("fast").appendTo("#inbox_" + account.id);
          });
 
-         // Add event handlers
+         // Hook up event handlers
          $(".readLink").click(function () { readThread(account.id, $(this).attr('mailId')); });
          $(".deleteLink").click(function () { deleteThread(account.id, $(this).attr('mailId')); });
          $(".spamLink").click(function () { spamThread(account.id, $(this).attr('mailId')); });
          $(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
          $(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
          $(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
+         
+         // Event handler for the hidden actions in account
+         $(".account").hover(function () {
+            $(this).find('.hiddenAccountActions').fadeIn('fast');
+         }, function () {
+            $(this).find('.hiddenAccountActions').fadeOut('slow');
+         });
+
+         // Event handler for the hidden actions in mail
+         $(".mail").hover(function () {
+            $(this).find('.hiddenMailActions').fadeIn('fast');
+            $(this).find('.summary').animate({
+               opacity: 1
+            }, 'fast');
+         }, function () {
+            $(this).find('.hiddenMailActions').fadeOut('slow');
+            $(this).find('.summary').animate({
+               opacity: 0.4
+            }, 'slow');
+         });
 
          // Event handler for the hidden actions in summary
          $(".summary").hover(function () {
-            $(this).children('.hiddenActions').fadeIn('fast');
+            $(this).find('.hiddenSummaryActions').delay(1000).slideDown('fast');
          }, function () {
-            $(this).children('.hiddenActions').fadeOut('fast');
+            $(this).find('.hiddenSummaryActions').slideUp('fast');
+            $(this).find('.hiddenSummaryActions').clearQueue();
          });
 
       });

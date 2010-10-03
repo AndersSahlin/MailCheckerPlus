@@ -42,7 +42,8 @@ body {
 .rounded {
     border-radius: 6px 0 0 6px;              
     border: 1px solid #bbb;
-    border-right: 0;
+    /*border-right: 0;*/
+    background-color: White;
 }
 
 .padded {
@@ -50,7 +51,7 @@ body {
 }
 
 .margin {
-    margin-bottom: 5px;
+    margin-bottom: 5px !important;
 }
 
 .border-top {
@@ -97,6 +98,7 @@ div#title
    font-size: 110%;
    font-weight: bold;
    float: left;
+   margin-left: 5px;
 }
 
 div#menu {
@@ -175,23 +177,29 @@ a:hover {
 
 /* Mail entry CSS */
 .indicator {
+   /*border-radius: 12px; 
+   border-style: none;
+   padding-left: 4px;*/
    border-right: 4px solid;
-   border-top-left-radius: 11px; 
 }
 
 .indicator.i0 {
+   /*background-color: #869cd3;*/
    border-color: #869cd3;
 }
 
 .indicator.i1 {
+   /*background-color: #ec5f65;*/
    border-color: #ec5f65;
 }
 
 .indicator.i2 {
+   /*background-color: #fff64c;*/
    border-color: #fff64c;
 }
 
 .indicator.i3 {
+   /*background-color: #60b579;*/
    border-color: #60b579;
 }
 
@@ -212,11 +220,20 @@ a:hover {
     font-weight: bold;
 }
 
-.hiddenActions 
+.hiddenAccountActions,
+.hiddenSummaryActions,
+.hiddenMailActions 
 {
    display: none;
+}
+
+.hiddenSummaryActions
+{
    background-color: LemonChiffon;
-   position: absolute;
-   top: 0;
-   right: 0;
+   text-align: right;
+}
+
+.summary 
+{
+   opacity: 0.4;
 }

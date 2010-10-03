@@ -19,15 +19,15 @@
     <!-- Template for an account !-->
     <script id="AccountTemplate" type="text/html">
     <# 
-      var cssClass = (account.id == 0) ? ' margin' : '';
+      var cssClass = (account.id == 0) ? 'margin-bottom: 5px;' : '';
     #>
-    <div class="indicator i<#= account.id % 4 #>">
-       <div id="inbox_<#= account.id #>" class="vbox rounded <#= cssClass #>">
+    <div class="indicator i<#= account.id % 4 #> account" style="<#= cssClass #>">
+       <div id="inbox_<#= account.id #>" class="vbox rounded">
            <div class="hbox">
                <div class="hbox wide padded inbox-link">
                    <a class="inboxlink" accountId="<#= account.id #>" href="#" title="<#= account.getInboxLink() #>"><#= account.getInboxLink() #></a>
                </div>
-               <div class="hbox padded">
+               <div class="hbox padded hiddenAccountActions">
                    <a class="composelink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><#= i18n.get('composeLinkTitle') #></a>
                    &nbsp;
                    <a class="sendpagelink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('sendPageLinkTitle') #>"><#= i18n.get('sendPageLinkTitle') #></a>
@@ -39,12 +39,12 @@
     
    <!-- Template for a mail !-->
    <script id="MailTemplate" type="text/html">
-<div class="vbox" id="<#= mail.id #>"> 
+<div class="vbox mail" id="<#= mail.id #>"> 
    <div class="hbox border-top sender">
       <div class="hbox wide padded">
             <label class="author" title="<#= mail.authorMail  #>"><#= mail.authorName  #></label>
       </div>
-      <div class="hbox padded">
+      <div class="hbox padded hiddenMailActions">
             <a class="readLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
             &nbsp;
             <a class="deleteLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
@@ -67,16 +67,16 @@
       </div>
    </div> 
 
-   <div class="hbox">
-      <div class="hbox wide border-top padded summary" mailId="<#= mail.id #>">
+   <div class="vbox summary">
+      <div class="hbox wide border-top padded" mailId="<#= mail.id #>">
          <#= mail.summary #>
-         <div class="hbox padded hiddenActions">
-            <a class="fullLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><#= i18n.get('fullLinkTitle') #></a>
-            &nbsp;
-            <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
-            &nbsp;
-            <a class="replyLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('replyLinkTitle') #>"><#= i18n.get('replyLinkTitle') #></a>
-         </div>
+      </div>
+      <div class="hbox padded hiddenSummaryActions">
+         <a class="fullLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><#= i18n.get('fullLinkTitle') #></a>
+         &nbsp;
+         <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
+         &nbsp;
+         <a class="replyLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('replyLinkTitle') #>"><#= i18n.get('replyLinkTitle') #></a>
       </div>
    </div>
 </div>

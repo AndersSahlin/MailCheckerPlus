@@ -18,6 +18,15 @@
       color: White;
    }
    }*/
+   .hiddenSummaryActions 
+   {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      margin-right: 4px;
+   }
+   
 }
 </style>
 <script type="text/javascript" src="src/i18n.js"></script>
@@ -50,6 +59,12 @@ $(document).ready(function () {
    });
 
    $('body').append(mailHtml);
+
+   $('body').hover(function () {
+      $(this).find('.hiddenSummaryActions').fadeIn('fast');
+   }, function () {
+      $(this).find('.hiddenSummaryActions').fadeOut('fast');
+   });
 
    /*$.ajax({
    url: mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail),
@@ -156,17 +171,14 @@ function archiveMail() {
             </div>
          </div>
 
-         <div class="hbox">         
-            <div class="hbox wide padded"></div>
-            <div class="hbox padded">
-                  <a class="readLink" mailId="<#= mail.id #>" href="javascript:readMail();" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
-                  &nbsp;
-                  <a class="deleteLink" mailId="<#= mail.id #>" href="javascript:deleteMail();" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
-                  &nbsp;
-                  <a class="spamLink" mailId="<#= mail.id #>" href="javascript:spamMail();" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
-                  &nbsp;
-                  <a class="archiveLink" mailId="<#= mail.id #>" href="javascript:archiveMail();" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
-            </div>
+         <div class="hbox padded hiddenSummaryActions">   
+            <a class="readLink" mailId="<#= mail.id #>" href="javascript:readMail();" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
+            &nbsp;
+            <a class="deleteLink" mailId="<#= mail.id #>" href="javascript:deleteMail();" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
+            &nbsp;
+            <a class="spamLink" mailId="<#= mail.id #>" href="javascript:spamMail();" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
+            &nbsp;
+            <a class="archiveLink" mailId="<#= mail.id #>" href="javascript:archiveMail();" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
          </div>  
       </div>
    </div>
