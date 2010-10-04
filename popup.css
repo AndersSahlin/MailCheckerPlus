@@ -70,7 +70,7 @@ body {
     height: 100%;
     z-index: 99;
     display: none;    
-    overflow: scroll;
+    overflow: auto;
     background-color: White;
     max-height: 500px;
 }
@@ -79,8 +79,14 @@ body {
     width: 100%;
     background-color: White;
     color: Black;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #333;
     text-align: right;
+   background-image: -webkit-gradient(linear,
+         left bottom,
+         left top,
+         color-stop(0.1, rgb(245,245,245)),
+         color-stop(0.8, rgb(255,255,255))
+   );
 }
 
 #fullscreenControls label {    
@@ -89,8 +95,17 @@ body {
     cursor: pointer;
 }
 
+#fullscreenControls img {
+   vertical-align: text-top;
+}
+
 #fullscreenControls:hover {
-    background-color: LemonChiffon;
+   background-image: -webkit-gradient(linear,
+         left bottom,
+         left top,
+         color-stop(0.1, rgb(247, 236, 183)),
+         color-stop(0.8, rgb(255,250,205))
+   );
 }
 
 div#title 
@@ -229,7 +244,12 @@ a:hover {
 
 .hiddenSummaryActions
 {
-   background-color: LemonChiffon;
+   background-image: -webkit-gradient(linear,
+         left bottom,
+         left top,
+         color-stop(0, rgb(245,245,245)),
+         color-stop(0.8, rgb(255,255,255))
+   );
    text-align: right;
 }
 

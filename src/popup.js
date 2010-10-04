@@ -146,35 +146,34 @@ function getThread(accountId, mailid) {
 }
 
 function showBody(mailid, mailbody) {
-    showElement(mailid + "_less-link");
-    hideElement(mailid + "_more-link");
-    
-    if (mailbody != null) {
-        var fullscreenContainer = $("#fullscreenContainer");
-        var fullscreenControl = $("#fullscreenControls");
-        
-        // Insert the full mail body and full screen controls
-        fullscreenContainer.html("");
-        fullscreenContainer.append(fullscreenControl);
-        fullscreenContainer.append(mailbody);
+   showElement(mailid + "_less-link");
+   hideElement(mailid + "_more-link");
 
-        // Remove previous click event handlers
-        fullscreenControl.unbind();
-        fullscreenControl.click(function () {
-            setTimeout(hideBody(mailid), 0);
-        });
+   if (mailbody != null) {
+      var fullscreenContainer = $("#fullscreenContainer");
+      var fullscreenControl = $("#fullscreenControls");
 
-        // Display full screen container
-        fullscreenContainer.css("display", "block");
+      // Insert the full mail body and full screen controls
+      fullscreenContainer.html("");
+      fullscreenContainer.append(fullscreenControl);
+      fullscreenContainer.append(mailbody);
 
-        // Save this mail in the cache
-        mailCache[mailid] = mailbody;
+      // Remove previous click event handlers
+      fullscreenControl.unbind();
+      fullscreenControl.click(function () {
+         setTimeout(hideBody(mailid), 0);
+      });
 
-        // Toggle the size of the window
-        expandWindow();
-    }
+      // Display full screen container
+      fullscreenContainer.css("display", "block");
+      
+      // Save this mail in the cache
+      mailCache[mailid] = mailbody;
+
+      // Toggle the size of the window
+      expandWindow();
+   }
 }
-
 function hideBody(mailid) {
     var mailSummaryElement = $('#' + mailid + "_summary");
     var mail = allMail[mailid];
@@ -312,29 +311,25 @@ function resizeWindow() {
 
 
 var animationSpeed = 350;
-
+var previousHeight;
 function expandWindow() {
-    $('body').animate(
-        { width: [750, 'swing'] },
-        animationSpeed
-    );
+   previousHeight = $('body').height();
 
-    $('#content').animate(
-        { 'max-height': [500, 'swing'] },
-        animationSpeed
-    );
+   $('body').animate({
+      width: [750, 'swing'],
+      height: [500, 'swing']
+   }, animationSpeed);
 }
 
 function contractWindow() {
-    $('body').animate(
-        { width: [500, 'swing'] },
-        animationSpeed
-    );
+   $('body').animate({
+      width: [500, 'swing'],
+      height: [previousHeight, 'swing']
+   }, animationSpeed, function () {
+      $(this).height('auto');
+   });
 
-    $('#content').animate(
-        { 'max-height': [400, 'swing'] },
-        animationSpeed
-    );   
+    previousHeight = 0;
 }
 
 $(document).ready(function () {
