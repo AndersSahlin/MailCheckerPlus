@@ -38,14 +38,23 @@ function MailAccount(settingsObj) {
     var atomLabel;
     var unreadLabel;
 
-    if (localStorage["gc_check_all"] == null || localStorage["gc_check_all"] == "false") {
-        inboxLabel = "#inbox";
-        unreadLabel = "#inbox";
-        atomLabel = "";
+    if (localStorage["gc_check_all"] != null
+        && localStorage["gc_check_all"] == "true") {
+       // Check all labels for unread mail
+       inboxLabel = "#all";
+       unreadLabel = "#search/l:unread";
+       atomLabel = "unread";
+    } else if (localStorage["gc_check_priority"] != null
+        && localStorage["gc_check_priority"] == "true"
+        && settingsObj.domain == null) {
+       // Only check priority inbox
+       inboxLabel = "#mbox";
+       unreadLabel = "#mbox";
+       atomLabel = "important";
     } else {
-        inboxLabel = "#all";
-        unreadLabel = "#search/l:unread";
-        atomLabel = "unread";
+       inboxLabel = "#inbox";
+       unreadLabel = "#inbox";
+       atomLabel = "";
     }
 
     var mailArray = new Array();
@@ -413,13 +422,13 @@ function MailAccount(settingsObj) {
         }
     }
     // Fetches content of thread
-    this.getThread = function (threadid, callback) {
+    this.getThread = function (accountid, threadid, callback) {
         if (threadid != null) {
             var getURL = mailURL + "h/" + Math.ceil(1000000 * Math.random()) + "/?v=pt&th=" + threadid;
             var gt_xhr = new XMLHttpRequest();
             gt_xhr.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
-                    that.readThread(threadid);
+                    //that.readThread(threadid);
                     var matches = this.responseText.match(/<hr>[\s\S]?<table[^>]*>([\s\S]*?)<\/table>(?=[\s\S]?<hr>)/gi);
                     //var matches = matchRecursiveRegExp(this.responseText, "<div class=[\"]?msg[\"]?>", "</div>", "gi")
                     //logToConsole(this.responseText);
@@ -437,7 +446,7 @@ function MailAccount(settingsObj) {
                         //threadbody += "<span class=\"lowerright\">[<a href=\"javascript:showReply('" + threadid + "');\" title=\"Write quick reply\">reply</a>]&nbsp;[<a href=\"javascript:hideBody('" + threadid + "');\" title=\"Show summary\">less</a>]</span>";
                         logToConsole(threadbody);
                         if (callback != null) {
-                            callback(threadid, threadbody);
+                           callback(accountid, threadid, threadbody);
                         }
                     }
                 } else if (this.readyState == 4 && this.status == 401) {

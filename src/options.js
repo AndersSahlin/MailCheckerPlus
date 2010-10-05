@@ -34,7 +34,17 @@ function charOrdA(a, b) {
 }
 
 // Saves options to localStorage.
-var boolIdArray = new Array("hide_count", "check_all", "force_ssl", "check_gmail_off", "open_tabs", "archive_read", "no_mailto", "sound_off", "animate_off", "show_notification");
+var boolIdArray = new Array("hide_count",
+                            "check_all",
+                            "check_priority",
+                            "force_ssl",
+                            "check_gmail_off",
+                            "open_tabs",
+                            "archive_read",
+                            "no_mailto",
+                            "sound_off",
+                            "animate_off", 
+                            "show_notification");
 var accounts;
 
 function save_options() {
@@ -268,4 +278,11 @@ function checkUserPermission() {
     try {
         return (webkitNotifications.checkPermission() == 0);
     } catch (e) { return false; }
+  }
+
+
+function toggleCheckBox(checkboxId, checked) {
+   if (checked) {
+      document.getElementById(checkboxId).checked = !checked;
+   }
 }

@@ -125,33 +125,41 @@ function sendReply(mailid) {
 
 function getThread(accountId, mailid) {
 	if(mailCache[mailid] != null) {
-		// Mail already fetched, read from cache instead
-		showBody(mailid, mailCache[mailid]);
+	   // Mail already fetched, read from cache instead
+		showBody(accountId, mailid, mailCache[mailid]);
 		return false;
 	}
 	
 	if(accountId != null) {
-		window.setTimeout(mailAccounts[accountId].getThread(mailid, showBody), 0);
-		
-		var mailElement = document.getElementById(mailid);
-		if(mailElement != null) {
-			var mailHeaderReadLink = document.getElementById(mailid + "_read-link");
-			if(mailHeaderReadLink != null) {
-				mailHeaderReadLink.href = "javascript:unreadThread('" + accountId + "', '" + mailid + "');";
-				mailHeaderReadLink.innerHTML = i18n.get('unreadLink');
-				mailHeaderReadLink.title = i18n.get('unreadLinkTitle');
-			}
-		}    
+		window.setTimeout(mailAccounts[accountId].getThread(accountId, mailid, showBody), 0);
+//		
+//		var mailElement = document.getElementById(mailid);
+//		if(mailElement != null) {
+//			var mailHeaderReadLink = document.getElementById(mailid + "_read-link");
+//			if(mailHeaderReadLink != null) {
+//				mailHeaderReadLink.href = "javascript:unreadThread('" + accountId + "', '" + mailid + "');";
+//				mailHeaderReadLink.innerHTML = i18n.get('unreadLink');
+//				mailHeaderReadLink.title = i18n.get('unreadLinkTitle');
+//			}
+//		}    
 	}
 }
 
-function showBody(mailid, mailbody) {
-   showElement(mailid + "_less-link");
-   hideElement(mailid + "_more-link");
+function showBody(accountid, mailid, mailbody) {
+//   showElement(mailid + "_less-link");
+   //   hideElement(mailid + "_more-link");
 
    if (mailbody != null) {
       var fullscreenContainer = $("#fullscreenContainer");
       var fullscreenControl = $("#fullscreenControls");
+      fullscreenControl.find('.readLink').text(i18n.get('readLink'));
+      fullscreenControl.find('.deleteLink').text(i18n.get('deleteLink'));
+      fullscreenControl.find('.spamLink').text(i18n.get('spamLink'));
+      fullscreenControl.find('.archiveLink').text(i18n.get('archiveLink'));
+      fullscreenControl.find('.readLink').attr('title', i18n.get('readLinkTitle'));
+      fullscreenControl.find('.deleteLink').attr('title', i18n.get('deleteLinkTitle'));
+      fullscreenControl.find('.spamLink').attr('title', i18n.get('spamLinkTitle'));
+      fullscreenControl.find('.archiveLink').attr('title', i18n.get('archiveLinkTitle'));
 
       // Insert the full mail body and full screen controls
       fullscreenContainer.html("");
@@ -159,9 +167,29 @@ function showBody(mailid, mailbody) {
       fullscreenContainer.append(mailbody);
 
       // Remove previous click event handlers
-      fullscreenControl.unbind();
-      fullscreenControl.click(function () {
-         setTimeout(hideBody(mailid), 0);
+      fullscreenControl.find('.closeLink').unbind();
+      fullscreenControl.find('.closeLink').click(function () {
+         setTimeout(hideBody(), 0);
+      });
+      fullscreenControl.find('.readLink').unbind();
+      fullscreenControl.find('.readLink').click(function () {
+         readThread(accountid, mailid);
+         setTimeout(hideBody(), 0);
+      });
+      fullscreenControl.find('.deleteLink').unbind();
+      fullscreenControl.find('.deleteLink').click(function () {
+         deleteThread(accountid, mailid);
+         setTimeout(hideBody(), 0);
+      });
+      fullscreenControl.find('.spamLink').unbind();
+      fullscreenControl.find('.spamLink').click(function () {
+         spamThread(accountid, mailid);
+         setTimeout(hideBody(), 0);
+      });
+      fullscreenControl.find('.archiveLink').unbind();
+      fullscreenControl.find('.archiveLink').click(function () {
+         archiveThread(accountid, mailid);
+         setTimeout(hideBody(), 0);
       });
 
       // Display full screen container
@@ -174,20 +202,19 @@ function showBody(mailid, mailbody) {
       expandWindow();
    }
 }
-function hideBody(mailid) {
-    var mailSummaryElement = $('#' + mailid + "_summary");
-    var mail = allMail[mailid];
-    var fullscreenContainer = $("#fullscreenContainer");
+function hideBody() {
+//   var mailSummaryElement = $('#' + mailid + "_summary");
+//   var mail = allMail[mailid];
 
-	//hideElement(mailid + "_reply-link");
-	hideElement(mailid + "_less-link");
-	showElement(mailid + "_more-link");
+//   //hideElement(mailid + "_reply-link");
+//   hideElement(mailid + "_less-link");
+//   showElement(mailid + "_more-link");
 
-	// Hide full screen
-	fullscreenContainer.css("display", "none");
+   // Hide full screen
+   $("#fullscreenContainer").css("display", "none");
 
-	// Toggle the size of the window
-	contractWindow();
+   // Toggle the size of the window
+   contractWindow();
 }
 
 // Parses mail into HTML elements
@@ -395,12 +422,13 @@ $(document).ready(function () {
          $(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
          $(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
          $(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
+         $(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
          
          // Event handler for the hidden actions in account
          $(".account").hover(function () {
             $(this).find('.hiddenAccountActions').fadeIn('fast');
          }, function () {
-            $(this).find('.hiddenAccountActions').fadeOut('slow');
+            $(this).find('.hiddenAccountActions').fadeOut('fast');
          });
 
          // Event handler for the hidden actions in mail
@@ -410,7 +438,7 @@ $(document).ready(function () {
                opacity: 1
             }, 'fast');
          }, function () {
-            $(this).find('.hiddenMailActions').fadeOut('slow');
+            $(this).find('.hiddenMailActions').fadeOut('fast');
             $(this).find('.summary').animate({
                opacity: 0.4
             }, 'slow');
@@ -418,7 +446,7 @@ $(document).ready(function () {
 
          // Event handler for the hidden actions in summary
          $(".summary").hover(function () {
-            $(this).find('.hiddenSummaryActions').delay(1000).slideDown('fast');
+            $(this).find('.hiddenSummaryActions').delay(250).slideDown('fast');
          }, function () {
             $(this).find('.hiddenSummaryActions').slideUp('fast');
             $(this).find('.hiddenSummaryActions').clearQueue();

@@ -81,17 +81,17 @@ body {
     color: Black;
     border-bottom: 1px solid #333;
     text-align: right;
-   background-image: -webkit-gradient(linear,
+   /*background-image: -webkit-gradient(linear,
          left bottom,
          left top,
          color-stop(0.1, rgb(245,245,245)),
          color-stop(0.8, rgb(255,255,255))
-   );
+   );*/
+   background-color: #ffffcc;
+    padding: 3px;
 }
 
-#fullscreenControls label {    
-    display: block;
-    padding: 3px;
+#fullscreenControls a {    
     cursor: pointer;
 }
 
@@ -100,12 +100,14 @@ body {
 }
 
 #fullscreenControls:hover {
-   background-image: -webkit-gradient(linear,
+   /*background-image: -webkit-gradient(linear,
          left bottom,
          left top,
          color-stop(0.1, rgb(247, 236, 183)),
          color-stop(0.8, rgb(255,250,205))
-   );
+   );*/
+   background-image: none;
+   background-color: #ffffcc;
 }
 
 div#title 
@@ -244,12 +246,13 @@ a:hover {
 
 .hiddenSummaryActions
 {
-   background-image: -webkit-gradient(linear,
+   /*background-image: -webkit-gradient(linear,
          left bottom,
          left top,
-         color-stop(0, rgb(245,245,245)),
+         color-stop(0, rgb(255,250,205)),
          color-stop(0.8, rgb(255,255,255))
-   );
+   );*/
+   background-color: #ffffcc;
    text-align: right;
 }
 

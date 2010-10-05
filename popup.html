@@ -60,7 +60,7 @@
             <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
       </div>!-->
       <div class="hbox wide padded">
-            <label><#= mail.title #></label>
+            <a class="openLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('openLinkTitle') #>"><#= mail.title #></a>            
       </div>
       <div class="hbox padded">
             <label><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
@@ -83,8 +83,17 @@
    </script>
     
     <div id="fullscreenContainer">
-        <div id="fullscreenControls">
-            <label>Close&nbsp;<img src="/img/close.gif" alt="Close" /></label>
+        <div id="fullscreenControls"> 
+            <a class="readLink" href="#"></a>
+            &nbsp;
+            <a class="deleteLink" href="#"></a>
+            &nbsp;
+            <a class="spamLink"  href="#"></a>
+            &nbsp;
+            <a class="archiveLink" href="#"></a>         
+            &nbsp;|&nbsp;
+            <a class="closeLink" href="#" title="Close preview">Close&nbsp;<img src="/img/close.gif" alt="Close" /></a>
+            &nbsp;
         </div>
     </div>
 
