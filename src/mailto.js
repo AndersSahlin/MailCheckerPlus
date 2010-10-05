@@ -38,16 +38,15 @@ function rewriteMailtosOnPage() {
   }
   
   for (var i = 0; i < nodes.length; i++) {
-    var mailto_str = nodes[i].getAttribute('href');
-    mailto_str = rewriteMailtoToGMailUrl(mailto_str);
+    var mailto_url = nodes[i].getAttribute('href');
+    gmail_url = rewriteMailtoToGMailUrl(mailto_url);
     nodes[i].setAttribute('title', "[GMCP] Compose a new mail to " + nodes[i].innerText);
     if(openInTab) {
-        nodes[i].setAttribute('href', mailto_str);
+        nodes[i].setAttribute('href', gmail_url);
         nodes[i].setAttribute('target', '_blank');
     } else {
-        //nodes[i].setAttribute('href', "javascript:window.open('" + mailto_str + "','Compose new message','width=640,height=480')");
-        nodes[i].setAttribute('href', "javascript:void(0)");
-        nodes[i].setAttribute('onclick', "window.open('" + mailto_str + "','Compose new message','width=640,height=480')");
+        nodes[i].setAttribute('href', mailto_url);
+        nodes[i].setAttribute('onclick', "window.open('" + gmail_url + "','Compose new message','width=640,height=480');return false");
     }
     nodes[i].setAttribute('rel', 'noreferrer');
   }
