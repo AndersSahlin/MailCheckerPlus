@@ -1,116 +1,123 @@
 /* CSS for Gmail Checker popup.html */
 
-html {    
-    position: relative;
+html
+{
+   position: relative;
 }
 
-body {
-    width: 500px;
-    overflow: hidden;
-    /*padding-top: 10px;*/
-    
-    font-family: Sans-Serif;
-    font-size: 0.8em;    
+body
+{
+   width: 500px;
+   overflow: hidden; /*padding-top: 10px;*/
+   font-family: arial, sans-serif;
+   font-size: 0.8em;
 }
 
-#content {
-    width: 100%;
-    padding-right: 3px;
-    max-height: 400px;
-    overflow: scroll;
-    overflow-x: hidden;
-    overflow-y: auto;    
-}
-
-.hbox {
-    display: -webkit-box;
-    -webkit-box-orient: horizontal;
-    -webkit-box-align: stretch;
-    position: relative;
-}
-        
-.vbox {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-box-align: stretch;    
-}
-        
-.wide {
-    -webkit-box-flex: 1 !important;
-}
-        
-.rounded {
-    border-radius: 6px 0 0 6px;              
-    border: 1px solid #bbb;
-    /*border-right: 0;*/
-    background-color: White;
-}
-
-.padded {
-    padding: 2px 4px 2px 4px;
-}
-
-.margin {
-    margin-bottom: 5px !important;
-}
-
-.border-top {
-    border-top: 1px solid #bbb;
-}
-
-.border-bottom {
-    border-bottom: 1px solid #bbb;
-}
-
-#fullscreenContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    display: none;    
-    overflow: auto;
-    background-color: White;
-    max-height: 500px;
-}
-
-#fullscreenControls {
-    width: 100%;
-    background-color: White;
-    color: Black;
-    border-bottom: 1px solid #333;
-    text-align: right;
-   /*background-image: -webkit-gradient(linear,
-         left bottom,
-         left top,
-         color-stop(0.1, rgb(245,245,245)),
-         color-stop(0.8, rgb(255,255,255))
-   );*/
-   background-color: #ffffcc;
-    padding: 3px;
-}
-
-#fullscreenControls a {    
-    cursor: pointer;
-}
-
-#fullscreenControls img {
+img
+{
    vertical-align: text-top;
 }
 
-#fullscreenControls:hover {
-   /*background-image: -webkit-gradient(linear,
-         left bottom,
-         left top,
-         color-stop(0.1, rgb(247, 236, 183)),
-         color-stop(0.8, rgb(255,250,205))
-   );*/
+#content
+{
+   width: 100%;
+   float: left;
+   padding-right: 3px;
+   margin-top: 5px;
+   max-height: 400px;
+   overflow: scroll;
+   overflow-x: hidden;
+   overflow-y: auto;
+}
+
+.hbox
+{
+   display: -webkit-box;
+   -webkit-box-orient: horizontal;
+   -webkit-box-align: stretch;
+   position: relative;
+}
+
+.vbox
+{
+   display: -webkit-box;
+   -webkit-box-orient: vertical;
+   -webkit-box-align: stretch;
+}
+
+.wide
+{
+   -webkit-box-flex: 1 !important;
+}
+
+.rounded
+{
+   border-radius: 6px 0 0 6px;
+   border: 1px solid #bbb; 
+   border-right: 0;
+   background-color: White;
+   margin-bottom: 5px;
+}
+
+.padded
+{
+   padding: 2px 4px 2px 4px;
+}
+
+.margin
+{
+   margin-bottom: 5px !important;
+}
+
+.border-top
+{
+   border-top: 1px solid #bbb;
+}
+
+.border-bottom
+{
+   border-bottom: 1px solid #bbb;
+}
+
+#fullscreenContainer
+{
+   position: absolute;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 99;
+   display: none;
+   overflow: auto;
+   background-color: White;
+   max-height: 500px;
+}
+
+#fullscreenControls
+{
+   width: 100%;
+   background-color: White;
+   color: Black;
+   border-bottom: 1px solid #333;
+   text-align: right; /*background-image: -webkit-gradient(linear,          left bottom,          left top,          color-stop(0.1, rgb(245,245,245)),          color-stop(0.8, rgb(255,255,255))    );*/
+   background-color: #ffffcc;
+   padding: 3px;
+}
+
+#fullscreenControls a
+{
+   cursor: pointer;
+}
+
+
+#fullscreenControls:hover
+{
+   /*background-image: -webkit-gradient(linear,          left bottom,          left top,          color-stop(0.1, rgb(247, 236, 183)),          color-stop(0.8, rgb(255,250,205))    );*/
    background-image: none;
    background-color: #ffffcc;
 }
 
-div#title 
+div#title
 {
    font-size: 110%;
    font-weight: bold;
@@ -118,123 +125,78 @@ div#title
    margin-left: 5px;
 }
 
-div#menu {
-    /*position: absolute;
-    top: -30px;
-    right: 20px;
-    float: right;
-    padding-top: 10px;
-    padding-right: 3px;
-    padding-left: 5px;
-    padding-bottom: 10px;
-    background: white url(img/dropdownarrow.png) no-repeat bottom center;
-    border: 1px solid #6d93b8;
-    -webkit-border-radius: 5px; 
-    -webkit-transition: all 0.2s linear;
-    z-index:98;*/
-    
-    float: right;
+div#menu
+{
+   /*position: absolute;     top: -30px;     right: 20px;     float: right;     padding-top: 10px;     padding-right: 3px;     padding-left: 5px;     padding-bottom: 10px;     background: white url(img/dropdownarrow.png) no-repeat bottom center;     border: 1px solid #6d93b8;     -webkit-border-radius: 5px;      -webkit-transition: all 0.2s linear;     z-index:98;*/
+   float: right;
 }
 
-div#menu:hover {
-    /*top: -8px;
-    padding-bottom: 2px;
-    background: white none;*/
+div#menu:hover
+{
+   /*top: -8px;     padding-bottom: 2px;     background: white none;*/
 }
 
-a.squareLink {
-    margin-top: 1px;
-    margin-right: 5px;
-    display: block;
-    float: left;
-    width: 16px;
-    height: 16px;
+a.imageLink
+{
+   opacity: 0.5;
+   -webkit-transition:opacity 0.05s ease-in;  
 }
 
-div#menu a#options {
-    background: transparent url("img/wrench.png") center center;
+a.imageLink:hover
+{
+   opacity: 1;
 }
 
-div#menu a#options:hover {
-    background: transparent url("img/wrench_hover.png") center center;
+a
+{
+   text-decoration: none;
+   /*color: #627e9a;*/
+   color: #79B;
 }
 
-div#menu a#refresh {
-    background: transparent url("img/refresh.png") center center;
+a:hover
+{
+   text-decoration: underline;
 }
 
-div#menu a#refresh:hover {
-    background: transparent url("img/refresh_hover.png") center center;
+.inbox
+{
 }
 
-div#resize {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index:98;
-}
-
-div#resize a#resizeLink {
-    background: transparent url("img/resize.png") center center;
-}
-
-div#resize a#resizeLink:hover {
-    background: transparent url("img/resize.png") center center;
-}
-
-
-a {
-    text-decoration: none;
-    color: #03C;
-}
-
-a:hover {
-    text-decoration: underline;
+.inboxLink
+{
+   font-size: 110%;
 }
 
 /* Mail entry CSS */
-.indicator {
-   /*border-radius: 12px; 
-   border-style: none;
-   padding-left: 4px;*/
+.indicator
+{
+   /*border-radius: 12px;     border-style: none;    padding-left: 4px;*/
    border-right: 4px solid;
 }
 
-.indicator.i0 {
+.indicator.i0
+{
    /*background-color: #869cd3;*/
-   border-color: #869cd3;
+   border-color: #79B;
 }
 
-.indicator.i1 {
+.indicator.i1
+{
    /*background-color: #ec5f65;*/
    border-color: #ec5f65;
 }
 
-.indicator.i2 {
+.indicator.i2
+{
    /*background-color: #fff64c;*/
    border-color: #fff64c;
 }
 
-.indicator.i3 {
+.indicator.i3
+{
    /*background-color: #60b579;*/
    border-color: #60b579;
-}
-
-.sender {
-   background-image: -webkit-gradient(linear,
-       left bottom,
-       left top,
-       color-stop(0.1, rgb(245,245,245)),
-       color-stop(0.8, rgb(255,255,255))
-   );
-}
-
-.author {
-    font-weight: bold;
-}
-
-.archiveLink {
-    font-weight: bold;
 }
 
 .hiddenAccountActions,
@@ -256,7 +218,48 @@ a:hover {
    text-align: right;
 }
 
-.summary 
+.mail
+{   
+}
+
+.sender
 {
-   opacity: 0.4;
+   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.1, rgb(245,245,245)), color-stop(0.8, rgb(255,255,255)));
+}
+
+.author
+{
+   font-weight: bold;
+   color: #00681C;
+}
+
+.openLink
+{
+   font-weight: bold;
+   color: #333;
+}
+
+.archiveLink
+{
+   font-weight: bold;
+}
+
+/*.starLink:hover {
+   background: transparent url("img/star_hover.png") no-repeat top center;
+}
+
+.starLink:hover > img {
+   visibility: hidden;
+}*/
+
+.mailActions a
+{
+   padding-left: 5px;
+}
+
+.hiddenSummaryActions
+{
+   /*background-image: -webkit-gradient(linear,          left bottom,          left top,          color-stop(0, rgb(255,250,205)),          color-stop(0.8, rgb(255,255,255))    );*/
+   background-color: #ffffcc;
+   text-align: right;
 }

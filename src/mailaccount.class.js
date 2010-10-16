@@ -126,8 +126,8 @@ function MailAccount(settingsObj) {
                             if (title == null || title.length < 1)
                                title = "(No subject)";
 
-                            if (summary == null || summary.length < 1)
-                               summary = "(No message)";
+//                            if (summary == null || summary.length < 1)
+//                               summary = "(No message)";
 
 
                             /*if(summary != null && (title.length + summary.length) > 100) {
@@ -277,7 +277,7 @@ function MailAccount(settingsObj) {
         }
 
         unreadCount = -1;
-        mailArray = null;
+        //mailArray = new ;
     }
 
     function logToConsole(text) {
@@ -548,7 +548,9 @@ function MailAccount(settingsObj) {
 
     // Returns the "Gmail - Inbox for..." link
     this.getInboxLink = function () {
-        return mailTitle;
+       if (mailTitle != null && mailTitle != "")
+          return mailTitle;
+       return mailURL;
     }
 
     // Returns the mail array

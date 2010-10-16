@@ -96,10 +96,6 @@ function spamThread(accountId, mailid) {
 
 function starThread(accountId, mailid) {
 	mailAccounts[accountId].starThread(mailid);
-	var starLink = document.getElementById(mailid + "_star-link");
-	if(starLink != null) {
-		starLink.style.background = "url(img/star_hover.png)";
-	}
 }
 
 function replyTo(accountId, mailid) {
@@ -293,8 +289,12 @@ function parseMail(accountId) {
 
 // Hides a mail in the mailbox
 function hideMail(accountId, mailid) {
+   var accountElement = $('#inbox_' + accountId);
+   $('#' + mailid).slideUp('fast');
+   $('#' + mailid).removeClass('mail');
 
-   $('#' + mailid).slideUp('fast');	
+   if (accountElement.find('.mail').length == 0)
+      accountElement.find('.toggleLink').hide('fast'); ;
 }
 
 // Shows a hidden mail in the mailbox
@@ -400,64 +400,62 @@ $(document).ready(function () {
 
          // Add to page
          $(accountHtml).fadeIn("fast").appendTo("#content");
+         var inboxElement = $('#inbox_' + account.id);
 
-         $.each(account.getMail(), function (j, mail) {
-            allMail[mail.id] = mail;
+         if (account.getMail() != null) {
+            $.each(account.getMail(), function (j, mail) {
+               allMail[mail.id] = mail;
 
-            // Render mail
-            var mailHtml = parseTemplate($("#MailTemplate").html(), {
-               account: account,
-               mail: mail,
-               i18n: i18n
+               mail.fullTitle = mail.title;
+               if (mail.title.length > 63)
+                  mail.title = mail.title.substr(0, 60) + "...";
+
+               // Render mail
+               var mailHtml = parseTemplate($("#MailTemplate").html(), {
+                  account: account,
+                  mail: mail,
+                  i18n: i18n
+               });
+
+               // Add to account element
+               $(mailHtml).fadeIn("fast").appendTo(inboxElement);
             });
 
-            // Add to account element
-            $(mailHtml).fadeIn("fast").appendTo("#inbox_" + account.id);
-         });
+            if (account.getMail().length == 0)
+               inboxElement.find(".toggleLink").hide();
+
+            inboxElement.find(".toggleLink").click(function () {
+               inboxElement.find('.mail').slideToggle('fast');
+
+               if ($(this).find('img').attr('src') == 'img/arrow_right.png') {
+                  $(this).find('img').attr('src', 'img/arrow_down.png')
+               } else {
+                  $(this).find('img').attr('src', 'img/arrow_right.png')
+               }
+            });
+         }
 
          // Hook up event handlers
-         $(".readLink").click(function () { readThread(account.id, $(this).attr('mailId')); });
-         $(".deleteLink").click(function () { deleteThread(account.id, $(this).attr('mailId')); });
-         $(".spamLink").click(function () { spamThread(account.id, $(this).attr('mailId')); });
-         $(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
-         $(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
-         $(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
-         $(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
-         
-         // Event handler for the hidden actions in account
-         $(".account").hover(function () {
-            $(this).find('.hiddenAccountActions').fadeIn('fast');
-         }, function () {
-            $(this).find('.hiddenAccountActions').fadeOut('fast');
-         });
+         inboxElement.find(".readLink").click(function () { readThread(account.id, $(this).attr('mailId')); });
+         inboxElement.find(".deleteLink").click(function () { deleteThread(account.id, $(this).attr('mailId')); });
+         inboxElement.find(".spamLink").click(function () { spamThread(account.id, $(this).attr('mailId')); });
+         inboxElement.find(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
+         inboxElement.find(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
+         inboxElement.find(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
+         inboxElement.find(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
 
-         // Event handler for the hidden actions in mail
-         $(".mail").hover(function () {
-            $(this).find('.hiddenMailActions').fadeIn('fast');
-            $(this).find('.summary').animate({
-               opacity: 1
-            }, 'fast');
-         }, function () {
-            $(this).find('.hiddenMailActions').fadeOut('fast');
-            $(this).find('.summary').animate({
-               opacity: 0.4
-            }, 'slow');
-         });
 
-         // Event handler for the hidden actions in summary
-         $(".summary").hover(function () {
-            $(this).find('.hiddenSummaryActions').delay(250).slideDown('fast');
-         }, function () {
-            $(this).find('.hiddenSummaryActions').slideUp('fast');
-            $(this).find('.hiddenSummaryActions').clearQueue();
+         inboxElement.find(".starLink").click(function () {
+            $(this).find('img').css('visibility', 'hidden');
+            starThread(account.id, $(this).attr('mailId'));
          });
 
       });
 
       // Add event handlers
-      $(".inboxlink").click(function () { openInbox($(this).attr('accountId')); });
-      $(".composelink").click(function () { composeNew($(this).attr('accountId')); });
-      $(".sendpagelink").click(function () { sendPage($(this).attr('accountId')); });
+      $(".inboxLink").click(function () { openInbox($(this).attr('accountId')); });
+      $(".composeLink").click(function () { composeNew($(this).attr('accountId')); });
+      $(".sendpageLink").click(function () { sendPage($(this).attr('accountId')); });
 
       // Should probably use jQuery for this
       document.getElementById('refresh').setAttribute('title', i18n.get('refreshLinkTitle'));

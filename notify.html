@@ -4,27 +4,30 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
 <link rel="stylesheet" type="text/css" media="screen" href="popup.css" />
 <style type="text/css">
-   body { margin: 0; padding: 0; width: 100%; }
+   body { margin: 0; padding: 0; width: 100%; overflow: hidden; }
    .border, .rounded { border: 0; }
    .indicator { border-radius: 0; }
-   /*.sender {
+   .sender {
       background-image: -webkit-gradient(linear,
           left bottom,
           left top,
-          color-stop(0.1, rgb(245,66,66)),
-          color-stop(0.8, rgb(252,136,136))
+          color-stop(0.1, rgb(200,0,0)),
+          color-stop(0.8, rgb(230,0,0))
       );
+   }
    .sender, .sender a {
       color: White;
    }
-   }*/
    .hiddenSummaryActions 
    {
       position: absolute;
       bottom: 0;
-      right: 0;
+      right: 0px;
       width: 100%;
-      margin-right: 4px;
+      float: right;
+   }
+   .summary {
+      opacity: 1;
    }
    
 }
@@ -48,8 +51,9 @@ $(document).ready(function () {
    var profilePhotos = backgroundPage.profilePhotos;
 
    var fullDateTime = mail.issued.toLocaleString();
-   var fullTitle = mail.title;
-   var shortTitle = (fullTitle.length > 50) ? fullTitle.substr(0, 50) + "..." : fullTitle;
+   mail.fullTitle = mail.title;
+   if (mail.title.length > 63)
+      mail.title = mail.title.substr(0, 60) + "...";
    var datetime = formatDateTime(mail.issued, i18n.selected_lang.months);
 
    var mailHtml = parseTemplate($("#MailTemplate").html(), {
@@ -152,13 +156,13 @@ function archiveMail() {
       <div class="vbox" id="<#= mail.id #>"> 
          <div class="hbox sender">
             <div class="hbox wide padded">
-               <a class="author" href="javascript:openMail();" title="<#= mail.authorMail  #>"><#= mail.authorName  #></a>
+               <a class="author" href="mailto:<#= mail.authorMail  #>" title="<#= mail.authorMail  #>"><#= mail.authorName  #></a>
             </div>
          </div>  
 
          <div class="hbox border-top title">
             <div class="hbox wide padded">
-                  <label><#= mail.title #></label>
+                  <a class="openLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('openLinkTitle') #>"><#= mail.title #></a>
             </div>
             <div class="hbox padded">
                   <label><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
