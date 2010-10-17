@@ -166,6 +166,7 @@ a:hover
 .inboxLink
 {
    font-size: 110%;
+   font-weight: bold;
 }
 
 /* Mail entry CSS */

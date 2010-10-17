@@ -37,8 +37,8 @@ Date.prototype.setISO8601 = function (timestamp) {
     return null;
 }
 
-function formatDateTime(timestamp, monthsArray) {
-    var issued = (new Date()).setISO8601(timestamp);
+function formatDateTime(issued, monthsArray) {
+    //var issued = (new Date()).setISO8601(timestamp);
     var today = new Date();
 
     if (issued.getFullYear() == today.getFullYear() &&

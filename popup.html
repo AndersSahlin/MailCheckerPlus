@@ -23,7 +23,10 @@
            <div class="hbox padded inbox">
                <div class="hbox padded wide">
                   <a class="toggleLink imageLink" accountId="<#= account.id #>" href="#" title=""><img src="img/arrow_down.png" /></a>
-                  <a class="inboxLink" accountId="<#= account.id #>" href="#" title="<#= account.getInboxLink() #>"><#= account.getInboxLink() #></a>
+                  <a class="inboxLink" accountId="<#= account.id #>" href="#" title="<#= account.getInboxLink() #>">
+                     <#= account.getInboxLink() #>
+                     <# if(account.unreadCount > 0) { #><span class="unreadCount">(<#= account.unreadCount #>)</span><# } #>
+                  </a>
                </div>
                <div class="hbox padded">
                    <a class="composelink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><img src="img/compose.png" /></a>

@@ -293,8 +293,14 @@ function hideMail(accountId, mailid) {
    $('#' + mailid).slideUp('fast');
    $('#' + mailid).removeClass('mail');
 
-   if (accountElement.find('.mail').length == 0)
-      accountElement.find('.toggleLink').hide('fast'); ;
+   var unreadCount = accountElement.find('.mail').length;
+
+   if (unreadCount == 0) {
+      accountElement.find('.toggleLink').hide('fast');
+      accountElement.find('.unreadCount').fadeOut('fast');
+   } else {
+      accountElement.find('.unreadCount').text('(' + unreadCount + ')');
+   }
 }
 
 // Shows a hidden mail in the mailbox
@@ -393,6 +399,10 @@ $(document).ready(function () {
          account.id = i;
 
          // Render account
+         if (account.getMail() != null) {
+            account.unreadCount = account.getMail().length;
+         }
+
          var accountHtml = parseTemplate($("#AccountTemplate").html(), {
             account: account,
             i18n: i18n
