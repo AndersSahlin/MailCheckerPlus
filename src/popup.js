@@ -383,13 +383,13 @@ $(document).ready(function () {
       // Preview setting set to "Automatic" + no unread mail =
       // Go to first mail inbox
       openInbox(0);
-   } else if (previewSetting == "2" && unreadCount == -1) {
-      // Preview setting set to "Always on" + no mail found =
-      // Display an error text
-      $('#content').html("<br /><h3>Error</h3><p>No active account was found</p>" +
-		    "<p><a href='https://mail.google.com/' target='_blank' title='Log in to Gmail'>Log in to Gmail</a></p>");
-      $('#content').width(300);
-      $('#content').css({ "textAlign": "center", "fontSize": "80%" });
+//   } else if (previewSetting == "2" && unreadCount == -1) {
+//      // Preview setting set to "Always on" + no mail found =
+//      // Display an error text
+//      $('#content').html("<br /><h3>Error</h3><p>No active account was found</p>" +
+//		    "<p><a href='https://mail.google.com/' target='_blank' title='Log in to Gmail'>Log in to Gmail</a></p>");
+//      $('#content').width(300);
+//      $('#content').css({ "textAlign": "center", "fontSize": "80%" });
    } else {
       backgroundPage.stopAnimateLoop();
 

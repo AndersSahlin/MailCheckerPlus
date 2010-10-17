@@ -154,9 +154,9 @@ function MailAccount(settingsObj) {
             return 1;
          return 0;
       });
-      
+
       // We've found new mail, alert others!
-      if (foundNewMail) {
+      if (foundNewMail || fullCount != unreadCount) {
          handleSuccess(fullCount);
       } else {
          logToConsole(mailURL + "feed/atom/" + atomLabel + " - No new mail found.");
