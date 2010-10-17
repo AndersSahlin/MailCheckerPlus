@@ -72,7 +72,7 @@ function MailAccount(settingsObj) {
    this.isDefault;
 
    // Debug output (if enabled, might cause memory leaks)
-   var verbose = false;
+   var verbose = true;
 
    // Without this/that, no internal calls to onUpdate or onError can be made...
    var that = this;
@@ -85,6 +85,13 @@ function MailAccount(settingsObj) {
       mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");
       //newestMail = null;
       var newMailArray = new Array();
+
+      if (fullCount < unreadCount || unreadCount == -1) {
+         // Mail count has been reduced, so we need to reload all mail.
+         // TODO: Find the old mail(s) and remove them instead.
+         foundNewMail = true;
+         mailArray = new Array();
+      }
 
       // Parse xml data for each mail entry
       xmlDocument.find('entry').each(function () {
@@ -156,7 +163,7 @@ function MailAccount(settingsObj) {
       });
 
       // We've found new mail, alert others!
-      if (foundNewMail || fullCount != unreadCount) {
+      if (foundNewMail) {
          handleSuccess(fullCount);
       } else {
          logToConsole(mailURL + "feed/atom/" + atomLabel + " - No new mail found.");
