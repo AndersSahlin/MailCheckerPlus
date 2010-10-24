@@ -20,8 +20,9 @@ function MailAccount(settingsObj) {
    var requestTimeout = 10000;
    var openInTab = (localStorage["gc_open_tabs"] != null && localStorage["gc_open_tabs"] == "true");
    var archiveAsRead = (localStorage["gc_archive_read"] != null && localStorage["gc_archive_read"] == "true");
-   var mailURL = (localStorage["gc_force_ssl"] != null && localStorage["gc_force_ssl"] == "true") ? "https://" : "http://";
-   mailURL += "mail.google.com";
+   // var mailURL = (localStorage["gc_force_ssl"] != null && localStorage["gc_force_ssl"] == "true") ? "https://" : "http://";
+   // Always use SSL, things become messy otherwise
+   var mailURL = "https://mail.google.com";
 
    if (settingsObj.domain != null) {
       // This is a GAFYD account
@@ -412,11 +413,15 @@ function MailAccount(settingsObj) {
    // Fetches content of thread
    this.getThread = function (accountid, threadid, callback) {
       if (threadid != null) {
-         var getURL = mailURL + "h/" + Math.ceil(1000000 * Math.random()) + "/?v=pt&th=" + threadid;
+         var getURL = mailURL.replace('http:', 'https:') + "h/" + Math.ceil(1000000 * Math.random()) + "/?v=pt&th=" + threadid;
          var gt_xhr = new XMLHttpRequest();
          gt_xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-               //that.readThread(threadid);
+//               var markAsRead = (localStorage["gc_showfull_read"] != null && localStorage["gc_showfull_read"] == "true");
+
+//               if(markAsRead)
+//                  that.readThread(threadid);
+
                var matches = this.responseText.match(/<hr>[\s\S]?<table[^>]*>([\s\S]*?)<\/table>(?=[\s\S]?<hr>)/gi);
                //var matches = matchRecursiveRegExp(this.responseText, "<div class=[\"]?msg[\"]?>", "</div>", "gi")
                //logToConsole(this.responseText);
@@ -631,10 +636,11 @@ function MailAccount(settingsObj) {
       subject = (subject.search(/^Re: /i) > -1) ? subject : "Re: " + subject; // Add 'Re: ' if not already there
       subject = encodeURIComponent(subject);
       // threadbody = encodeURIComponent(threadbody);
-      var issued = (new Date()).setISO8601(mail.issued);
+      var issued = mail.issued;
       var threadbody = "\r\n\r\n" + issued.toString() + " <" + mail.authorMail + ">:\r\n" + mail.summary;
       threadbody = encodeURIComponent(threadbody);
-      var replyURL = mailURL + "?view=cm&fs=1&tf=1&to=" + to + "&su=" + subject + "&body=" + threadbody;
+      var replyURL = mailURL.replace('http:', 'https:') + "?view=cm&tf=1&to=" + to + "&su=" + subject + "&body=" + threadbody;
+      logToConsole(replyURL);
       if (openInTab) {
          chrome.tabs.create({ url: replyURL });
       } else {

@@ -28,9 +28,9 @@
                      <# if(account.unreadCount > 0) { #><span class="unreadCount">(<#= account.unreadCount #>)</span><# } #>
                   </a>
                </div>
-               <div class="hbox padded">
-                   <a class="composelink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><img src="img/compose.png" /></a>
-                   <a class="sendpagelink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('sendPageLinkTitle') #>"><img src="img/send_page.png" /></a>
+               <div class="hbox padded" style="padding-right: 0">
+                   <a class="composeLink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><img src="img/compose.png" /></a>
+                   <a class="sendpageLink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('sendPageLinkTitle') #>"><img src="img/send_page.png" /></a>
                </div>
            </div>
        </div>
@@ -62,7 +62,7 @@
             <a class="openLink" mailId="<#= mail.id #>" href="#" title="<#= mail.fullTitle #>"><#= mail.title #></a>            
          </div>
          <div class="hbox">
-            <a class="fullLink imageLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><img src="img/expand.png" /></a>
+            <a class="fullLink imageLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><img src="img/more.png" /></a>
             <a class="replyLink imageLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('replyLinkTitle') #>"><img src="img/reply.png" /></a>
          </div>
       </div> 

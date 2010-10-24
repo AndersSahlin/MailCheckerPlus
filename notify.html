@@ -30,6 +30,8 @@
       opacity: 1;
    }
    
+   a { cursor: pointer; }
+   
 }
 </style>
 <script type="text/javascript" src="src/i18n.js"></script>
@@ -70,54 +72,11 @@ $(document).ready(function () {
       $(this).find('.hiddenSummaryActions').fadeOut('fast');
    });
 
-   /*$.ajax({
-   url: mailURL.replace('http', 'https') + "photos/" + encodeURIComponent(mail.authorMail),
-   success: function(data) {
-   console.log(data);
-   },
-   complete: function(request, status) {
-   console.log(request);
-   console.log(status);
-   }
-   });*/
-
-   //    var mailElement =
-   //    "<div class=\"mailEntry\" id=\"" + mail.id + "\">" +
-   //        "<div class=\"mailHeader\">" +
-   //            "<span class=\"authorName\">&bull;&nbsp;<a class=\"nohover\">" + mail.authorName + "</a></span>" +
-   //            "<span class=\"issued\" title=\"" + fullDateTime + "\">" + datetime + "&nbsp;&nbsp;<img src=\"img/datetime.gif\" /></span>" +
-   //        "</div>" +
-   //        "<div class=\"mailContainer\">" +
-   //        "<img id=\"icon\" src=\"" + mailURL.replace('http:', 'https:') + "photos/" + encodeURIComponent(mail.authorMail) + "\" />" +
-   //    //"<img id=\"icon\" src=\"img/icon_48.png\" />" +
-   //            "<div class=\"mailBody\">";
-   //    if (mail.summary != null && mail.summary.length > 0) {
-   //        mailElement +=
-   //                    "<div class=\"title\">" +
-   //                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + shortTitle + "</a></span>" +
-   //                    "</div>" +
-   //                    "<div class=\"summary " + ((mail.summary == null || mail.summary.length == 0) ? "hidden" : "") + "\"><div id=\"" + mail.id + "_summary\">" + mail.summary + "</div></div>";
-   //    } else {
-   //        mailElement +=
-   //                    "<div class=\"title\">" +
-   //                        "<span><a href=\"javascript:openMail();\" class=\"title-link\" title=\"" + i18n.get('openLinkTitle') + "\">" + mail.title + "</a></span>" +
-   //                    "</div>";
-   //    }
-   //    mailElement +=
-   //            "</div>" +
-   //        "</div>" +
-   //        "<span class=\"actions\">" +
-   //                        "<span class=\"read\"><a id=\"" + mail.id + "_read-link\" href=\"javascript:readMail();\" title=\"" + i18n.get('readLinkTitle') + "\">" + i18n.get('readLink') + "</a></span>" +
-   //                        "<span class=\"delete\"><a href=\"javascript:deleteMail();\" title=\"" + i18n.get('deleteLinkTitle') + "\">" + i18n.get('deleteLink') + "</a></span>" +
-   //                        "<span class=\"spam\"><a href=\"javascript:spamMail();\" title=\"" + i18n.get('spamLinkTitle') + "\">" + i18n.get('spamLink') + "</a></span>" +
-   //                        "<span class=\"archive\"><a href=\"javascript:archiveMail();\" title=\"" + i18n.get('archiveLinkTitle') + "\">" + i18n.get('archiveLink') + "</a></span>" +
-   //        "</span>" +
-   //    "</div>";
-   //    document.getElementById('mailBox').innerHTML += mailElement;
-   //document.getElementById('icon').src = mailURL + "photos/" + encodeURIComponent(escape(mail.authorMail)) + "?rp=1";//"http://www.gravatar.com/avatar/" + hex_md5(mail.authorMail) + "?d=" + chrome.extension.getURL("icon_32.png");
-   /*if(profilePhotos[mail.authorMail] != null) {
-   $('#icon').get(0).src = profilePhotos[mail.authorMail];
-   }*/
+   $('body').find(".readLink").click(function () { readMail(); });
+   $('body').find(".deleteLink").click(function () { deleteMail(); });
+   $('body').find(".spamLink").click(function () { spamMail(); });
+   $('body').find(".archiveLink").click(function () { archiveMail(); });
+   $('body').find(".openLink").click(function () { openMail(); });
 });
 
 // Opens a mail and closes this window
@@ -176,13 +135,13 @@ function archiveMail() {
          </div>
 
          <div class="hbox padded hiddenSummaryActions">   
-            <a class="readLink" mailId="<#= mail.id #>" href="javascript:readMail();" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
+            <a class="readLink" mailId="<#= mail.id #>" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
             &nbsp;
-            <a class="deleteLink" mailId="<#= mail.id #>" href="javascript:deleteMail();" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
+            <a class="deleteLink" mailId="<#= mail.id #>" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
             &nbsp;
-            <a class="spamLink" mailId="<#= mail.id #>" href="javascript:spamMail();" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
+            <a class="spamLink" mailId="<#= mail.id #>" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
             &nbsp;
-            <a class="archiveLink" mailId="<#= mail.id #>" href="javascript:archiveMail();" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
+            <a class="archiveLink" mailId="<#= mail.id #>" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
          </div>  
       </div>
    </div>

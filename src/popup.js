@@ -120,6 +120,12 @@ function sendReply(mailid) {
 }
 
 function getThread(accountId, mailid) {
+
+   var markAsRead = (localStorage["gc_showfull_read"] != null && localStorage["gc_showfull_read"] == "true");
+   if (markAsRead) {
+      readThread(accountId, mailid);
+   }
+
 	if(mailCache[mailid] != null) {
 	   // Mail already fetched, read from cache instead
 		showBody(accountId, mailid, mailCache[mailid]);
@@ -225,7 +231,6 @@ function parseMail(accountId) {
 			mail.title = mail.title.substr(0, 65) + "...";
             
 		var i = mailArray.indexOf(mail);			
-		var issued = (new Date()).setISO8601(mail.issued);
 		var today = new Date();
 		var datetime;
 		var fullDateTime = issued.toLocaleString();
