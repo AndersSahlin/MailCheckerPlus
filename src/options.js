@@ -107,7 +107,8 @@ function restore_options() {
     spawnIconRow("set1", "Default");
     spawnIconRow("set2", "Default Grey");
     spawnIconRow("set3", "Default White");
-    spawnIconRow("set11","New style");
+    spawnIconRow("set11", "Native");
+    spawnIconRow("set12", "Native Grey");
     spawnIconRow("set8", "Gmail Glossy");
     spawnIconRow("set9", "Gmail Mini");
     spawnIconRow("set10", "Gmail Monochrome");
