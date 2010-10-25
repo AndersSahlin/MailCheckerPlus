@@ -45,7 +45,7 @@
             <label class="author" title="<#= mail.authorMail  #>"><#= mail.authorName  #></label>
          </div>
          <div class="hbox mailActions">
-            <label title="<#= formatDateTime(mail.issued, i18n.selected_lang.months, true) #>"><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
+            <label title="<#= mail.issued #>"><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
             <a class="readLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
             <a class="deleteLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
             <a class="spamLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
@@ -83,17 +83,26 @@
    </script>
     
     <div id="fullscreenContainer">
-        <div id="fullscreenControls"> 
-            <a class="readLink" href="#"></a>
-            &nbsp;
-            <a class="deleteLink" href="#"></a>
-            &nbsp;
-            <a class="spamLink"  href="#"></a>
-            &nbsp;
-            <a class="archiveLink" href="#"></a>         
-            &nbsp;|&nbsp;
-            <a class="closeLink" href="#" title="Close preview">Close&nbsp;<img src="/img/close.gif" alt="Close" /></a>
-            &nbsp;
+        <div id="fullscreenControls">
+            <a class="starLink imageLink" href="#"><img src="img/star.png" /></a>
+            <span class="authorLink" href="#"></span>
+            <span class="issuedLink" href="#"></span>
+            &nbsp;-&nbsp;
+            <a class="openLink" href="#"></a>
+            <div>
+               <a class="replyLink imageLink" href="#"><img src="img/reply.png" /></a>
+               &nbsp;
+               <a class="readLink" href="#"></a>
+               &nbsp;
+               <a class="deleteLink" href="#"></a>
+               &nbsp;
+               <a class="spamLink"  href="#"></a>
+               &nbsp;
+               <a class="archiveLink" href="#"></a>         
+               &nbsp;|&nbsp;
+               <a class="closeLink" href="#" title="Close preview">Close&nbsp;<img src="/img/close.gif" alt="Close" /></a>
+               &nbsp;
+            </div>
         </div>
     </div>
     

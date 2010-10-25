@@ -5,6 +5,35 @@
 
 var languages = new Array();
 
+// Albanian
+languages["sq"] = {
+    "id" : "sq",
+    "what" : "Shqip",
+    "months" : new Array("jan", "shk", "mar", "pri", "maj", "qer", "kor", "gus", "sht", "tet", "nën", "dhj"),
+    "readLink" : "Lexuar",
+    "readLinkTitle" : "Shënoje si të lexuar",
+    "unreadLink": "Palexuar",
+    "unreadLinkTitle" : "Shënoje si të  palexuar",
+    "deleteLink" : "Fshije",
+    "deleteLinkTitle" : "Fshije email-in",
+    "spamLink" : "Spam",
+    "spamLinkTitle" : "Shënoje si spam",
+    "archiveLink" : "Arkivo",
+    "archiveLinkTitle" : "Arkivo email-in",
+    "starLinkTitle" : "Shënoje me yll email-in",
+    "openLinkTitle" : "Hape në webmail",
+    "replyLinkTitle" : "Përgjigju email-it",
+    "summaryLinkTitle" : "Shfaq përmbledhjen",
+    "fullLinkTitle" : "Shfaqe mesazhin të plotë",
+    "refreshLinkTitle" : "Fresko postat",
+    "optionsLinkTitle" : "Shko te faqja opsioneve",
+    "composeLinkTitle" : "Shkruaj një email të ri",
+    "noUnreadText" : "S'ka email të palexuar",
+    "oneUnreadText" : "e-mail i palexuar", // One unread item: "1 unread mail"
+    "severalUnreadText" : "e-maile të palexuar", // Several unread items: "3 unread mail"
+    "popupText" : "Keni marrë një email të ri!"
+};
+
 // Arabic
 languages["ar"] = {
     "id" : "ar",
@@ -63,6 +92,122 @@ languages["arw"] = {
     "popupText" : "لديك رسائل جديدة!"
 };
 
+// Armenian
+languages["hy"] = {
+    "id" : "hy",
+    "what" : "Հայերեն",
+    "months" : new Array("հնվ", "փետ", "մրտ", "ապր", "մյս", "հնս", "հլս", "օգտ", "սեպ", "հկտ", "նոյ", "դեկ"),
+    "readLink" : "Ընթերցված",
+    "readLinkTitle" : "Նշել ինչպես ընթերցված",
+    "unreadLink": "Չընթերցված",
+    "unreadLinkTitle" : "Նշել ինչպես չընթերցված",
+    "deleteLink" : "Ջնջել",
+    "deleteLinkTitle" : "Ջնջել նամակը",
+    "spamLink" : "Սպամ",
+    "spamLinkTitle" : "Նշել ինչպես սպամ",
+    "archiveLink" : "Արխիվացնել",
+    "archiveLinkTitle" : "Արխիվացնել նամակը",
+    "starLinkTitle" : "Նշել՝ աստղով",
+    "openLinkTitle" : "Բացել Gmail-ում",
+    "replyLinkTitle" : "Պատասխանել",
+    "summaryLinkTitle" : "Շրջել նամակը",
+    "fullLinkTitle" : "Ցուցադրել նամակը ամբողջությամբ",
+    "refreshLinkTitle" : "Ստուգել փոստը",
+    "optionsLinkTitle" : "Բացել կարգավորումների էջը",
+    "composeLinkTitle" : "Գրել նամակ",
+    "noUnreadText" : "Նոր նամակներ չկան",
+    "oneUnreadText" : "նոր նամակ", // One unread item: "1 unread mail"
+    "severalUnreadText" : "նոր նամակներ", // Several unread items: "3 unread mail"
+    "popupText" : "Դուք ստացաք նոր նամակ:"
+};
+
+// Azeri (Latin)
+languages["az"] = {
+    "id" : "az",
+    "what" : "Azərbaycanca",
+    "months" : new Array("Yan", "Fev", "Mar", "Apr", "May", "Iyun", "Iyul", "Avg", "Sen", "Okt", "Noy", "Dek"),
+    "readLink" : "Oxu",
+    "readLinkTitle" : "Oxunulub kimi işarə et",
+    "unreadLink": "Oxunmamıs",
+    "unreadLinkTitle" : "Oxunmamıs kimi işarə et",
+    "deleteLink" : "Sil",
+    "deleteLinkTitle" : "Məktubu sil",
+    "spamLink" : "Spam",
+    "spamLinkTitle" : "Spam kimi gostər",
+    "archiveLink" : "Arxivlə",
+    "archiveLinkTitle" : "Məktubu arxivlə",
+    "starLinkTitle" : "Məktubu ulduzla",
+    "openLinkTitle" : "Web'de ac",
+    "replyLinkTitle" : "Məktuba cavab yaz",
+    "summaryLinkTitle" : "Qisa gostəricilər",
+    "fullLinkTitle" : "Tam məktubu gostər",
+    "refreshLinkTitle" : "Təzələmək",
+    "optionsLinkTitle" : "Xüsusiyyətlər səyfəsinə keç",
+    "composeLinkTitle" : "Məktubu yaz",
+    "noUnreadText" : "Oxunmamıs məktub yoxtur",
+    "oneUnreadText" : "Oxunmamıs məktub", // One unread item: "1 unread mail"
+    "severalUnreadText" : "Oxunmamıs məktublar", // Several unread items: "3 unread mail"
+    "popupText" : "Sizə təzə məktub gəlib!"
+};
+
+// Basque
+languages["eu"] = {
+    "id" : "eu",
+    "what" : "Basque",
+    "months" : new Array("urt", "ots", "mar", "api", "mai", "eka", "uzt", "abu", "ira", "urr", "aza", "abe"),
+    "readLink" : "Irakurri",
+    "readLinkTitle" : "Markatu irakurrita gisa",
+    "unreadLink": "Irakurri gabe",
+    "unreadLinkTitle" : "Markatu irakurri gabe gisa",
+    "deleteLink" : "Ezabatu",
+    "deleteLinkTitle" : "Ezabatu mezua",
+    "spamLink" : "Spama",
+    "spamLinkTitle" : "Markatu spam gisa",
+    "archiveLink" : "Artxibatu",
+    "archiveLinkTitle" : "Artxibatu mezua",
+    "starLinkTitle" : "Gehitu izarra",
+    "openLinkTitle" : "Webmailean ireki",
+    "replyLinkTitle" : "Erantzun",
+    "summaryLinkTitle" : "Erakutsi laburpena",
+    "fullLinkTitle" : "Erakutsi mezu osoa",
+    "refreshLinkTitle" : "Postontzi guztiak eguneratu",
+    "optionsLinkTitle" : "Aukeren orrira joan",
+    "composeLinkTitle" : "Mezu berria idatzi",
+    "noUnreadText" : "Irakurri gabeko postarik ez",
+    "oneUnreadText" : "Irakurri gabeko posta", // Irakurri gabeko mezu bat: "1 irakurri gabe"
+    "severalUnreadText" : "Irakurri gabeko posta", // Hainbat mezu irakurri gabe: "3 irakurri gabe"
+    "popupText" : "Mezu berri bat jaso duzu!"
+};
+
+// Bosnian
+languages["bs"] = {
+    "id" : "bs",
+    "what" : "Bosanski",
+    "months" : new Array("jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"),
+    "readLink" : "Pročitano",
+    "readLinkTitle" : "Označi kao pročitano",
+    "unreadLink": "Nepročitano",
+    "unreadLinkTitle" : "Označi kao nepročitano",
+    "deleteLink" : "Obriši",
+    "deleteLinkTitle" : "Obriši poruku",
+    "spamLink" : "Prijavi kao neželjenu poštu",
+    "spamLinkTitle" : "Označi kao neželjenu poštu",
+    "archiveLink" : "Arhiviraj",
+    "archiveLinkTitle" : "Arhivirana pošta",
+    "starLinkTitle" : "Dodaj zvjezdicu",
+    "openLinkTitle" : "Otvori u web pošti",
+    "replyLinkTitle" : "Odgovori",
+    "summaryLinkTitle" : "Prikaži kratak pregled",
+    "fullLinkTitle" : "Prikaži cijelu poruku",
+    "refreshLinkTitle" : "Osvježi sve sandučiće",
+    "optionsLinkTitle" : "Idi u podešavanja",
+    "composeLinkTitle" : "Nova poruka",
+    "noUnreadText" : "Nema novih poruka",
+    "oneUnreadText" : "nepročitana pošta", // One unread item: "1 nepročitana poruka"
+    "severalUnreadText" : "nepročitana pošta", // Several unread items: "3 nepročitanih poruka"
+    "popupText" : "Primili ste novu poruku!"
+};
+
 // English
 languages["en"] = {
     "id" : "en",
@@ -90,7 +235,93 @@ languages["en"] = {
     "noUnreadText" : "No unread mail",
     "oneUnreadText" : "unread mail", // One unread item: "1 unread mail"
     "severalUnreadText" : "unread mail", // Several unread items: "3 unread mail"
-    "popupText" : "You have received new mail!",
+    "popupText" : "You have received new mail!"
+};
+
+// Esperanto
+languages["eo"] = {
+    "id" : "eo",
+    "what" : "Esperanto",
+    "months" : new Array("jan", "feb", "mar", "apr", "maj", "jun", "jul", "aŭg", "sep", "okt", "nov", "dec"),
+    "readLink" : "Legita",
+    "readLinkTitle" : "Marku kiel legita",
+    "unreadLink": "Mallegita",
+    "unreadLinkTitle" : "Marku kiel mallegita",
+    "deleteLink" : "Forviŝu",
+    "deleteLinkTitle" : "Forviŝu mesaĝon",
+    "spamLink" : "Spamo",
+    "spamLinkTitle" : "Marku kiel spamo",
+    "archiveLink" : "Gardu",
+    "archiveLinkTitle" : "Gardu mesaĝon",
+    "starLinkTitle" : "Ekverku",
+    "openLinkTitle" : "Malfermu en TTT",
+    "replyLinkTitle" : "Respundu mesaĝon",
+    "summaryLinkTitle" : "Montru resumon",
+    "fullLinkTitle" : "Montu tutan mesaĝon",
+    "refreshLinkTitle" : "Ĝisdatiĝi kontojn",
+    "optionsLinkTitle" : "Iru al agordoj",
+    "composeLinkTitle" : "Ekverku mesaĝon",
+    "noUnreadText" : "Neniu mesaĝoj ne legitaj",
+    "oneUnreadText" : "ne legita", // One unread item: "1 unread mail"
+    "severalUnreadText" : "ne legitaj", // Several unread items: "3 unread mail"
+    "popupText" : "Vi ricevis novan mesaĝon!"
+};
+
+// Estonian
+languages["et"] = {
+    "id" : "et",
+    "what" : "Eesti keel",
+    "months" : new Array("jaan", "veeb", "märts", "apr", "mai", "juun", "juul", "aug", "sep", "okt", "nov", "dets"),
+    "readLink" : "Loe",
+    "readLinkTitle" : "Märgi loetuna",
+    "unreadLink": "Lugemata",
+    "unreadLinkTitle" : "Märgi lugemata",
+    "deleteLink" : "Kustuta",
+    "deleteLinkTitle" : "Kustuta kiri",
+    "spamLink" : "Rämpspost",
+    "spamLinkTitle" : "Märgi rämpspostina",
+    "archiveLink" : "Arhiveeri",
+    "archiveLinkTitle" : "Arhiveeri kiri",
+    "starLinkTitle" : "Märgista kiri",
+    "openLinkTitle" : "Ava veebilehel",
+    "replyLinkTitle" : "Vasta kirjale",
+    "summaryLinkTitle" : "Näita kokkuvõtet",
+    "fullLinkTitle" : "Näita kogu kirja",
+    "refreshLinkTitle" : "Uuenda kõiki postkaste",
+    "optionsLinkTitle" : "Mine valikute lehele",
+    "composeLinkTitle" : "Koosta uus kiri",
+    "noUnreadText" : "Pole uusi kirju",
+    "oneUnreadText" : "lugemata kiri", // One unread item : "1 unread mail"
+    "severalUnreadText" : "lugemata kirja", // Several unread items: "3 unread mail"
+    "popupText" : "Sulle on uus kiri!"
+};
+
+// Euskara
+languages["eu"] = {
+    "id" : "eu",
+    "what" : "Euskara",
+    "months" : new Array("urt", "ots", "mar", "api", "mai", "eka", "uzt", "abu", "ira", "urr", "aza", "abe"),
+    "readLink" : "Irakurria",
+    "readLinkTitle" : "Irakurria bezala markatu",
+    "unreadLink": "Irakurri gabea",
+    "unreadLinkTitle" : "Irakurri gabe bezala markatu",
+    "deleteLink" : "Ezabatu",
+    "deleteLinkTitle" : "Mezua ezabatu",
+    "spamLink" : "Spam",
+    "spamLinkTitle" : "Spam bezala markatu",
+    "archiveLink" : "Artxibatu",
+    "archiveLinkTitle" : "Mezua artxibatu",
+    "starLinkTitle" : "Bereiztu",
+    "openLinkTitle" : "Webmail-a ireki",
+    "replyLinkTitle" : "Erantzun",
+    "summaryLinkTitle" : "Erakutsi laburpena",
+    "fullLinkTitle" : "Mezua osorik erakutsi",
+    "refreshLinkTitle" : "Mezu berriak ikusi",
+    "optionsLinkTitle" : "Lehentasunak ikusi",
+    "composeLinkTitle" : "Mezu berria idatzi",
+    "noUnreadText" : "Ez duzu irakurri gabeko mezurik",
+    "unreadText" : "Irakurri gabeko mezuak",
+    "popupText" : "Mezu berria jaso duzu!"
 };
 
 // French - Français
@@ -161,22 +392,22 @@ languages["he"] = {
     "unreadLink": "לא נקרא",
     "unreadLinkTitle" : "סמן כלא נקרא",
     "deleteLink" : "מחק",
-    "deleteLinkTitle" : "מחק דואר",
+    "deleteLinkTitle" : "מחק הודעה",
     "spamLink" : "דואר זבל",
     "spamLinkTitle" : "סמן כדואר זבל",
     "archiveLink" : "שלח לארכיון",
-    "archiveLinkTitle" : "שלח דואר לארכיון",
-    "starLinkTitle" : "סמן דואר בכוכב",
-    "openLinkTitle" : "Gmailפתח ב",
-    "replyLinkTitle" : "השב לדואר",
+    "archiveLinkTitle" : "שלח הודעה לארכיון",
+    "starLinkTitle" : "סמן הודעה בכוכב",
+    "openLinkTitle" : "Gmail-פתח ב",
+    "replyLinkTitle" : "השב להודעה",
     "summaryLinkTitle" : "הצג סיכום",
     "fullLinkTitle" : "הצג הודעה במלואה",
     "refreshLinkTitle" : "רענן את כל תיבות הדואר",
     "optionsLinkTitle" : "פתח את דף האפשרויות",
     "composeLinkTitle" : "כתוב דואר",
-    "noUnreadText" : "אין דואר חדש",
-    "oneUnreadText" : "דואר אחד שלא נקרא", // One unread item: "1 unread mail"
-    "severalUnreadText" : "מספר דברי דואר שלא נקראו", // Several unread items: "3 unread mail"
+    "noUnreadText" : "אין הודעות חדשות",
+    "oneUnreadText" : "הודעות שלא נקראו", // One unread item: "1 unread mail"
+    "severalUnreadText" : "הודעות שלא נקראו", // Several unread items: "3 unread mail"
     "popupText" : "!קיבלת דואר חדש"
 };
 
@@ -236,6 +467,64 @@ languages["it"] = {
     "oneUnreadText" : "nuovo messaggio", // One unread item: "1 unread mail"
     "severalUnreadText" : "nuovi messaggi", // Several unread items: "3 unread mail"
     "popupText" : "Hai ricevuto un nuovo messaggio!"
+};
+
+// Latvian
+languages["lv"] = {
+    "id" : "lv",
+    "what" : "Latviešu",
+    "months" : new Array("jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"),
+    "readLink" : "Lasīts",
+    "readLinkTitle" : "Atzīmēt kā lasītu",
+    "unreadLink": "Nelasīts",
+    "unreadLinkTitle" : "Atzīmēt kā nelasītu",
+    "deleteLink" : "Dzēst",
+    "deleteLinkTitle" : "Dzēst e-pastu",
+    "spamLink" : "Spams",
+    "spamLinkTitle" : "Atzīmēt kā lasītu",
+    "archiveLink" : "Arhīvs",
+    "archiveLinkTitle" : "Arhivēt e-pastu",
+    "starLinkTitle" : "Atzīmēt kā favorītu",
+    "openLinkTitle" : "Atvērt webpastā",
+    "replyLinkTitle" : "Atbildēt uz e-pastu",
+    "summaryLinkTitle" : "Rādīt kopsavilkumu",
+    "fullLinkTitle" : "Rādīt pilnskatā",
+    "refreshLinkTitle" : "Pārbaudīt visus e-pastus",
+    "optionsLinkTitle" : "Iet uz opcijām",
+    "composeLinkTitle" : "Rakstīt jaunu e-pastu",
+    "noUnreadText" : "Nav jaunu e-pastu",
+    "oneUnreadText" : "nelasīts e-pasts", // One unread item: "1 unread mail"
+    "severalUnreadText" : "nelasīti e-pasti", // Several unread items: "3 unread mail"
+    "popupText" : "Pienācis e-pasts!"
+};
+
+// Mongolian
+languages["mn"] = {
+    "id" : "mn",
+    "what" : "Монгол",
+    "months" : new Array("1-сар", "2-сар", "3-сар", "4-сар", "5-сар", "6-сар", "7-сар", "8-сар", "9-сар", "10-сар", "11-сар", "12-сар"),
+    "readLink" : "Унших",
+    "readLinkTitle" : "Ушисанг тэмдэглэ",
+    "unreadLink": "Уншаагүй",
+    "unreadLinkTitle" : "Уншаагүй болго",
+    "deleteLink" : "Устга",
+    "deleteLinkTitle" : "Майл устга",
+    "spamLink" : "Спам",
+    "spamLinkTitle" : "Спан тэмдэглэ",
+    "archiveLink" : "Архив",
+    "archiveLinkTitle" : "Архив",
+    "starLinkTitle" : "Одоор тэмдэглэ",
+    "openLinkTitle" : "Вэб майл дээр нээ",
+    "replyLinkTitle" : "Майлд хариулах",
+    "summaryLinkTitle" : "Ерөнхий харах",
+    "fullLinkTitle" : "Бүтэм емайл харах",
+    "refreshLinkTitle" : "Бүх майл хайрцагийг унш",
+    "optionsLinkTitle" : "Тохируулага руу очих",
+    "composeLinkTitle" : "Шинэ емайл бичих",
+    "noUnreadText" : "Уншаагүй емайл алга",
+    "oneUnreadText" : "уншаагүй емайл", // One unread item: "1 unread mail"
+    "severalUnreadText" : "уншаагүй емайл", // Several unread items: "3 unread mail"
+    "popupText" : "Та шинэ емайл хүлээн авлаа!"
 };
 
 // Polish
@@ -587,10 +876,39 @@ languages["ro"] = {
     "popupText" : "Aveți un mesaj nou!"
 };
 
+// Lao
+languages["lo"] = {
+    "id" : "lo",
+    "what" : "ພາສາລາວ",
+    "months" : new Array("ມ.ກ", "ກ.ພ", "ມ.ນ", "ມ.ສ", "ພ.ພ", "ມ.ຖ", "ກ.ດ", "ສ.ຫ", "ກ.ຍ", "ຕ.ລ", "ພ.ຈ", "ທ.ວ"),
+    "readLink" : "ອ່ານ",
+    "readLinkTitle" : "ໃສ່ເຄື່ອງໝາຍອ່ານແລ້ວ",
+    "unreadLink": "ຍັງບໍ່ໄດ້ອ່ານ",
+    "unreadLinkTitle" : "ໃສ່ເຄື່ອງໝາຍຍັງບໍ່ໄດ້ອ່ານ",
+    "deleteLink" : "ລຶບ",
+    "deleteLinkTitle" : "ລຶບຈົດໝາຍ",
+    "spamLink" : "ຈົດໝາຍບໍ່ມີປະໂຫຍດ",
+    "spamLinkTitle" : "ລາຍງານຈົດໝາຍບໍ່ມີປະໂຫຍດ",
+    "archiveLink" : "ເກັບມ້ຽນ",
+    "archiveLinkTitle" : "ຈົດໝາຍທີ່ເກັບມ້ຽນ",
+    "starLinkTitle" : "ໃສເຄື່ອງໝາຍດາວ",
+    "openLinkTitle" : "ເປີດໃນເວັບ",
+    "replyLinkTitle" : "ຕອບຈົດໝາຍ",
+    "summaryLinkTitle" : "ສະຫລຸບຫຍໍ້",
+    "fullLinkTitle" : "ລາຍລະອຽດຈົດໝາຍ",
+    "refreshLinkTitle" : "ສະແດງລາຍການຈົດໝາຍຄືນອີກ",
+    "optionsLinkTitle" : "ກຳນົດຄ່າຕົວເລືອກ",
+    "composeLinkTitle" : "ຂຽນຈົດໝາຍ",
+    "noUnreadText" : "ບໍ່ມີຈົດໝາຍທີ່ຍັງບໍ່ໄດ້ອ່ານ",
+    "oneUnreadText" : "ສະບັບຍັງບໍ່ໄດ້ອ່ານ", // One unread item: "1 unread mail"
+    "severalUnreadText" : "ສະບັບຍັງບໍ່ໄດ້ອ່ານ", // Several unread items: "3 unread mail"
+    "popupText" : "ມີຈົດໝາຍໃໝ່"
+};
+
 // Chinese (Traditional)繁体中文
 languages["zh-TW"] = {
     "id" : "zh-TW",
-    "what" : "Chinese (Traditional) 繁體中文",
+    "what" : "繁體中文",
     "months" : new Array("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"),
     "readLink" : "已讀",
     "readLinkTitle" : "標記為已讀取",
@@ -617,7 +935,7 @@ languages["zh-TW"] = {
 };
 
 // Georgian
-languages["Geo"] = {
+languages["geo"] = {
     "id" : "geo",
     "what" : "ქართული",
     "months" : new Array("იან", "თებ", "მარ", "აპრ", "მაი", "ივნ", "ივლl", "აგვ", "სექ", "ოქტ", "ნოემ", "დეკ"),
@@ -712,8 +1030,8 @@ languages["hi"] = {
     "readLinkTitle" : "पठित के रूप में चिह्नित करे",
     "unreadLink": "अपठित",
     "unreadLinkTitle" : "अपठित के रूप में चिह्नित करे",
-    "deleteLink" : "हटाये",
-    "deleteLinkTitle" : "मेल हटेये",
+    "deleteLink" : "हटाव",
+    "deleteLinkTitle" : "मेल हटायें",
     "spamLink" : "स्पं",
     "spamLinkTitle" : "स्पं के रूप में चिह्नित करे",
     "archiveLink" : "संग्रहित",
@@ -822,7 +1140,7 @@ languages["el"] = {
 // Chinese (Simplified) 简体中文
 languages["zh-CN"] = {
     "id" : "zh-CN",
-    "what" : "Chinese (Simplified) 简体中文",
+    "what" : "简体中文",
     "months" : new Array("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"),
     "readLink" : "已读",
     "readLinkTitle" : "标记为已读",
@@ -875,6 +1193,35 @@ languages["af"] = {
     "oneUnreadText" : "ongeleesde epos", // One unread item: "1 ongeleesde epos"
     "severalUnreadText" : "ongeleesde eposse", // Several unread items: "3 ongeleesde eposse"
     "popupText" : "Jy het 'n nuwe boodskap ontvang!"
+};
+
+// Kannada = ಕನ್ನಡ
+languages["kn"] = {
+    "id" : "kn",
+    "what" : "ಕನ್ನಡ",
+    "months" : new Array("ಜನವರಿ", "ಫೆಬ್ರವರಿ", "ಮಾರ್ಚ್", "ಎಪ್ರಿಲ್", "ಮೇ", "ಜೂನ್", "ಜುಲೈ", "ಆಗಸ್ಟ್", "ಸೆಪ್ಟೆಂಬರ್", "ಆಕ್ಟೋಬರ್", "ನವೆಂಬರ್", "ಡಿಸೆಂಬರ್"),
+    "readLink" : "ಓದಿದೆ",
+    "readLinkTitle" : "ಓದಿದಂತೆ ಗುರುತಿಸು",
+    "unreadLink": "ಓದಿಲ್ಲ",
+    "unreadLinkTitle" : "ಓದಿಲ್ಲದಂತೆ ಗುರುತಿಸು",
+    "deleteLink" : "ಅಳಿಸು",
+    "deleteLinkTitle" : "ಪತ್ರವನ್ನು ಅಳಿಸು",
+    "spamLink" : "ರದ್ದಿ",
+    "spamLinkTitle" : "ರದ್ದಿ ಎಂದು ಗುರುತಿಸು",
+    "archiveLink" : "ಸಂಗ್ರಹಿಸು",
+    "archiveLinkTitle" : "ಪತ್ರವನ್ನು ಸಂಗ್ರಹಿಸಿಡು",
+    "starLinkTitle" : "ನಕ್ಷತ್ರಿಸು",
+    "openLinkTitle" : "ಅಂತರ್ಜಾಲದಲ್ಲಿ ತೆರಿ",
+    "replyLinkTitle" : "ಉತ್ತರಿಸು",
+    "summaryLinkTitle" : "ಸಾರಾಂಶವನ್ನು ತೋರಿಸು",
+    "fullLinkTitle" : "ಪೂರ್ಣ ಸಂದೇಶವನ್ನು ತೋರಿಸು",
+    "refreshLinkTitle" : "ಎಲ್ಲಾ ಅಂಚೆಪೆಟ್ಟಿಗೆಗಳನ್ನು ನವೀಕರಿಸಿ",
+    "optionsLinkTitle" : "ಆಯ್ಕೆಗಳಿಗೆ ಹೋಗಿ",
+    "composeLinkTitle" : "ಹೊಸ ಪತ್ರವನ್ನು ಬರೆ",
+    "noUnreadText" : "ಓದದ ಪತ್ರಗಳಿಲ್ಲ",
+    "oneUnreadText" : "ಓದದ ಪತ್ರ", // One unread item: "1 ಓದದ ಪತ್ರ"
+    "severalUnreadText" : "ಓದದ ಪತ್ರಗಳು", // Several unread items: "3 ಓದದ ಪತ್ರಗಳು"
+    "popupText" : "ನಿಮಗೆ ಹೊಸ ಪತ್ರ ಬಂದಿದೆ!"
 };
 
 // Ukrainian
@@ -1080,7 +1427,7 @@ languages["ja"] = {
     "popupText" : "新しいメールが届いています"
 };
 
-// Català
+// Catalan
 languages["ca"] = {
     "id" : "ca",
     "what" : "Català",
@@ -1151,10 +1498,10 @@ languages["no"] = {
     "deleteLinkTitle" : "Slett e-post",
     "spamLink" : "Spam",
     "spamLinkTitle" : "Merk som spam",
-    "archiveLink" : "Arkiv",
+    "archiveLink" : "Arkiver",
     "archiveLinkTitle" : "Arkiver e-post",
     "starLinkTitle" : "Merk med stjerne",
-    "openLinkTitle" : "Åpne i webmail",
+    "openLinkTitle" : "Åpne i nettleser",
     "replyLinkTitle" : "Svar på e-post",
     "summaryLinkTitle" : "Vis sammendrag",
     "fullLinkTitle" : "Vis hele meldingen",
@@ -1285,31 +1632,31 @@ languages["nl"] = {
 
 // Danish
 languages["dk"] = {
-    "id" : "dk",
+    "id" : "DK",
     "what" : "Dansk",
     "months" : new Array("jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"),
-    "readLink" : "Læst",
+    "readLink" : "Læs",
     "readLinkTitle" : "Marker som læst",
-    "unreadLink": "Ulæst",
-    "unreadLinkTitle" : "Marker som ulæst",
+    "unreadLink": "Ikke læst",
+    "unreadLinkTitle" : "Marker som ikke læst",
     "deleteLink" : "Slet",
     "deleteLinkTitle" : "Slet mail",
     "spamLink" : "Spam",
     "spamLinkTitle" : "Marker som spam",
     "archiveLink" : "Arkivér",
     "archiveLinkTitle" : "Arkivér mail",
-    "starLinkTitle" : "Stjernemarker mail",
+    "starLinkTitle" : "Tilføj stjerne",
     "openLinkTitle" : "Åben i webmail",
-    "replyLinkTitle" : "Svar på mail",
-    "summaryLinkTitle" : "Vis resumé",
-    "fullLinkTitle" : "Vis hele mail",
-    "refreshLinkTitle" : "Opdater alle mailbokse",
+    "replyLinkTitle" : "Svar mail",
+    "summaryLinkTitle" : "Vis citeret tekst",
+    "fullLinkTitle" : "Vis hele beskeden",
+    "refreshLinkTitle" : "Opdater alle indbakker",
     "optionsLinkTitle" : "Gå til indstillinger",
     "composeLinkTitle" : "Skriv ny mail",
-    "noUnreadText" : "Ingen ulæste mails",
-    "oneUnreadText" : "ulæst mail", // One unread item: "1 ulæst mail"
+    "noUnreadText" : "Ingen ulæst mail",
+    "oneUnreadText" : "ulæst mail", // One unread item: "1 unread mail"
     "severalUnreadText" : "ulæste mails", // Several unread items: "3 unread mail"
-    "popupText" : "Du har fået en ny mail!"
+    "popupText" : "Du har modtaget en mail!"
 };
 
 // Persian
@@ -1400,33 +1747,91 @@ languages["sk"] = {
     "popupText" : "Máte novú správu!"
 };
 
-// Polish
-languages["pl"] = {
-    "id" : "pl",
-    "what" : "Polski",
-    "months" : new Array("Sty", "Lut", "Mar", "Kwi", "Maj", "Cze", "Lip", "Sie", "Wrz", "Paź", "Lis", "Gru"),
-    "readLink" : "Przeczytane",
-    "readLinkTitle" : "Oznacz jako przeczytane",
-    "unreadLink": "Nieprzeczytane",
-    "unreadLinkTitle" : "Oznacz jako nieprzeczytane",
-    "deleteLink" : "Usuń",
-    "deleteLinkTitle" : "Usuń wiadomość",
+// Urdu
+languages["urd"] = {
+    "id" : "urd",
+    "what" : "اردو",
+    "months" : new Array("جنوری", "فروری", "مارچ", "اپریل", "مئ", "جون", "جولائی", "اگست", "سپتمبر", "اکتوبر", "نومبر", "دسمبر"),
+    "readLink" : "دیکھا ھوا",
+    "readLinkTitle" : "دیکھا ھوا قرار دیں",
+    "unreadLink": "ان دیکھا",
+    "unreadLinkTitle" : "ان دیکھا قرار دیں",
+    "deleteLink" : "ضائع",
+    "deleteLinkTitle" : "ضائع کریں",
+    "spamLink" : "فضول",
+    "spamLinkTitle" : "فضول قرار دیں",
+    "archiveLink" : "محفوظ",
+    "archiveLinkTitle" : "محفوظ کریں",
+    "starLinkTitle" : "اہم قرار دیں",
+    "openLinkTitle" : "ویب میل میں کھولیں",
+    "replyLinkTitle" : "جواب دیں",
+    "summaryLinkTitle" : "خلاصہ دیکھیں",
+    "fullLinkTitle" : "مکمل پیغام دیکھیں",
+    "refreshLinkTitle" : "تمام پیغامات دوبارہ لاین",
+    "optionsLinkTitle" : "ترتیب دیکھیں",
+    "composeLinkTitle" : "نیا پیغام",
+    "noUnreadText" : "کوئی ان دیکھا پیغام نہیں",
+    "oneUnreadText" : "ان دیکھا پیغام",
+    "severalUnreadText" : "ان دیکھے پیغامات",
+    "popupText" : "ایک نیا پیغام موصول ہوا ہے"
+};
+
+// Sinhala
+languages["si"] = {
+    "id" : "si",
+    "what" : "සිංහල",
+    "months" : new Array("ජනවාරි", "පෙබරවාරි", "මාර්තු", "අප්රේල්", "මැයි", "ජූනි", "ජූලි", "අගෝස්තු", "සැප්තැම්බර්", "ඔක්තෝබර්", "නොවැම්බර්", "දෙසැම්බර්"),
+    "readLink" : "කියවන්න",
+    "readLinkTitle" : "කියැවූ ලෙස සළකුණු කරන්න",
+    "unreadLink": "කියවා නැති ",
+    "unreadLinkTitle" : "කියවා නැති ලෙස සළකුණු කරන්න",
+    "deleteLink" : "මකා දමන්න",
+    "deleteLinkTitle" : "ලිපිය මකා දමන්න",
+    "spamLink" : "අනවශ්ය Spam ලිපි",
+    "spamLinkTitle" : "අනවශ්ය Spam ලිපි ලෙස සළකුණු කරන්න",
+    "archiveLink" : "ගොනුව",
+    "archiveLinkTitle" : "ලිපි ගොනුව",
+    "starLinkTitle" : "තරු ලිපි ",
+    "openLinkTitle" : "වෙබ් මේල් මඟින් අරඹන්න",
+    "replyLinkTitle" : "ලිපියට පිළිතුරු යවන්න",
+    "summaryLinkTitle" : "සාරාංශය පෙන්වන්න",
+    "fullLinkTitle" : "සම්පූර්ණ ලිපිය පෙන්වන්න",
+    "refreshLinkTitle" : "සෑම ලිපි පෙට්ටියක්ම Refresh කරන්න",
+    "optionsLinkTitle" : "Options පිටුවට යන්න",
+    "composeLinkTitle" : "නව ලිපියක් අරඹන්න",
+    "noUnreadText" : "නොකියවූ ලිපි නැත",
+    "oneUnreadText" : "නොකියවූ ලිපි", // One unread item: "නොකියවූ ලිපි 1"
+    "severalUnreadText" : "නොකියවූ ලිපි", // Several unread items: "නොකියවූ ලිපි 3"
+    "popupText" : "ඔබට නව ලිපියක් ලැබී ඇත!"
+};
+
+// Uzbek
+languages["uz"] = {
+    "id" : "uz",
+    "what" : "O'zbekcha",
+    "months" : new Array("yan", "fev", "mar", "apr", "may", "yun", "yul", "avg", "sen", "okt", "noy", "dek"),
+    "readLink" : "Ko'rilmagan",
+    "readLinkTitle" : "Ko'rilgan deb belgilash",
+    "unreadLink": "Ko'rilmagan",
+    "unreadLinkTitle" : "Ko'rilmagan deb belgilash",
+    "deleteLink" : "O'chirish",
+    "deleteLinkTitle" : "Xatni o'chirish",
     "spamLink" : "Spam",
-    "spamLinkTitle" : "Oznacz jako spam",
-    "archiveLink" : "Archiwizuj",
-    "archiveLinkTitle" : "Archiwizuj wiadomość",
-    "starLinkTitle" : "Oznacz gwiazdką",
-    "openLinkTitle" : "Otwórz w nowym oknie",
-    "replyLinkTitle" : "Odpowiedz",
-    "summaryLinkTitle" : "Pokaż podsumowanie",
-    "fullLinkTitle" : "Pokaż pełną treść",
-    "refreshLinkTitle" : "Odśwież wszystkie skrzynki",
-    "optionsLinkTitle" : "Przejdź do strony z ustawieniami",
-    "composeLinkTitle" : "Napisz nową wiadomość",
-    "noUnreadText" : "Brak nowych wiadomości",
-    "oneUnreadText" : "nieprzeczytana wiadomość", // One unread item: "1 nieprzeczytana wiadomość"
-    "severalUnreadText" : "nieprzeczytane wiadomości", // Several unread items: "3 nieprzeczytane wiadomości"
-    "popupText" : "Masz nową wiadomość!"
+    "spamLinkTitle" : "Spam deb belgilash",
+    "archiveLink" : "Arxiv",
+    "archiveLinkTitle" : "Xatni arxivlash",
+    "starLinkTitle" : "Yulduzli belgi",
+    "openLinkTitle" : "Xatni webda ochish",
+    "replyLinkTitle" : "Xatga javob",
+    "summaryLinkTitle" : "Show summary",
+    "fullLinkTitle" : "To'liq xatni ochish",
+    "refreshLinkTitle" : "Xamma pochtani yangilash",
+    "optionsLinkTitle" : "Optsiyalar",
+    "composeLinkTitle" : "Yangi xat",
+    "noUnreadText" : "Yangi xat yo'q",
+    "oneUnreadText" : "ta o'qilmagan xat", // One unread item: "1 unread mail"
+    "severalUnreadText" : "ta o'qilmagan xat", // Several unread items: "3 unread mail"
+    "popupText" : "Yangi xat keldi!"
 };
 
 if(localStorage["gc_language"] == null) {
