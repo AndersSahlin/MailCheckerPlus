@@ -67,43 +67,43 @@
          </div>
       </div> 
 
-      <div class="vbox summary padded">
-         <div class="hbox wide " mailId="<#= mail.id #>">
-            <#= mail.summary #>
-         </div>
-         <# /*<div class="hbox padded hiddenSummaryActions">
-            <a class="fullLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><#= i18n.get('fullLinkTitle') #></a>
-            &nbsp;
-            <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
-            &nbsp;
-            <a class="replyLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('replyLinkTitle') #>"><#= i18n.get('replyLinkTitle') #></a>
-         </div> */#>
+      <div class="vbox summary padded" mailId="<#= mail.id #>">
+         <#= mail.summary #>
       </div>
    </div>
    </script>
     
     <div id="fullscreenContainer">
-        <div id="fullscreenControls">
-            <a class="starLink imageLink" href="#"><img src="img/star.png" /></a>
-            <span class="authorLink" href="#"></span>
-            <span class="issuedLink" href="#"></span>
-            &nbsp;-&nbsp;
-            <a class="openLink" href="#"></a>
-            <div>
-               <a class="replyLink imageLink" href="#"><img src="img/reply.png" /></a>
-               &nbsp;
-               <a class="readLink" href="#"></a>
-               &nbsp;
-               <a class="deleteLink" href="#"></a>
-               &nbsp;
-               <a class="spamLink"  href="#"></a>
-               &nbsp;
-               <a class="archiveLink" href="#"></a>         
-               &nbsp;|&nbsp;
-               <a class="closeLink" href="#" title="Close preview">Close&nbsp;<img src="/img/close.gif" alt="Close" /></a>
-               &nbsp;
+        <div id="fullscreenControls" class="vbox">
+            <div class="hbox padded">
+               <div class="hbox wide">
+                  <a class="openLink" href="#"></a>
+               </div>
+               <div class="hbox">
+                  <a class="closeLink imageLink" href="#" title="Close preview"><img src="/img/close.gif" alt="Close" /></a>
+               </div>
+            </div>
+            <div class="hbox padded">
+               <div class="hbox wide">
+                  <a class="starLink imageLink" href="#"><img src="img/star.png" /></a>
+                  <span class="authorLink author" href="#"></span>                  
+               </div>
+               <div class="hbox">
+                  <span class="issuedLink" href="#"></span>
+                  &nbsp;
+                  <a class="replyLink imageLink" href="#"><img src="img/reply.png" /></a>
+                  &nbsp;
+                  <a class="readLink" href="#"></a>
+                  &nbsp;
+                  <a class="deleteLink" href="#"></a>
+                  &nbsp;
+                  <a class="spamLink"  href="#"></a>
+                  &nbsp;
+                  <a class="archiveLink" href="#"></a>    
+               </div>
             </div>
         </div>
+        <div id="fullscreenContent"></div>
     </div>
     
       

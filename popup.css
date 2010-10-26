@@ -83,14 +83,21 @@ img
 {
    position: absolute;
    top: 0;
-   left: 0;
+   right: 0;
    width: 100%;
    height: 100%;
    z-index: 99;
    display: none;
-   overflow: auto;
    background-color: White;
-   max-height: 500px;
+   /*max-height: 500px;*/
+}
+
+#fullscreenContent
+{
+   max-height: 450px;
+   overflow: auto;
+   padding: 15px 10px 5px 10px;
+   background-color: White;
 }
 
 #fullscreenControls
@@ -100,18 +107,16 @@ img
    color: Black;
    border-bottom: 1px solid #333;
    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.1, rgb(245,245,245)), color-stop(0.8, rgb(255,255,255)));
-   padding: 3px;
-}
-
-#fullscreenControls div
-{
-   text-align:right;
-   float: right;
 }
 
 #fullscreenControls a
 {
    cursor: pointer;
+}
+
+#fullscreenControls a.openLink
+{
+   font-size: 110%;
 }
 
  /*
@@ -147,7 +152,7 @@ a.imageLink
    -webkit-transition:opacity 0.05s ease-in;  
 }
 
-a.imageLink:hover
+a.imageLink:hover, a.imageLink.fakeHover
 {
    opacity: 1;
 }

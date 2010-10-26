@@ -155,6 +155,7 @@ function showBody(accountid, mailid, mailbody) {
       var mail = allMail[mailid];
 
       var fullscreenContainer = $("#fullscreenContainer");
+      var fullscreenContent = $("#fullscreenContent");
       var fullscreenControl = $("#fullscreenControls");
 
 
@@ -177,46 +178,41 @@ function showBody(accountid, mailid, mailbody) {
       fullscreenControl.find('.archiveLink').attr('title', i18n.get('archiveLinkTitle'));
 
       // Insert the full mail body and full screen controls
-      fullscreenContainer.html("");
-      fullscreenContainer.append(fullscreenControl);
-      fullscreenContainer.append(mailbody);
+      fullscreenContent.empty();
+      fullscreenContent.html(mailbody);
 
-      // Remove previous click event handlers
-      fullscreenControl.find('.closeLink').unbind();
+      fullscreenContainer.empty();
+      fullscreenContainer.append(fullscreenControl);
+      fullscreenContainer.append(fullscreenContent);
+
+      // Set event handlers
       fullscreenControl.find('.closeLink').click(function () {
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.readLink').unbind();
       fullscreenControl.find('.readLink').click(function () {
          readThread(accountid, mailid);
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.replyLink').unbind();
       fullscreenControl.find('.replyLink').click(function () {
          replyTo(accountid, mailid);
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.deleteLink').unbind();
       fullscreenControl.find('.deleteLink').click(function () {
          deleteThread(accountid, mailid);
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.spamLink').unbind();
       fullscreenControl.find('.spamLink').click(function () {
          spamThread(accountid, mailid);
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.archiveLink').unbind();
       fullscreenControl.find('.archiveLink').click(function () {
          archiveThread(accountid, mailid);
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.openLink').unbind();
       fullscreenControl.find('.openLink').click(function () {
          openMail(accountid, mailid);
          setTimeout(hideBody(), 0);
       });
-      fullscreenControl.find('.starLink').unbind();
       fullscreenControl.find('.starLink').click(function () {
          $(this).css('opacity', '1');
          starThread(accountid, mailid);
@@ -298,21 +294,21 @@ function resizeWindow() {
 }
 
 
-var animationSpeed = 350;
+var animationSpeed = 250;
 var previousHeight;
 function expandWindow() {
    previousHeight = $('body').height();
 
    $('body').animate({
       width: [750, 'swing'],
-      height: [500, 'swing']
+      //height: [500, 'swing']
    }, animationSpeed);
 }
 
 function contractWindow() {
    $('body').animate({
       width: [500, 'swing'],
-      height: [previousHeight, 'swing']
+      //height: [previousHeight, 'swing']
    }, animationSpeed, function () {
       $(this).height('auto');
    });
@@ -382,10 +378,10 @@ function renderMail() {
       inboxElement.find(".spamLink").click(function () { spamThread(account.id, $(this).attr('mailId')); });
       inboxElement.find(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
       inboxElement.find(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
+      inboxElement.find(".summary").click(function () { getThread(account.id, $(this).attr('mailId')); });
       inboxElement.find(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
       inboxElement.find(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
-
-
+      
       inboxElement.find(".starLink").click(function () {
          $(this).css('opacity', '1');
          starThread(account.id, $(this).attr('mailId'));
