@@ -35,9 +35,9 @@ function MailAccount(settingsObj) {
       mailURL += "/mail/";
    }
 
-   var inboxLabel = "";
+   var inboxLabel = "#inbox";
+   var unreadLabel = "#inbox";
    var atomLabel = "";
-   var unreadLabel = "";
 
    if (localStorage["gc_check_all"] != null
         && localStorage["gc_check_all"] == "true") {
@@ -50,6 +50,7 @@ function MailAccount(settingsObj) {
         && settingsObj.domain == null) {
       // Only check priority inbox
       atomLabel = "important";
+      inboxLabel = unreadLabel = "#mbox";
    }
 
    var mailArray = new Array();
