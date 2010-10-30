@@ -303,16 +303,17 @@ function expandWindow() {
       width: [750, 'swing'],
       //height: [500, 'swing']
    }, animationSpeed);
+
+   $('.account').slideUp();
 }
 
 function contractWindow() {
    $('body').animate({
       width: [500, 'swing'],
       //height: [previousHeight, 'swing']
-   }, animationSpeed, function () {
-      $(this).height('auto');
-   });
+   }, animationSpeed);
 
+   $('.account').slideDown();
    previousHeight = 0;
 }
 
