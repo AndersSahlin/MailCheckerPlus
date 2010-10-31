@@ -68,7 +68,7 @@ function MailAccount(settingsObj) {
    this.isDefault;
 
    // Debug output (if enabled, might cause memory leaks)
-   var verbose = false;
+   var verbose = true;
 
    // Without this/that, no internal calls to onUpdate or onError can be made...
    var that = this;
@@ -356,6 +356,7 @@ function MailAccount(settingsObj) {
    // Opens the inbox
    this.openInbox = function () {
       // See if there is any Gmail tab open	
+      logToConsole('Opening inbox');
       chrome.windows.getAll({ populate: true }, function (windows) {
          for (var w in windows) {
             for (var i in windows[w].tabs) {

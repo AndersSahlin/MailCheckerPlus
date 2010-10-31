@@ -9,6 +9,24 @@ var mailCache = new Array();
 var allMail;
 var scrollbar;
 
+var unreadCount = 0;
+allMail = new Array();
+$.each(mailAccounts, function (i, account) {
+   unreadCount += account.getUnreadCount();
+});
+
+var previewSetting = localStorage["gc_preview_setting"];
+
+if (previewSetting == "0") {
+   // Preview setting set to "Always off" =
+   // Go to first mail inbox with unread items
+   openInbox();
+} else if (previewSetting == "1" && unreadCount == 0) {
+   // Preview setting set to "Automatic" + no unread mail =
+   // Go to first mail inbox
+   openInbox(0);
+}
+
 function hideElement(id) {
    var element = document.getElementById(id);
    if (element != null) {
@@ -32,14 +50,14 @@ function openMail(accountId, mailid) {
 function openInbox(accountId) {
    window.close();
    if (accountId == null) {
+      accountId = 0;
       // Open first inbox with unread items
       $.each(mailAccounts, function (i, account) {
          if (account.getUnreadCount() > 0) {
-            account.openInbox();
+            accountId = account.id;
             return false;
          }
       });
-      accountId = 0;
    }
    mailAccounts[accountId].openInbox();
 }
@@ -403,31 +421,11 @@ $(document).ready(function () {
       unreadCount += account.getUnreadCount();
    });
 
-   var previewSetting = localStorage["gc_preview_setting"];
+   backgroundPage.stopAnimateLoop();
 
-   if (previewSetting == "0") {
-      // Preview setting set to "Always off" =
-      // Go to first mail inbox with unread items
-      openInbox();
-   }
-   if (previewSetting == "1" && unreadCount == 0) {
-      // Preview setting set to "Automatic" + no unread mail =
-      // Go to first mail inbox
-      openInbox(0);
-      //   } else if (previewSetting == "2" && unreadCount == -1) {
-      //      // Preview setting set to "Always on" + no mail found =
-      //      // Display an error text
-      //      $('#content').html("<br /><h3>Error</h3><p>No active account was found</p>" +
-      //		    "<p><a href='https://mail.google.com/' target='_blank' title='Log in to Gmail'>Log in to Gmail</a></p>");
-      //      $('#content').width(300);
-      //      $('#content').css({ "textAlign": "center", "fontSize": "80%" });
-   } else {
-      backgroundPage.stopAnimateLoop();
+   renderMail();
 
-      renderMail();
-
-      // Should probably use jQuery for this
-      document.getElementById('refresh').setAttribute('title', i18n.get('refreshLinkTitle'));
-      document.getElementById('options').setAttribute('title', i18n.get('optionsLinkTitle'));
-   }
+   // Should probably use jQuery for this
+   document.getElementById('refresh').setAttribute('title', i18n.get('refreshLinkTitle'));
+   document.getElementById('options').setAttribute('title', i18n.get('optionsLinkTitle'));
 });
