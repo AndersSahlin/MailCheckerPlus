@@ -74,11 +74,13 @@ function MailAccount(settingsObj) {
    var that = this;
    
    function onGetInboxSuccess(data) {
-      var foundNewMail = false;
-      var xmlDocument = $(data);
+      var foundNewMail = false; 
+      var parser = new DOMParser();
+      xmlDocument = $(parser.parseFromString(data, "text/xml"));
       var fullCount = xmlDocument.find('fullcount').text();
 
-      mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");
+      mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");      
+
       //newestMail = null;
       var newMailArray = new Array();
 
