@@ -156,7 +156,7 @@ function reloadSettings() {
    }
    accounts = new Array();
    profilePhotos = {};
-	   
+
    chrome.browserAction.setBadgeText({ text: "..." });
    chrome.browserAction.setTitle({ title: "Polling accounts..." });
 
@@ -182,17 +182,16 @@ function reloadSettings() {
             reloadSettings_complete();
          },
          error: function (objRequest) { },
-		 complete: function() { 
-			if(accounts.length == 0) {
-				// No multiple accounts - just check default Gmail
-				var acc = new MailAccount({});
-				acc.onError = mailError;
-				acc.onUpdate = mailUpdate;
-				accounts.push(acc);
-				reloadSettings_complete();
-			}
-		}
-		 
+         complete: function () {
+            if (accounts.length == 0) {
+               // No multiple accounts - just check default Gmail
+               var acc = new MailAccount({});
+               acc.onError = mailError;
+               acc.onUpdate = mailUpdate;
+               accounts.push(acc);
+               reloadSettings_complete();
+            }
+         }
       });
    } else {
       reloadSettings_complete();

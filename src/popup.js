@@ -43,12 +43,11 @@ function showElement(id) {
 
 // Opens a mail and closes this window
 function openMail(accountId, mailid) {
-   window.close();
    mailAccounts[accountId].openThread(mailid);
+   window.close();
 }
 
 function openInbox(accountId) {
-   window.close();
    if (accountId == null) {
       accountId = 0;
       // Open first inbox with unread items
@@ -60,22 +59,23 @@ function openInbox(accountId) {
       });
    }
    mailAccounts[accountId].openInbox();
+   window.close();
 }
 
 function openUnread(accountId) {
-   window.close();
    mailAccounts[accountId].openUnread();
+   window.close();
 }
 
 function composeNew(accountId) {
-   window.close();
    mailAccounts[accountId].composeNew();
+   window.close();
 }
 
 function sendPage(accountId) {
    chrome.tabs.getSelected(null, function (tab) {
-      window.close();
       mailAccounts[accountId].sendPage(tab);
+      window.close();
    });
 }
 
