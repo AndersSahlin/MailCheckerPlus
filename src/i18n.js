@@ -1632,7 +1632,7 @@ languages["nl"] = {
 
 // Danish
 languages["dk"] = {
-    "id" : "DK",
+    "id" : "dk",
     "what" : "Dansk",
     "months" : new Array("jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"),
     "readLink" : "Læs",
