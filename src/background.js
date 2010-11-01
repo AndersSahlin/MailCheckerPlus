@@ -1,4 +1,4 @@
-﻿/// <reference path="chrome-api-vsdoc.js" />
+/// <reference path="chrome-api-vsdoc.js" />
 /// <reference path="jquery-1.4.2.js" />
 /// <reference path="mailaccount.class.js" />
 
@@ -156,6 +156,9 @@ function reloadSettings() {
    }
    accounts = new Array();
    profilePhotos = {};
+	   
+   chrome.browserAction.setBadgeText({ text: "..." });
+   chrome.browserAction.setTitle({ title: "Polling accounts..." });
 
    if (localStorage["gc_check_gmail_off"] == null ||
         localStorage["gc_check_gmail_off"] == "false") {
@@ -178,14 +181,18 @@ function reloadSettings() {
 
             reloadSettings_complete();
          },
-         error: function (objRequest) {
-            // No multiple accounts - just check default Gmail
-            var acc = new MailAccount({});
-            acc.onError = mailError;
-            acc.onUpdate = mailUpdate;
-            accounts.push(acc);
-            reloadSettings_complete();
-         }
+         error: function (objRequest) { },
+		 complete: function() { 
+			if(accounts.length == 0) {
+				// No multiple accounts - just check default Gmail
+				var acc = new MailAccount({});
+				acc.onError = mailError;
+				acc.onUpdate = mailUpdate;
+				accounts.push(acc);
+				reloadSettings_complete();
+			}
+		}
+		 
       });
    } else {
       reloadSettings_complete();
