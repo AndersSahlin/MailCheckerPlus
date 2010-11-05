@@ -20,7 +20,7 @@ var previewSetting = localStorage["gc_preview_setting"];
 if (previewSetting == "0") {
    // Preview setting set to "Always off" =
    // Go to first mail inbox with unread items
-   openInbox();
+   openInbox(0);
 } else if (previewSetting == "1" && unreadCount == 0) {
    // Preview setting set to "Automatic" + no unread mail =
    // Go to first mail inbox
