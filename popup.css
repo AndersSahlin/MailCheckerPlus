@@ -3,11 +3,11 @@
 html
 {
    position: relative;
+   width: 500px;
 }
 
 body
 {
-   width: 500px;
    overflow: hidden; /*padding-top: 10px;*/
    font-family: arial, sans-serif;
    font-size: 0.8em;

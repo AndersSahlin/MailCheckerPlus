@@ -57,6 +57,7 @@ function MailAccount(settingsObj) {
    var newestMail;
    var unreadCount = -1;
    var mailTitle;
+   var mailAddress;
    var abortTimerId;
    var gmailAt = null;
    var errorLives = 5;
@@ -79,7 +80,8 @@ function MailAccount(settingsObj) {
       xmlDocument = $(parser.parseFromString(data, "text/xml"));
       var fullCount = xmlDocument.find('fullcount').text();
 
-      mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");      
+      mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");
+      mailAddress = mailTitle.match(/([\S]+@[\S]+)/ig)[0];
 
       //newestMail = null;
       var newMailArray = new Array();
@@ -94,6 +96,7 @@ function MailAccount(settingsObj) {
       // Parse xml data for each mail entry
       xmlDocument.find('entry').each(function () {
          var title = $(this).find('title').text();
+         var shortTitle = title;
          var summary = $(this).find('summary').text();
          var issued = $(this).find('issued').text();
          issued = (new Date()).setISO8601(issued);
@@ -106,13 +109,18 @@ function MailAccount(settingsObj) {
          // Data checks
          if (authorName == null || authorName.length < 1)
             authorName = "(unknown sender)";
-         if (title == null || title.length < 1)
-            title = "(No subject)";
+
+         if (title == null || title.length < 1) {
+            shortTitle = title = "(No subject)";
+         } else if (title.length > 63) {
+            shortTitle = title.substr(0, 60) + "...";
+         }
 
          // Construct a new mail object
          var mailObject = {
             "id": id,
             "title": title,
+            "shortTitle": shortTitle,
             "summary": summary,
             "link": link,
             "issued": issued,
@@ -544,6 +552,13 @@ function MailAccount(settingsObj) {
       return mailURL;
    }
 
+   // Returns the email address for the current account
+   this.getAddress = function () {
+      if (mailAddress != null && mailAddress != "")
+         return mailAddress;
+      return "(unknown account)";
+   }
+
    // Returns the mail array
    this.getMail = function () {
       return mailArray;
@@ -586,6 +601,13 @@ function MailAccount(settingsObj) {
    this.archiveNewestMail = function () {
       if (newestMail != null) {
          that.archiveThread(newestMail.id);
+      }
+   }
+
+   // Stars the newest thread
+   this.starNewestMail = function () {
+      if (newestMail != null) {
+         that.starThread(newestMail.id);
       }
    }
 

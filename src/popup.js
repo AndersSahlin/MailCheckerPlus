@@ -58,6 +58,12 @@ function openInbox(accountId) {
          }
       });
    }
+
+   if(mailAccounts == null || mailAccounts[accountId] == null) {
+      console.error("No mailaccount(s) found with account id " + accountId);
+      return;
+   }
+
    mailAccounts[accountId].openInbox();
    window.close();
 }
@@ -177,8 +183,8 @@ function showBody(accountid, mailid, mailbody) {
       var fullscreenControl = $("#fullscreenControls");
 
 
-      fullscreenControl.find('.openLink').text(mail.title);
-      fullscreenControl.find('.openLink').attr('title', i18n.get('openLinkTitle'));
+      fullscreenControl.find('.openLink').text(mail.shortTitle);
+      fullscreenControl.find('.openLink').attr('title', mail.title);
       fullscreenControl.find('.authorLink').text(mail.authorName);
       fullscreenControl.find('.authorLink').attr('title', mail.authorMail);
       fullscreenControl.find('.issuedLink').text(formatDateTime(mail.issued, i18n.selected_lang.months, true));
@@ -265,14 +271,16 @@ function hideBody() {
 // Hides a mail in the mailbox
 function hideMail(accountId, mailid) {
    var accountElement = $('#inbox_' + accountId);
-   $('#' + mailid).slideUp('fast');
-   $('#' + mailid).removeClass('mail');
+//   $('#' + mailid).slideUp('fast');
+//   $('#' + mailid).removeClass('mail');
+   $('#' + mailid).remove();
 
    var unreadCount = accountElement.find('.mail').length;
 
    if (unreadCount == 0) {
       accountElement.find('.toggleLink').hide('fast');
       accountElement.find('.unreadCount').fadeOut('fast');
+      window.close();
    } else {
       accountElement.find('.unreadCount').text('(' + unreadCount + ')');
    }
@@ -303,7 +311,7 @@ function openOptions() {
 }
 
 function resizeWindow() {
-   var isExpanded = $('body').width() != 500;
+   var isExpanded = $('html').width() != 500;
 
    if (isExpanded)
       contractWindow();
@@ -317,7 +325,7 @@ var previousHeight;
 function expandWindow() {
    previousHeight = $('body').height();
 
-   $('body').animate({
+   $('html').animate({
       width: [750, 'swing'],
       //height: [500, 'swing']
    }, animationSpeed);
@@ -326,7 +334,7 @@ function expandWindow() {
 }
 
 function contractWindow() {
-   $('body').animate({
+   $('html').animate({
       width: [500, 'swing'],
       //height: [previousHeight, 'swing']
    }, animationSpeed);
@@ -361,11 +369,7 @@ function renderMail() {
       if (account.getMail() != null) {
          $.each(account.getMail(), function (j, mail) {
             allMail[mail.id] = mail;
-
-            mail.fullTitle = mail.title;
-            if (mail.title.length > 63)
-               mail.title = mail.title.substr(0, 60) + "...";
-
+            
             // Render mail
             var mailHtml = parseTemplate($("#MailTemplate").html(), {
                account: account,
