@@ -1,4 +1,4 @@
-﻿/// <reference path="jquery-1.4.2.js" />
+/// <reference path="jquery-1.4.2.js" />
 /// <reference path="chrome-api-vsdoc.js" />
 
 var backgroundPage = chrome.extension.getBackgroundPage();
@@ -85,8 +85,8 @@ function sendPage(accountId) {
    });
 }
 
-function readThread(accountId, mailid) {
-   hideMail(accountId, mailid);
+function readThread(accountId, mailid, stayOpen) {
+   hideMail(accountId, mailid, stayOpen);
    mailAccounts[accountId].readThread(mailid);
 }
 
@@ -147,7 +147,7 @@ function getThread(accountId, mailid) {
 
    var markAsRead = (localStorage["gc_showfull_read"] != null && localStorage["gc_showfull_read"] == "true");
    if (markAsRead) {
-       mailAccounts[accountId].readThread(mailid);
+	  readThread(accountId, mailid, true);
    }
 
    if (mailCache[mailid] != null) {
@@ -269,7 +269,7 @@ function hideBody() {
 }
 
 // Hides a mail in the mailbox
-function hideMail(accountId, mailid) {
+function hideMail(accountId, mailid, stayOpen) {
    var accountElement = $('#inbox_' + accountId);
 //   $('#' + mailid).slideUp('fast');
 //   $('#' + mailid).removeClass('mail');
@@ -280,7 +280,10 @@ function hideMail(accountId, mailid) {
    if (unreadCount == 0) {
       accountElement.find('.toggleLink').hide('fast');
       accountElement.find('.unreadCount').fadeOut('fast');
-      window.close();
+	
+	  if(!stayOpen) { 
+         window.close();
+	  }
    } else {
       accountElement.find('.unreadCount').text('(' + unreadCount + ')');
    }
