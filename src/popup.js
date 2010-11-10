@@ -147,7 +147,7 @@ function getThread(accountId, mailid) {
 
    var markAsRead = (localStorage["gc_showfull_read"] != null && localStorage["gc_showfull_read"] == "true");
    if (markAsRead) {
-      readThread(accountId, mailid);
+       mailAccounts[accountId].readThread(mailid);
    }
 
    if (mailCache[mailid] != null) {
