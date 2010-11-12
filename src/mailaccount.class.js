@@ -95,15 +95,15 @@ function MailAccount(settingsObj) {
 
       // Parse xml data for each mail entry
       xmlDocument.find('entry').each(function () {
-         var title = $(this).find('title').text();
+         var title = $(this).find('title').text().htmlEntities();
          var shortTitle = title;
-         var summary = $(this).find('summary').text();
+         var summary = $(this).find('summary').text().htmlEntities();
          var issued = $(this).find('issued').text();
          issued = (new Date()).setISO8601(issued);
          var link = $(this).find('link').attr('href');
          var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
 
-         var authorName = $(this).find('author').find('name').text();
+         var authorName = $(this).find('author').find('name').text().htmlEntities();
          var authorMail = $(this).find('author').find('email').text();
 
          // Data checks
