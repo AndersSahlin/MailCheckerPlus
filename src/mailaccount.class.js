@@ -104,7 +104,7 @@ function MailAccount(settingsObj) {
          var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
 
          var authorName = $(this).find('author').find('name').text().htmlEntities();
-         var authorMail = $(this).find('author').find('email').text();
+         var authorMail = $(this).find('author').find('email').text().htmlEntities();
 
          // Data checks
          if (authorName == null || authorName.length < 1)
