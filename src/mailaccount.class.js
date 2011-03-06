@@ -1,5 +1,6 @@
 /// <reference path="chrome-api-vsdoc.js" />
 /// <reference path="jquery-1.4.2.js" />
+/// <reference path="encoder.js" />
 
 /* 
 *********************************
@@ -9,10 +10,6 @@ for Google Mail Checker Plus
 https://chrome.google.com/extensions/detail/gffjhibehnempbkeheiccaincokdjbfe
 *********************************
 */
-
-String.prototype.htmlEntities = function () {
-   return this.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-};
 
 function MailAccount(settingsObj) {
    // Check global settings
@@ -69,7 +66,7 @@ function MailAccount(settingsObj) {
    this.isDefault;
 
    // Debug output (if enabled, might cause memory leaks)
-   var verbose = true;
+   var verbose = false;
 
    // Without this/that, no internal calls to onUpdate or onError can be made...
    var that = this;
@@ -95,16 +92,16 @@ function MailAccount(settingsObj) {
 
       // Parse xml data for each mail entry
       xmlDocument.find('entry').each(function () {
-         var title = $(this).find('title').text().htmlEntities();
+         var title = Encoder.htmlEncode($(this).find('title').text());
          var shortTitle = title;
-         var summary = $(this).find('summary').text().htmlEntities();
+         var summary = Encoder.htmlEncode($(this).find('summary').text());
          var issued = $(this).find('issued').text();
          issued = (new Date()).setISO8601(issued);
          var link = $(this).find('link').attr('href');
          var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
 
-         var authorName = $(this).find('author').find('name').text().htmlEntities();
-         var authorMail = $(this).find('author').find('email').text().htmlEntities();
+         var authorName = Encoder.htmlEncode($(this).find('author').find('name').text());
+         var authorMail = Encoder.htmlEncode($(this).find('author').find('email').text());
 
          // Data checks
          if (authorName == null || authorName.length < 1)

@@ -49,120 +49,126 @@ var boolIdArray = new Array("hide_count",
 var accounts;
 
 function save_options() {
-    for (var i in boolIdArray) {
-        var id = boolIdArray[i];
-        var element = document.getElementById(id);
-        var value = element.checked;
-        localStorage["gc_" + id] = value;
+   for (var i in boolIdArray) {
+      var id = boolIdArray[i];
+      var element = document.getElementById(id);
+      var value = element.checked;
+      localStorage["gc_" + id] = value;
 
-        console.log("saved: " + id + " as " + value);
-    }
+      console.log("saved: " + id + " as " + value);
+   }
 
-    var iconRadios = document.forms[0].icon_set;
-    for (var i in iconRadios) {
-        if (iconRadios[i].checked) {
-            localStorage["gc_icon_set"] = iconRadios[i].value;
-            break;
-        }
-    }
+   var iconRadios = document.forms[0].icon_set;
+   for (var i in iconRadios) {
+      if (iconRadios[i].checked) {
+         localStorage["gc_icon_set"] = iconRadios[i].value;
+         break;
+      }
+   }
 
-    var previewRadios = document.forms[0].preview_setting;
-    for (var i in previewRadios) {
-        if (previewRadios[i].checked) {
-            localStorage["gc_preview_setting"] = previewRadios[i].value;
-            break;
-        }
-    }
+   var previewRadios = document.forms[0].preview_setting;
+   for (var i in previewRadios) {
+      if (previewRadios[i].checked) {
+         localStorage["gc_preview_setting"] = previewRadios[i].value;
+         break;
+      }
+   }
 
-    delete localStorage["gc_poll"];
-    delete localStorage["gc_accounts"];
+   delete localStorage["gc_poll"];
+   delete localStorage["gc_dn_timeout"];
+   delete localStorage["gc_accounts"];
 
-    localStorage["gc_poll"] = parseInt(document.getElementById("poll").value);
-    localStorage["gc_language"] = document.getElementById("languages").value;
+   localStorage["gc_poll"] = parseInt(document.getElementById("poll").value);
+   localStorage["gc_dn_timeout"] = parseInt(document.getElementById("dn_timeout").value);
+   localStorage["gc_language"] = document.getElementById("languages").value;
 
-    if (accounts.length > 0) {
-        localStorage.setObject("gc_accounts", accounts);
-    }
+   if (accounts.length > 0) {
+      localStorage.setObject("gc_accounts", accounts);
+   }
 
-    var backgroundPage = chrome.extension.getBackgroundPage();
-    backgroundPage.init();
+   var backgroundPage = chrome.extension.getBackgroundPage();
+   backgroundPage.init();
 }
 
 // Restores input states to saved values from localStorage.
 function restore_options() {
-    showContent(0);
+   showContent(0);
 
-    for (var i in boolIdArray) {
-        var id = boolIdArray[i];
-        var value = localStorage["gc_" + id];
+   for (var i in boolIdArray) {
+      var id = boolIdArray[i];
+      var value = localStorage["gc_" + id];
 
-        if (value == "true") {
-            var element = document.getElementById(id);
-            element.checked = true;
-        }
+      if (value == "true") {
+         var element = document.getElementById(id);
+         element.checked = true;
+      }
 
-        console.log("restored: " + id + " as " + value);
-    }
+      console.log("restored: " + id + " as " + value);
+   }
 
-    spawnIconRow("set1", "Default");
-    spawnIconRow("set2", "Default Grey");
-    spawnIconRow("set3", "Default White");
-    spawnIconRow("set11", "Native");
-    spawnIconRow("set12", "Native Grey");
-    spawnIconRow("set8", "Gmail Glossy");
-    spawnIconRow("set9", "Gmail Mini");
-    spawnIconRow("set10", "Gmail Monochrome");
-    spawnIconRow("set4", "Alternative 1");
-    spawnIconRow("set5", "Alternative 2");
-    spawnIconRow("set6", "Chromified Classic");
-    spawnIconRow("set7", "Chromified Grey");
+   spawnIconRow("set1", "Default");
+   spawnIconRow("set2", "Default Grey");
+   spawnIconRow("set3", "Default White");
+   spawnIconRow("set11", "Native");
+   spawnIconRow("set12", "Native Grey");
+   spawnIconRow("set8", "Gmail Glossy");
+   spawnIconRow("set9", "Gmail Mini");
+   spawnIconRow("set10", "Gmail Monochrome");
+   spawnIconRow("set4", "Alternative 1");
+   spawnIconRow("set5", "Alternative 2");
+   spawnIconRow("set6", "Chromified Classic");
+   spawnIconRow("set7", "Chromified Grey");
 
-    var iconRadios = document.forms[0].icon_set;
-    var iconFound = false;
-    for (var i in iconRadios) {
-        if (iconRadios[i].value == localStorage["gc_icon_set"]) {
-            iconRadios[i].checked = true;
-            iconFound = true;
-            break;
-        }
-    }
-    if (!iconFound) {
-        iconRadios[0].checked = true;
-    }
+   var iconRadios = document.forms[0].icon_set;
+   var iconFound = false;
+   for (var i in iconRadios) {
+      if (iconRadios[i].value == localStorage["gc_icon_set"]) {
+         iconRadios[i].checked = true;
+         iconFound = true;
+         break;
+      }
+   }
+   if (!iconFound) {
+      iconRadios[0].checked = true;
+   }
 
-    var previewRadios = document.forms[0].preview_setting;
-    for (var i in previewRadios) {
-        if (previewRadios[i].value == localStorage["gc_preview_setting"]) {
-            previewRadios[i].checked = true;
-            break;
-        }
-    }
+   var previewRadios = document.forms[0].preview_setting;
+   for (var i in previewRadios) {
+      if (previewRadios[i].value == localStorage["gc_preview_setting"]) {
+         previewRadios[i].checked = true;
+         break;
+      }
+   }
 
-    if (localStorage["gc_poll"] != null) {
-        document.getElementById("poll_" + localStorage["gc_poll"]).selected = true;
-    }
+   if (localStorage["gc_poll"] != null) {
+      document.getElementById("poll_" + localStorage["gc_poll"]).selected = true;
+   }
 
-    accounts = localStorage.getObject("gc_accounts");
-    if (accounts == null) {
-        accounts = new Array();
-    }
+   if (localStorage["gc_dn_timeout"] != null) {
+      document.getElementById("dn_timeout_" + localStorage["gc_dn_timeout"]).selected = true;
+   }
 
-    var langSel = document.getElementById("languages");
-    for (var i in languages) {
-        langSel.add(new Option(languages[i].what, languages[i].id), languages[i].id);
-    }
-    langSel.value = localStorage["gc_language"];
+   accounts = localStorage.getObject("gc_accounts");
+   if (accounts == null) {
+      accounts = new Array();
+   }
 
-    sortlist(langSel);
+   var langSel = document.getElementById("languages");
+   for (var i in languages) {
+      langSel.add(new Option(languages[i].what, languages[i].id), languages[i].id);
+   }
+   langSel.value = localStorage["gc_language"];
 
-    var acc_sel = document.getElementById("accounts");
-    for (var i in accounts) {
-        if (accounts[i] == null || accounts[i].domain == null)
-            break;
-        acc_sel.add(new Option(accounts[i].domain), null);
-    }
+   sortlist(langSel);
 
-    //chrome.extension.getBackgroundPage().getLabels("https://mail.google.com/mail/", loadLabels);
+   var acc_sel = document.getElementById("accounts");
+   for (var i in accounts) {
+      if (accounts[i] == null || accounts[i].domain == null)
+         break;
+      acc_sel.add(new Option(accounts[i].domain), null);
+   }
+
+   //chrome.extension.getBackgroundPage().getLabels("https://mail.google.com/mail/", loadLabels);
 }
 
 function loadLabels(labels) {

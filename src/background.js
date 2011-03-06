@@ -120,6 +120,9 @@ function reloadSettings() {
    if (localStorage["gc_poll"] == null)
       localStorage["gc_poll"] = 15000;
 
+   if (localStorage["gc_dn_timeout"] == null)
+      localStorage["gc_dn_timeout"] = 15000;
+
    reloadLanguage();
 
    iconSet = localStorage["gc_icon_set"];
@@ -303,54 +306,29 @@ function playSound() {
       return;
 
    try {
-      //        document.getElementById('notify_sound').load();
-      document.getElementById('notify_sound').play();
-   }
-   catch (e) {
+      var audioElement = new Audio();
+      audioElement.src = "notify.ogg";
+      audioElement.play();
+   } catch (e) {
       console.error(e);
    }
 }
 
-// Displays a notification popup 
+// Displays a notification popup
 function notify(accountWithNewestMail) {
    if (localStorage["gc_show_notification"] != null && localStorage["gc_show_notification"] == "true") {
       try {
          var notification = webkitNotifications.createHTMLNotification(chrome.extension.getURL("notify.html"));
-         var timeout = 15;
+
+         var timeout = localStorage["gc_dn_timeout"];
 
          notification.show();
-         setTimeout(function () {
-            notification.cancel();
-         },
-            timeout * 1000);
 
-         //if (profilePhotos[newestMail] != null) {
-
-         /*} else {		
-         $.ajax({
-         url: "http://socialgraph.apis.google.com/otherme?q=" + newestMail.authorMail,
-         success: function(data) {
-         JSON.parse(data.toString(),
-         function(key, value) {
-         if (value && typeof value === 'string' && key == 'photo') {
-         profilePhotos[newestMail.authorMail] = value;
+         if (timeout != 0) {
+            setTimeout(function () {
+               notification.cancel();
+            }, timeout);
          }
-         return value;
-         });
-         },
-         complete: function(request, status) {
-         notification.show();
-         setTimeout(function() {
-         notification.cancel();
-         },
-         timeout * 1000);
-         }
-         });
-         notification.show();
-         setTimeout(function() {
-         notification.cancel();
-         }, timeout * 1000);
-         }*/
 
       } catch (e) {
          console.error(e);
