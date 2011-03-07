@@ -145,8 +145,8 @@ function reloadSettings() {
    }
 
    if (localStorage["gc_version"] == null ||
-        localStorage["gc_version"] != "1.2") {
-      localStorage["gc_version"] = "1.2";
+        localStorage["gc_version"] != "1.2.2") {
+      localStorage["gc_version"] = "1.2.2";
       chrome.tabs.create({ url: "about.html" });
    }
 

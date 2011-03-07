@@ -1,5 +1,5 @@
 ﻿/*  
-    Google Mail Checker Plus
+    Mail Checker Plus for Google Mail™
     - Localization file -   
 */
 

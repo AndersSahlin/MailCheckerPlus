@@ -6,7 +6,7 @@
 *********************************
 MailAccount class
 by Anders Sahlin a.k.a. destructoBOT (malakeen@gmail.com)
-for Google Mail Checker Plus
+for Mail Checker Plus for Google Mail™
 https://chrome.google.com/extensions/detail/gffjhibehnempbkeheiccaincokdjbfe
 *********************************
 */

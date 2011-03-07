@@ -1,9 +1,9 @@
-{
+﻿{
    "background_page": "background.html",
    "browser_action": {
       "default_icon": "icons/set1/not_logged_in.png",
-      "default_title": "Google Mail Checker Plus",
-      "name": "Google Mail Checker Plus",
+      "default_title": "Mail Checker Plus for Google Mail™",
+      "name": "Mail Checker Plus for Google Mail™",
       "popup": {
          "path": "popup.html"
       }
@@ -19,7 +19,7 @@
         "48": "img/icon_48.png",
         "128": "img/icon_128.png"
    },
-   "name": "Google Mail Checker Plus",
+   "name": "Mail Checker Plus for Google Mail™",
    "options_page": "options.html",
    "permissions": [ "notifications", "tabs", "http://*/*", "https://*/*", "http://*.google.com/*", "https://*.google.com/*" ],
    "version": "1.2.2"
