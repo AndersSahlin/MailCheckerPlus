@@ -92,16 +92,14 @@ function MailAccount(settingsObj) {
 
       // Parse xml data for each mail entry
       xmlDocument.find('entry').each(function () {
-         var title = Encoder.htmlEncode($(this).find('title').text());
+         var title = $(this).find('title').text();
          var shortTitle = title;
-         var summary = Encoder.htmlEncode($(this).find('summary').text());
-         var issued = $(this).find('issued').text();
-         issued = (new Date()).setISO8601(issued);
+         var summary = $(this).find('summary').text();
+         var issued = (new Date()).setISO8601($(this).find('issued').text());
          var link = $(this).find('link').attr('href');
          var id = link.replace(/.*message_id=(\d\w*).*/, "$1");
-
-         var authorName = Encoder.htmlEncode($(this).find('author').find('name').text());
-         var authorMail = Encoder.htmlEncode($(this).find('author').find('email').text());
+         var authorName = $(this).find('author').find('name').text();
+         var authorMail = $(this).find('author').find('email').text();
 
          // Data checks
          if (authorName == null || authorName.length < 1)
@@ -112,6 +110,13 @@ function MailAccount(settingsObj) {
          } else if (title.length > 63) {
             shortTitle = title.substr(0, 60) + "...";
          }
+
+         // Encode content to prevent XSS attacks
+         title = Encoder.XSSEncode(title, true);
+         shortTitle = Encoder.XSSEncode(shortTitle, true);
+         summary = Encoder.XSSEncode(summary, true);
+         authorMail = Encoder.XSSEncode(authorMail, true);
+         authorName = Encoder.XSSEncode(authorName, true);
 
          // Construct a new mail object
          var mailObject = {
@@ -649,12 +654,12 @@ function MailAccount(settingsObj) {
    this.replyTo = function (mail) {
       //this.getThread(mail.id, replyToCallback);
       var to = encodeURIComponent(mail.authorMail); // Escape sender email
-      var subject = mail.title; // Escape subject string
+      var subject = Encoder.htmlDecode(mail.title); // Escape subject string
       subject = (subject.search(/^Re: /i) > -1) ? subject : "Re: " + subject; // Add 'Re: ' if not already there
       subject = encodeURIComponent(subject);
       // threadbody = encodeURIComponent(threadbody);
       var issued = mail.issued;
-      var threadbody = "\r\n\r\n" + issued.toString() + " <" + mail.authorMail + ">:\r\n" + mail.summary;
+      var threadbody = "\r\n\r\n" + issued.toString() + " <" + mail.authorMail + ">:\r\n" + Encoder.htmlDecode(mail.summary);
       threadbody = encodeURIComponent(threadbody);
       var replyURL = mailURL.replace('http:', 'https:') + "?view=cm&tf=1&to=" + to + "&su=" + subject + "&body=" + threadbody;
       logToConsole(replyURL);

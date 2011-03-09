@@ -1,5 +1,6 @@
 /// <reference path="jquery-1.4.2.js" />
 /// <reference path="chrome-api-vsdoc.js" />
+/// <reference path="encoder.js" />
 
 var backgroundPage = chrome.extension.getBackgroundPage();
 var mailAccounts = backgroundPage.accounts;
@@ -183,11 +184,11 @@ function showBody(accountid, mailid, mailbody) {
       var fullscreenControl = $("#fullscreenControls");
 
 
-      fullscreenControl.find('.openLink').text(mail.shortTitle);
-      fullscreenControl.find('.openLink').attr('title', mail.title);
-      fullscreenControl.find('.authorLink').text(mail.authorName);
-      fullscreenControl.find('.authorLink').attr('title', mail.authorMail);
-      fullscreenControl.find('.issuedLink').text(formatDateTime(mail.issued, i18n.selected_lang.months, true));
+      fullscreenControl.find('.openLink').html(mail.shortTitle);
+      fullscreenControl.find('.openLink').attr('title', Encoder.htmlDecode(mail.title));
+      fullscreenControl.find('.authorLink').html(mail.authorName);
+      fullscreenControl.find('.authorLink').attr('title', Encoder.htmlDecode(mail.authorMail));
+      fullscreenControl.find('.issuedLink').html(formatDateTime(mail.issued, i18n.selected_lang.months, true));
       fullscreenControl.find('.issuedLink').attr('title', mail.issued);
 
       fullscreenControl.find('.readLink').text(i18n.get('readLink'));
