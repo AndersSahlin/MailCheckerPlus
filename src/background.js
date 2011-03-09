@@ -22,6 +22,8 @@ var animTimer;
 var loopTimer;
 var animDelay = 10;
 
+var audioElement = new Audio();
+
 function startAnimate() {
    if (localStorage["gc_animate_off"] == null ||
         localStorage["gc_animate_off"] == "false") {
@@ -122,6 +124,9 @@ function reloadSettings() {
 
    if (localStorage["gc_dn_timeout"] == null)
       localStorage["gc_dn_timeout"] = 15000;
+
+   if (localStorage["gc_sn_audio"] == null)
+      localStorage["gc_sn_audio"] = "chime.mp3";
 
    reloadLanguage();
 
@@ -282,10 +287,10 @@ function mailUpdate(_account) {
    }
 
    if (newUnreadCount > unreadCount) {
-      playSound();
-      startAnimate();
+      setTimeout('playSound()', 0);
+      setTimeout('startAnimate()', 0);
       if (accountWithNewestMail != null) {
-         notify(accountWithNewestMail);
+         setTimeout('notify(accountWithNewestMail)', 0);
       }
    }
    unreadCount = newUnreadCount;
@@ -305,9 +310,15 @@ function playSound() {
    if (localStorage["gc_sound_off"] != null && localStorage["gc_sound_off"] == "true")
       return;
 
+   var source = localStorage["gc_sn_audio"];
+
+   if (source == "custom") {
+      source = localStorage["gc_sn_audio_raw"];
+   }
+
    try {
-      var audioElement = new Audio();
-      audioElement.src = "notify.ogg";
+      audioElement.src = source;
+      audioElement.load();
       audioElement.play();
    } catch (e) {
       console.error(e);

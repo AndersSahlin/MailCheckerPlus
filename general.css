@@ -1,163 +1,193 @@
 /* CSS for Mail Checker Plus for Google Mail™ */
-body {
-    font-family: arial, sans-serif;
-    font-size: 80%;
-    background: #6BACCF url("img/options_bg.png") repeat-x top left;
-    color: #fff;
+body
+{
+   font-family: arial, sans-serif;
+   font-size: 80%;
+   background: #6BACCF url("img/options_bg.png") repeat-x top left;
+   color: #fff;
 }
 
-body a, body a:visited {
-    color: #fff;
-    text-decoration: none;
-    border-bottom: 1px dotted #fff;
+body a, body a:visited
+{
+   color: #fff;
+   text-decoration: none;
+   border-bottom: 1px dotted #fff;
 }
 
-body a:hover {
-    border-bottom: 1px solid #fff;
+body a:hover
+{
+   border-bottom: 1px solid #fff;
 }
 
-h1 {
-    margin-top: 0;
+h1
+{
+   margin-top: 0;
 }
 
-h1.title {
-	font-size: 200%;
+h1.title
+{
+   font-size: 200%;
 }
 
-#main {
-    margin: 0 auto;
-    margin-top: 30px;
-    text-align: center;
-    width: 550px;
+legend
+{
+   font-size: 110%;
+   font-weight: bold;
 }
 
-#main img {
-    vertical-align: text-bottom;
+#main
+{
+   margin: 0 auto;
+   margin-top: 30px;
+   text-align: center;
+   width: 550px;
 }
 
-#main input {
-    margin-top: 5px;
+#main img
+{
+   vertical-align: text-bottom;
 }
 
-#save {
-    clear: both;
-    float: right;
-    margin: 0;
-    padding: 0;
-    text-align: right;
-    font-size: 70%;
-    font-weight: bold;
+#main input
+{
+   margin-top: 5px;
 }
 
-span.field {
-    padding-top:8px;
-    clear:both;
-    float:left;
-    text-align:right;
-    width: 80px;
+#save
+{
+   clear: both;
+   float: right;
+   margin: 0;
+   padding: 0;
+   text-align: right;
+   font-size: 70%;
+   font-weight: bold;
 }
 
-table {
-	border-width: 5px;
-	border-style: outset;
-	border-color: gray;
-	border-collapse: separate;
-    background-color: #fff;
-    color: #000;
-    font-size: 90%;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-    text-align: left;
+span.field
+{
+   padding-top: 8px;
+   clear: both;
+   float: left;
+   text-align: right;
+   width: 80px;
 }
 
-table a, table a:visited {
-    color: #000;
-    text-decoration: none;
-    border-bottom: 1px dotted #000;
+table
+{
+   border-width: 5px;
+   border-style: outset;
+   border-color: gray;
+   border-collapse: separate;
+   background-color: #fff;
+   color: #000;
+   font-size: 90%;
+   margin: 0 auto;
+   width: 100%;
+   position: relative;
+   text-align: left;
 }
 
-table a:hover {
-    border-bottom: 1px solid #000;
+table a, table a:visited
+{
+   color: #000;
+   text-decoration: none;
+   border-bottom: 1px dotted #000;
 }
 
-td {
-	border-width: 1px;
-	padding: 10px;
-	border-style: dashed;
-	border-color: #ccc;
-	background-color: white;
+table a:hover
+{
+   border-bottom: 1px solid #000;
 }
 
-td.left_column {
-    text-align: right;
-    width: 100px;
+td
+{
+   border-width: 1px;
+   padding: 10px;
+   border-style: dashed;
+   border-color: #ccc;
+   background-color: white;
 }
 
-form {
-    margin: 0 auto;
-    padding: 0;
+td.left_column
+{
+   text-align: right;
+   width: 100px;
 }
 
-#languages {
-    font-size: 80%;
-    height: 20px;
+form
+{
+   margin: 0 auto;
+   padding: 0;
 }
 
-.left{
-    float: left;
-    margin-top: 5px;
-    margin-left: 5px;
-    font-weight: bold;
+#languages
+{
+   font-size: 80%;
+   height: 20px;
 }
 
-.top_right {
-    right: 15px;
-    top: 5px;
-    position: absolute;
+.left
+{
+   float: left;
+   margin-top: 5px;
+   margin-left: 5px;
+   font-weight: bold;
 }
 
-.invisible {
-	display: none;
+.top_right
+{
+   right: 15px;
+   top: 5px;
+   position: absolute;
 }
 
-.content {
-	float: left;
-	padding: 10px;
-	padding-left: 20px;
-	
-	border-left: 1px dashed #ccc;
+.invisible
+{
+   display: none;
 }
 
-ul.menu {
-	padding: 0;
-	margin: 0;
-	list-style-type: none;
-	float: left;
-	width: 25%;
+.content
+{
+   float: left;
+   padding: 10px;
+   padding-left: 20px;
+   border-left: 1px dashed #ccc;
 }
 
-ul.menu li {	
-	padding: 0;
-	list-style: none;
-	display: block;
-	clear: both;
-	width: 100%;
-	border-bottom: 1px dashed #ccc;
+ul.menu
+{
+   padding: 0;
+   margin: 0;
+   list-style-type: none;
+   float: left;
+   width: 25%;
 }
 
-ul.menu  li a {
-	display: block;
-	clear: both;
-	padding: 10px;
-	border: 0;
-    background: white url("img/options_bg.png") repeat-x top left;
-	color: #000;
-	font-size: 150%;
-	font-weight: bold;
+ul.menu li
+{
+   padding: 0;
+   list-style: none;
+   display: block;
+   clear: both;
+   width: 100%;
+   border-bottom: 1px dashed #ccc;
 }
 
-ul.menu  li a:hover, ul.menu  li a.active{
-	background-color: #6BACCF;
-	color: white;
+ul.menu li a
+{
+   display: block;
+   clear: both;
+   padding: 10px;
+   border: 0;
+   background: white url("img/options_bg.png") repeat-x top left;
+   color: #000;
+   font-size: 150%;
+   font-weight: bold;
+}
+
+ul.menu li a:hover, ul.menu li a.active
+{
+   background-color: #6BACCF;
+   color: white;
 }

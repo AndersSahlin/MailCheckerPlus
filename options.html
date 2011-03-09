@@ -29,23 +29,60 @@
 		   <td  style="padding: 0">
 			   <ul class="menu">
 				   <li><a href="javascript:showContent(0)" title="View general settings">General</a></li>
-				   <li><a href="javascript:showContent(1)" title="View account settings">Accounts</a></li>
-				   <li><a href="javascript:showContent(2)" title="View visual settings">Visual</a></li>
-				   <li><a href="javascript:showContent(3)" title="View extension icon settings">Icon</a></li>
+				   <li><a href="javascript:showContent(1)" title="View notification settings">Notifications</a></li>
+				   <li><a href="javascript:showContent(2)" title="View account settings">Accounts</a></li>
+				   <li><a href="javascript:showContent(3)" title="View visual settings">Visual</a></li>
+				   <li><a href="javascript:showContent(4)" title="View extension icon settings">Icon</a></li>
 			   </ul>
 			   <div id="content_0" class="content invisible">
 				   <h2>General settings</h2>
-				   <input type="checkbox" id="show_notification" onchange="requestUserPermission()" /> <label for="show_notification"><strong>Show desktop notifications</strong></label>  <a title="Enable this setting to show a notification when new mail arrives" style="cursor: help">?</a>
-				   <br /><br /><input type="checkbox" id="archive_read" /> <label for="archive_read">Archive marks as read</label>  <a title="Enable this setting to mark a mail as read when you archive it" style="cursor: help">?</a>
+				   <input type="checkbox" id="archive_read" /> <label for="archive_read">Archive marks as read</label>  <a title="Enable this setting to mark a mail as read when you archive it" style="cursor: help">?</a>
 				   <br /><input type="checkbox" id="showfull_read" /> <label for="showfull_read">Previewing marks as read</label>  <a title="Enable this setting to mark a mail as read when previewing it in the popup window" style="cursor: help">?</a>
 				   <!--<br /><input type="checkbox" id="force_ssl" /> <label for="force_ssl">Always use SSL</label> <a title="Enable this setting to always use SSL when accessing Google Mail" style="cursor: help">?</a>!-->
 				   <br /><input type="checkbox" id="open_tabs" /> <label for="open_tabs">Open compose in tab</label>  <a title="Enable this setting to open mail composing in a new tab instead of a new window (also applies to mailto-links)" style="cursor: help">?</a>
 				   <br /><input type="checkbox" id="no_mailto" /> <label for="no_mailto">Ignore mailto-links</label> <a title="Enable this setting to ignore parsing of mailto-links and open them in your regular mail client instead" style="cursor: help">?</a>
-				   <br /><input type="checkbox" id="sound_off" /> <label for="sound_off">Turn <strong>off</strong> notification sound</label> <a title="Disables notification sound when new mail arrives" style="cursor: help">?</a>
-				   <br /><input type="checkbox" id="animate_off" /> <label for="animate_off">Turn <strong>off</strong> icon animation</label> <a title="Disables animation of the icon when there is new mail" style="cursor: help">?</a>
 				   <br /><input type="checkbox" id="hide_count" /> <label for="hide_count">Hide unread mail count</label> <a title="Enable this setting to hide the unread count number from the browser action icon" style="cursor: help">?</a>
 			   </div>
 			   <div id="content_1" class="content invisible">
+				   <h2>Notification settings</h2>
+				   <input type="checkbox" id="animate_off" /> <label for="animate_off">Disable icon animation</label> <a title="Disables animation of the icon when there is new mail" style="cursor: help">?</a>
+               <br />
+               <br />
+               <fieldset>
+                  <legend>Sound notifications</legend>
+				      <input type="checkbox" id="sound_off" /> <label for="sound_off">Disable notification sound</label> <a title="Disables notification sound when new mail arrives" style="cursor: help">?</a>
+                  <br />
+                  <br />
+                  Notification sound:
+                  <select id="sn_audio">
+				          <option id="sn_audio_0" value="chime.mp3">Chime</option>
+				          <option id="sn_audio_1" value="ding.ogg">Ding</option>
+				          <option id="sn_audio_c" value="custom">Custom</option>
+				      </select>
+                  <a href="javascript:void(0);" onclick="playNotificationSound()" title="Play notification sound" style="border: 0"><img src="img/play.png" alt="Play" /></a>
+                  <br /><input type="file" id="sn_audio_src" accept="audio/wav, audio/x-wav, audio/mpeg, audio/vorbis, application/ogg" onchange="handleAudioFile(this.files)" />
+                  <input type="hidden" id="sn_audio_enc" />
+               </fieldset>
+               <br />				   
+               <fieldset>
+                  <legend>Desktop notifications</legend>                  
+				      <input type="checkbox" id="show_notification" onchange="requestUserPermission()" /> <label for="show_notification">Show desktop notifications</label>  <a title="Enable this setting to show a notification when new mail arrives" style="cursor: help">?</a>
+				      <br />
+                  <br />
+                  Timeout:  
+				      <select id="dn_timeout">
+				          <option id="dn_timeout_3000" value="3000">3 seconds</option>
+				          <option id="dn_timeout_15000" value="15000">15 seconds</option>
+				          <option id="dn_timeout_60000" value="60000">1 minute</option>
+				          <option id="dn_timeout_900000" value="900000">15 minutes</option>
+				          <option id="dn_timeout_3600000" value="3600000">1 hour</option>
+				          <option id="dn_timeout_18000000" value="18000000">5 hours</option>
+				          <option id="dn_timeout_0" value="0">Indefinitely</option>
+				      </select>
+                  <a title="This setting determines how long the desktop notification window will be visible" style="cursor: help">?</a>	
+               </fieldset>
+			   </div>
+			   <div id="content_2" class="content invisible">
 				   <h2>Account settings</h2>
 				   <p>
 					   <select id="accounts"></select><br />
@@ -75,32 +112,22 @@
 				   </select>
                <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>		
 			   </div>
-			   <div id="content_2" class="content invisible">
+			   <div id="content_3" class="content invisible">
 				   <h2>Visual settings</h2>
-				   <h3>Preview window</h3>
-				   <input type="radio" name="preview_setting" id="preview_setting0" value="0" /> <label for="preview_setting0">Always off</label> <a title="Disables the preview popup window (not recommended) and opens the first account with unread mail" style="cursor: help">?</a>
-				   <br />
-				   <input type="radio" name="preview_setting" id="preview_setting1" value="1" /> <label for="preview_setting1">Automatic</label> <a title="Only shows the preview window when there's unread mail" style="cursor: help">?</a>
-				   <br />
-				   <input type="radio" name="preview_setting" id="preview_setting2" value="2" /> <label for="preview_setting2">Always on</label> <a title="Always shows the preview window" style="cursor: help">?</a>
+               <fieldset>
+                  <legend>Preview window</legend>
+				      <input type="radio" name="preview_setting" id="preview_setting0" value="0" /> <label for="preview_setting0">Always off</label> <a title="Disables the preview popup window (not recommended) and opens the first account with unread mail" style="cursor: help">?</a>
+				      <br />
+				      <input type="radio" name="preview_setting" id="preview_setting1" value="1" /> <label for="preview_setting1">Automatic</label> <a title="Only shows the preview window when there's unread mail" style="cursor: help">?</a>
+				      <br />
+				      <input type="radio" name="preview_setting" id="preview_setting2" value="2" /> <label for="preview_setting2">Always on</label> <a title="Always shows the preview window" style="cursor: help">?</a>
+               </fieldset>
 				   <h3>Language</h3>
-				   <select id="languages">
-				   </select>
+				   <select id="languages"></select>
 				   <a title="Select the language of the extension" style="cursor: help">?</a>
 				   <p><a href="http://chrome.desc.se/forum/viewtopic.php?id=28" title="Help translate the extension" target="_blank">Missing your language?</a></p>
-				   <h3>Desktop notifications</h3>
-				   Timeout:  
-				   <select id="dn_timeout">
-				       <option id="dn_timeout_15000" value="15000">15 seconds</option>
-				       <option id="dn_timeout_60000" value="60000">1 minute</option>
-				       <option id="dn_timeout_900000" value="900000">15 minutes</option>
-				       <option id="dn_timeout_3600000" value="3600000">1 hour</option>
-				       <option id="dn_timeout_18000000" value="18000000">5 hours</option>
-				       <option id="dn_timeout_0" value="0">Indefinitely</option>
-				   </select>
-               <a title="This setting determines how long the desktop notification window will be visible" style="cursor: help">?</a>	
-			   </div>
-			   <div id="content_3" class="content invisible">
+				</div>
+			   <div id="content_4" class="content invisible">
 				   <h2>Icon selection settings</h2>
 				   <div id="icon_selection"></div>
 			   </div>

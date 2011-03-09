@@ -86,6 +86,13 @@ function save_options() {
       localStorage.setObject("gc_accounts", accounts);
    }
 
+   localStorage["gc_sn_audio"] = document.getElementById("sn_audio").value;
+   if (localStorage["gc_sn_audio"] == "custom") {
+      localStorage["gc_sn_audio_raw"] = document.getElementById("sn_audio_enc").value;
+   } else {
+      localStorage["gc_sn_audio_raw"] = null;
+   }
+
    var backgroundPage = chrome.extension.getBackgroundPage();
    backgroundPage.init();
 }
@@ -169,6 +176,19 @@ function restore_options() {
    }
 
    //chrome.extension.getBackgroundPage().getLabels("https://mail.google.com/mail/", loadLabels);
+
+   $('#sn_audio').val(localStorage["gc_sn_audio"]);
+   $('#sn_audio').change(function () {
+      if (this.value == "custom") {
+         $('#sn_audio_src').show();
+      } else {
+         $('#sn_audio_src').hide();
+      }
+   });
+
+   if (localStorage["gc_sn_audio"] != "custom") {
+      $('#sn_audio_src').hide();
+   }
 }
 
 function loadLabels(labels) {
@@ -293,5 +313,58 @@ function checkUserPermission() {
 function toggleCheckBox(checkboxId, checked) {
    if (checked) {
       document.getElementById(checkboxId).checked = !checked;
+   }
+}
+
+function handleAudioFile(fileList) {
+   var file = fileList[0];
+   var fileReader = new FileReader();
+
+   fileReader.onloadend = function () {
+      $('#sn_audio_enc').val(this.result);
+   }
+
+   fileReader.onabort = fileReader.onerror = function () {
+      switch (this.error.code) {
+         case FileError.NOT_FOUND_ERR:
+            alert("File not found!");
+            break;
+         case FileError.SECURITY_ERR:
+            alert("Security error!");
+            break;
+         case FileError.NOT_READABLE_ERR:
+            alert("File not readable!");
+            break;
+         case FileError.ENCODING_ERR:
+            alert("Encoding error in file!");
+            break;
+         default:
+            alert("An error occured while reading the file!");
+            break;
+      }
+   }
+
+   fileReader.readAsDataURL(file);
+}
+
+function playNotificationSound() {
+   var source;
+
+   if (document.getElementById("sn_audio").value == "custom") {
+      if (document.getElementById("sn_audio_enc").value) {
+         source = document.getElementById("sn_audio_enc").value;
+      } else {
+         source = localStorage["gc_sn_audio_raw"];
+      }
+   } else {
+      source = document.getElementById("sn_audio").value;
+   }
+
+   try {
+      var audioElement = new Audio();
+      audioElement.src = source;
+      audioElement.play();
+   } catch (e) {
+      console.error(e);
    }
 }
