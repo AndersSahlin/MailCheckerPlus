@@ -22,5 +22,5 @@
    "name": "Mail Checker Plus for Google Mail™",
    "options_page": "options.html",
    "permissions": [ "notifications", "tabs", "http://*/*", "https://*/*", "http://*.google.com/*", "https://*.google.com/*" ],
-   "version": "1.2.3"
+   "version": "1.2.3.1"
 }
