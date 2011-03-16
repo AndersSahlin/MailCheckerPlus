@@ -88,7 +88,11 @@ function save_options() {
 
    localStorage["gc_sn_audio"] = document.getElementById("sn_audio").value;
    if (localStorage["gc_sn_audio"] == "custom") {
-      localStorage["gc_sn_audio_raw"] = document.getElementById("sn_audio_enc").value;
+	   try{
+		localStorage["gc_sn_audio_raw"] = document.getElementById("sn_audio_enc").value;
+	   } catch (e) {
+		alert(e);   
+	   }
    } else {
       localStorage["gc_sn_audio_raw"] = null;
    }
@@ -177,7 +181,9 @@ function restore_options() {
 
    //chrome.extension.getBackgroundPage().getLabels("https://mail.google.com/mail/", loadLabels);
 
-   $('#sn_audio').val(localStorage["gc_sn_audio"]);
+   $('#sn_audio').val(localStorage["gc_sn_audio"]);   
+   $('#sn_audio_enc').val(localStorage["gc_sn_audio_raw"]);
+   
    $('#sn_audio').change(function () {
       if (this.value == "custom") {
          $('#sn_audio_src').show();
@@ -321,7 +327,21 @@ function handleAudioFile(fileList) {
    var fileReader = new FileReader();
 
    fileReader.onloadend = function () {
+	   try {
+		   localStorage["temp"] = this.result;
+	   } catch(e) {
+		   alert("The file you have chosen is too large, please select a shorter sound alert.");
+		   return;
+	   } finally {		   
+		   localStorage["temp"] = null;
+		   delete localStorage["temp"];
+	   }		
+	   
       $('#sn_audio_enc').val(this.result);
+	   
+	   
+	  $('#submit').val('Save &amp; Reload');
+	  $('#submit').removeAttr('disabled');
    }
 
    fileReader.onabort = fileReader.onerror = function () {
@@ -342,8 +362,14 @@ function handleAudioFile(fileList) {
             alert("An error occured while reading the file!");
             break;
       }
+	  
+	  $('#submit').val('Save &amp; Reload');
+	  $('#submit').removeAttr('disabled');
    }
 
+   $('#submit').val('Processing...');
+   $('#submit').attr('disabled', 'disabled');
+   
    fileReader.readAsDataURL(file);
 }
 
