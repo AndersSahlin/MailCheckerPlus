@@ -13,13 +13,13 @@ Features
 * Monitor all your labels or priority inbox
 * Translated to over 60 languages!
 * More than 10 different icon sets, choose your favorite!
-* Help and support at official forum: http://chrome.desc.se/forum/
+* Help and support at official forum: [http://chrome.desc.se/forum/](http://chrome.desc.se/forum/)
 
-http://twitter.com/GMCPlus
+[http://twitter.com/GMCPlus](http://twitter.com/GMCPlus)
 
 Hate the new design? Want the old version back? Look no further...
 Google Mail Checker Plus Classic:
-https://chrome.google.com/extensions/detail/mcalakneigcblgalgpgbanhcmglpjjej
+[https://chrome.google.com/extensions/detail/mcalakneigcblgalgpgbanhcmglpjjej](https://chrome.google.com/extensions/detail/mcalakneigcblgalgpgbanhcmglpjjej)
 
 Observe! This extension requires elevated permissions because of the content script that parses mailto-links. It does NOT in ANY WAY monitor private data in your browser!
 
