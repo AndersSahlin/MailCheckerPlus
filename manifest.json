@@ -11,7 +11,7 @@
    "content_scripts": [ {
       "all_frames": true,
       "js": [ "src/mailto.js" ],
-      "matches": [ "http://*/*" ]
+      "matches": [ "http://*/*", "https://*/*" ]
    } ],
    "description": "Displays the number of unread messages in your Gmail and Google Apps inbox. Preview mail, read, delete, archive and mark as spam!",
    "icons": {
