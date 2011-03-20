@@ -16,6 +16,7 @@ Features
 * Help and support at official forum: [http://chrome.desc.se/forum/](http://chrome.desc.se/forum/)
 
 [http://chrome.desc.se](http://chrome.desc.se)
+
 [http://twitter.com/GMCPlus](http://twitter.com/GMCPlus)
 
 Hate the new design? Want the old version back? Look no further...
