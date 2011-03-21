@@ -35,8 +35,8 @@ function charOrdA(a, b) {
 
 // Saves options to localStorage.
 var boolIdArray = new Array("hide_count",
-                            "check_all",
-                            "check_priority",
+//                            "check_all",
+//                            "check_priority",
 //"force_ssl",
                             "showfull_read",
                             "check_gmail_off",
@@ -81,6 +81,8 @@ function save_options() {
    localStorage["gc_poll"] = parseInt(document.getElementById("poll").value);
    localStorage["gc_dn_timeout"] = parseInt(document.getElementById("dn_timeout").value);
    localStorage["gc_language"] = document.getElementById("languages").value;
+   localStorage["gc_check_label"] = document.getElementById("check_label").value;
+   localStorage["gc_open_label"] = document.getElementById("open_label").value;
 
    if (accounts.length > 0) {
       localStorage.setObject("gc_accounts", accounts);
@@ -157,6 +159,14 @@ function restore_options() {
 
    if (localStorage["gc_dn_timeout"] != null) {
       document.getElementById("dn_timeout_" + localStorage["gc_dn_timeout"]).selected = true;
+   }
+
+   if (localStorage["gc_check_label"] != null) {
+      document.getElementById("check_label_" + localStorage["gc_check_label"]).selected = true;
+   }
+
+   if (localStorage["gc_open_label"] != null) {
+      document.getElementById("open_label_" + localStorage["gc_open_label"]).selected = true;
    }
 
    accounts = localStorage.getObject("gc_accounts");

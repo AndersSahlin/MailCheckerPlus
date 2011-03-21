@@ -32,24 +32,9 @@ function MailAccount(settingsObj) {
       mailURL += "/mail/";
    }
 
-   var inboxLabel = "#inbox";
-   var unreadLabel = "#inbox";
-   var atomLabel = "";
-
-   if (localStorage["gc_check_all"] != null
-        && localStorage["gc_check_all"] == "true") {
-      // Check all labels for unread mail
-      inboxLabel = "#all";
-      unreadLabel = "#search/l:unread";
-      atomLabel = "unread";
-   } else if (localStorage["gc_check_priority"] != null
-        && localStorage["gc_check_priority"] == "true"
-        && settingsObj.domain == null) {
-      // Only check priority inbox
-      atomLabel = "important";
-      inboxLabel = unreadLabel = "#mbox";
-   }
-
+   var inboxLabel = localStorage["gc_open_label"];
+   var atomLabel = localStorage["gc_check_label"];
+   
    var mailArray = new Array();
    var newestMail;
    var unreadCount = -1;
@@ -71,7 +56,7 @@ function MailAccount(settingsObj) {
    // Without this/that, no internal calls to onUpdate or onError can be made...
    var that = this;
    
-   function onGetInboxSuccess(data) {
+   function onGetInboxSuccess(data, callback) {
       var foundNewMail = false; 
       var parser = new DOMParser();
       xmlDocument = $(parser.parseFromString(data, "text/xml"));
@@ -176,6 +161,10 @@ function MailAccount(settingsObj) {
       } else {
          logToConsole(mailURL + "feed/atom/" + atomLabel + " - No new mail found.");
       }
+
+      if (callback != null) {
+         window.setTimeout(callback, 0);
+      }
    }
 
    // Handles a successful getInboxCount call and schedules a new one
@@ -204,7 +193,7 @@ function MailAccount(settingsObj) {
    }
 
    // Retreives inbox count and populates mail array
-   function getInboxCount() {
+   function getInboxCount(callback) {
       try {
          logToConsole("requesting " + mailURL + "feed/atom/" + atomLabel);
 
@@ -213,7 +202,7 @@ function MailAccount(settingsObj) {
             dataType: "text",
             url: mailURL + "feed/atom/" + atomLabel,
             timeout: requestTimeout,
-            success: function (data) { onGetInboxSuccess(data); },
+            success: function (data) { onGetInboxSuccess(data, callback); },
             error: function (xhr, status, err) { handleError(xhr, status, err); }
          });
 
@@ -387,28 +376,28 @@ function MailAccount(settingsObj) {
       });
    }
 
-   // Opens unread label
-   this.openUnread = function () {
-      // See if there is any Gmail tab open		
-      chrome.windows.getAll({ populate: true }, function (windows) {
-         for (var w in windows) {
-            for (var i in windows[w].tabs) {
-               var tab = windows[w].tabs[i];
-               if (tab.url.indexOf(mailURL) >= 0) {
-                  chrome.tabs.update(tab.id, { selected: true });
-                  return;
-               } else if (tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
-                  chrome.tabs.update(tab.id, { selected: true });
-                  return;
-               } else if (tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
-                  chrome.tabs.update(tab.id, { selected: true });
-                  return;
-               }
-            }
-         }
-         chrome.tabs.create({ url: mailURL + unreadLabel });
-      });
-   }
+//   // Opens unread label
+//   this.openUnread = function () {
+//      // See if there is any Gmail tab open		
+//      chrome.windows.getAll({ populate: true }, function (windows) {
+//         for (var w in windows) {
+//            for (var i in windows[w].tabs) {
+//               var tab = windows[w].tabs[i];
+//               if (tab.url.indexOf(mailURL) >= 0) {
+//                  chrome.tabs.update(tab.id, { selected: true });
+//                  return;
+//               } else if (tab.url.indexOf(mailURL.replace("http:", "https:")) >= 0) {
+//                  chrome.tabs.update(tab.id, { selected: true });
+//                  return;
+//               } else if (tab.url.indexOf(mailURL.replace("https:", "http:")) >= 0) {
+//                  chrome.tabs.update(tab.id, { selected: true });
+//                  return;
+//               }
+//            }
+//         }
+//         chrome.tabs.create({ url: mailURL + unreadLabel });
+//      });
+//   }
 
    // Opens a thread
    this.openThread = function (threadid) {
@@ -622,9 +611,9 @@ function MailAccount(settingsObj) {
       getAt();
    }
 
-   // Returns the mail array
-   this.refreshInbox = function () {
-      window.setTimeout(getInboxCount, 0);
+   // Refresh the unread items
+   this.refreshInbox = function (callback) {
+      getInboxCount(callback);
    }
 
    // Opens the Compose window

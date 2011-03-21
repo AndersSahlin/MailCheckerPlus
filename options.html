@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
    <head>
 	   <title>Options for Mail Checker Plus for Google Mail™</title>
@@ -88,16 +88,9 @@
 					   <select id="accounts"></select><br />
 					   <a href="javascript:add_account()" title="Add a new account">Add</a> | <a href="javascript:remove_account()" title="Remove selected account">Remove</a>
 				   </p>	
-				   <input type="checkbox" id="check_gmail_off" /> <label for="check_gmail_off">Turn off regular Gmail checking</label> <a title="Enable this setting if you don't have an account at gmail.com" style="cursor: help">?</a>
-				   <br /><input type="checkbox" id="check_all" onclick="toggleCheckBox('check_priority', this.checked)" /> <label for="check_all">Check all folders for unread mail</label> <a title="Enable this setting to check all folders, not only your inbox, for unread mail" style="cursor: help">?</a>
-				   <br /><input type="checkbox" id="check_priority" onclick="toggleCheckBox('check_all', this.checked)" /> <label for="check_priority"><strong>Check priority mail</strong></label> <a title="Enable this setting to only check for unread priority mail" style="cursor: help">?</a>
-                   <!--<br /><input type="checkbox" id="is_default" /> <label for="is_default">This is my default account</label> <a title="Your default account will be used when clicking on mailto-links" style="cursor: help">?</a>!-->
-				   <!--<p>
-					   <span><strong>Label whitelist</strong> <a title="Add all labels here that you want to check for new mail" style="cursor: help">?</a></span>
-					   <select id="labels" multiple style="width: 100%"></select>
-					   <span style="float: right; clear: both;"><a href="javascript:add_label()" title="Add new label to whitelist">Add</a> | <a href="javascript:remove_label()" title="Remove selected label from whitelist">Remove</a></span>
-				   </p>!-->	
-				   <br /><br />
+               <input type="checkbox" id="check_gmail_off" /> <label for="check_gmail_off">Turn off regular Gmail checking</label> <a title="Enable this setting if you don't have an account at gmail.com" style="cursor: help">?</a>
+               <br />
+               <br />
 				   Polling interval:  
 				   <select id="poll">
 				       <option id="poll_15000" value="15000">15 seconds</option>
@@ -110,7 +103,34 @@
 				       <option id="poll_7200000" value="7200000">2 hours</option>
 				       <option id="poll_18000000" value="18000000">5 hours</option>
 				   </select>
-               <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>		
+               <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>	
+               <br /><br />
+				   Monitor this label:  
+				   <select id="check_label">
+				       <option id="check_label_" value="">Inbox</option>
+				       <option id="check_label_important" value="important">Important mail</option>
+				       <option id="check_label_unread" value="unread">All mail</option>
+				   </select>
+               <a title="This setting determines which label the extension will monitor for new mail" style="cursor: help">?</a>	
+               <br /><br />
+				   Open this label:  
+				   <select id="open_label">
+				       <option id="open_label_#inbox" value="#inbox">Inbox</option>
+				       <option id="open_label_#mbox" value="#mbox">Priority inbox</option>
+				       <option id="open_label_#search/l:unread" value="#search/l:unread">Unread mail</option>
+				       <option id="open_label_#all" value="#all">All mail</option>
+				   </select>
+               <a title="This setting determines where the user will be directed when clicking the inbox label or extension icon" style="cursor: help">?</a>	
+               
+               <!--<br /><input type="checkbox" id="check_all" onclick="toggleCheckBox('check_priority', this.checked)" /> <label for="check_all">Check all folders for unread mail</label> <a title="Enable this setting to check all folders, not only your inbox, for unread mail" style="cursor: help">?</a>
+				   <br /><input type="checkbox" id="check_priority" onclick="toggleCheckBox('check_all', this.checked)" /> <label for="check_priority"><strong>Check priority mail</strong></label> <a title="Enable this setting to only check for unread priority mail" style="cursor: help">?</a>
+                   <br /><input type="checkbox" id="is_default" /> <label for="is_default">This is my default account</label> <a title="Your default account will be used when clicking on mailto-links" style="cursor: help">?</a>!-->
+				   <!--<p>
+					   <span><strong>Label whitelist</strong> <a title="Add all labels here that you want to check for new mail" style="cursor: help">?</a></span>
+					   <select id="labels" multiple style="width: 100%"></select>
+					   <span style="float: right; clear: both;"><a href="javascript:add_label()" title="Add new label to whitelist">Add</a> | <a href="javascript:remove_label()" title="Remove selected label from whitelist">Remove</a></span>
+				   </p>!-->	
+				   	
 			   </div>
 			   <div id="content_3" class="content invisible">
 				   <h2>Visual settings</h2>

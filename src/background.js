@@ -128,6 +128,26 @@ function reloadSettings() {
    if (localStorage["gc_sn_audio"] == null)
       localStorage["gc_sn_audio"] = "chime.mp3";
 
+   if (localStorage["gc_open_label"] == null ||
+         localStorage["gc_check_label"] == null) {
+      // Backwards compatability with previous checkboxes
+      if (localStorage["gc_check_all"] != null &&
+            localStorage["gc_check_all"] == "true") {
+         // Check all mail
+         localStorage["gc_check_label"] = "unread";
+         localStorage["gc_open_label"] = "#search/l:unread";
+      } else if (localStorage["gc_check_priority"] != null &&
+            localStorage["gc_check_priority"] == "true") {
+         // Check priority mail
+         localStorage["gc_check_label"] = "important";
+         localStorage["gc_open_label"] = "#mbox";
+      } else {
+         // Default settings (inbox)
+         localStorage["gc_check_label"] = "";
+         localStorage["gc_open_label"] = "#inbox";
+      }
+   }
+
    reloadLanguage();
 
    iconSet = localStorage["gc_icon_set"];

@@ -45,7 +45,7 @@ function showElement(id) {
 // Opens a mail and closes this window
 function openMail(accountId, mailid) {
    mailAccounts[accountId].openThread(mailid);
-   window.close();
+   //window.close();
 }
 
 function openInbox(accountId) {
@@ -69,10 +69,10 @@ function openInbox(accountId) {
    window.close();
 }
 
-function openUnread(accountId) {
-   mailAccounts[accountId].openUnread();
-   window.close();
-}
+//function openUnread(accountId) {
+//   mailAccounts[accountId].openUnread();
+//   window.close();
+//}
 
 function composeNew(accountId) {
    mailAccounts[accountId].composeNew();
@@ -306,8 +306,12 @@ function replyTextKeyPress(event, mailid) {
    }
 }
 
-function refreshMail() {
-   renderMail();
+function refreshMail() {   
+   $.each(mailAccounts, function (i, account) {
+      account.refreshInbox(function () {
+         renderAccount(account);         
+      });
+   });
 }
 
 function openOptions() {
@@ -353,73 +357,77 @@ function renderMail() {
 
    // Loop through each account and render it on the page
    $.each(mailAccounts, function (i, account) {
-      account.getNewAt();
       account.id = i;
-
-      // Render account
-      if (account.getMail() != null) {
-         account.unreadCount = account.getMail().length;
-      }
-
-      var accountHtml = parseTemplate($("#AccountTemplate").html(), {
-         account: account,
-         i18n: i18n
-      });
-
-      // Add to page
-      $(accountHtml).fadeIn("fast").appendTo("#content");
-      var inboxElement = $('#inbox_' + account.id);
-
-      if (account.getMail() != null) {
-         $.each(account.getMail(), function (j, mail) {
-            allMail[mail.id] = mail;
-            
-            // Render mail
-            var mailHtml = parseTemplate($("#MailTemplate").html(), {
-               account: account,
-               mail: mail,
-               i18n: i18n
-            });
-
-            // Add to account element
-            $(mailHtml).fadeIn("fast").appendTo(inboxElement);
-         });
-
-         if (account.getMail().length == 0)
-            inboxElement.find(".toggleLink").hide();
-
-         inboxElement.find(".toggleLink").click(function () {
-            inboxElement.find('.mail').slideToggle('fast');
-
-            if ($(this).find('img').attr('src') == 'img/arrow_right.png') {
-               $(this).find('img').attr('src', 'img/arrow_down.png')
-            } else {
-               $(this).find('img').attr('src', 'img/arrow_right.png')
-            }
-         });
-      }
-
-      // Hook up event handlers
-      inboxElement.find(".readLink").click(function () { readThread(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".deleteLink").click(function () { deleteThread(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".spamLink").click(function () { spamThread(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".summary").click(function () { getThread(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
-      inboxElement.find(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
-      
-      inboxElement.find(".starLink").click(function () {
-         $(this).css('opacity', '1');
-         starThread(account.id, $(this).attr('mailId'));
-      });
-
+      renderAccount(account);
    });
 
    // Add event handlers
    $(".inboxLink").click(function () { openInbox($(this).attr('accountId')); });
    $(".composeLink").click(function () { composeNew($(this).attr('accountId')); });
    $(".sendpageLink").click(function () { sendPage($(this).attr('accountId')); });
+}
+
+function renderAccount(account) {
+   $('#content_' + account.id).remove();
+   account.getNewAt();
+
+   // Render account
+   if (account.getMail() != null) {
+      account.unreadCount = account.getMail().length;
+   }
+
+   var accountHtml = parseTemplate($("#AccountTemplate").html(), {
+      account: account,
+      i18n: i18n
+   });
+
+   // Add to page
+   $(accountHtml).fadeIn("fast").appendTo("#content");
+   var inboxElement = $('#inbox_' + account.id);
+
+   if (account.getMail() != null) {
+      $.each(account.getMail(), function (j, mail) {
+         allMail[mail.id] = mail;
+            
+         // Render mail
+         var mailHtml = parseTemplate($("#MailTemplate").html(), {
+            account: account,
+            mail: mail,
+            i18n: i18n
+         });
+
+         // Add to account element
+         $(mailHtml).fadeIn("fast").appendTo(inboxElement);
+      });
+
+      if (account.getMail().length == 0)
+         inboxElement.find(".toggleLink").hide();
+
+      inboxElement.find(".toggleLink").click(function () {
+         inboxElement.find('.mail').slideToggle('fast');
+
+         if ($(this).find('img').attr('src') == 'img/arrow_right.png') {
+            $(this).find('img').attr('src', 'img/arrow_down.png')
+         } else {
+            $(this).find('img').attr('src', 'img/arrow_right.png')
+         }
+      });
+   }
+
+   // Hook up event handlers
+   inboxElement.find(".readLink").click(function () { readThread(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".deleteLink").click(function () { deleteThread(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".spamLink").click(function () { spamThread(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".archiveLink").click(function () { archiveThread(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".fullLink").click(function () { getThread(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".summary").click(function () { getThread(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
+   inboxElement.find(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
+      
+   inboxElement.find(".starLink").click(function () {
+      $(this).css('opacity', '1');
+      starThread(account.id, $(this).attr('mailId'));
+   });
 }
 
 $(document).ready(function () {
