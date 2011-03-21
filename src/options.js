@@ -37,6 +37,7 @@ function charOrdA(a, b) {
 var boolIdArray = new Array("hide_count",
                             "check_all",
                             "check_priority",
+                            "open_mbox",
 //"force_ssl",
                             "showfull_read",
                             "check_gmail_off",
@@ -44,7 +45,7 @@ var boolIdArray = new Array("hide_count",
                             "archive_read",
                             "no_mailto",
                             "sound_off",
-                            "animate_off", 
+                            "animate_off",
                             "show_notification");
 var accounts;
 
@@ -91,7 +92,7 @@ function save_options() {
 	   try{
 		localStorage["gc_sn_audio_raw"] = document.getElementById("sn_audio_enc").value;
 	   } catch (e) {
-		alert(e);   
+		alert(e);
 	   }
    } else {
       localStorage["gc_sn_audio_raw"] = null;
@@ -181,9 +182,9 @@ function restore_options() {
 
    //chrome.extension.getBackgroundPage().getLabels("https://mail.google.com/mail/", loadLabels);
 
-   $('#sn_audio').val(localStorage["gc_sn_audio"]);   
+   $('#sn_audio').val(localStorage["gc_sn_audio"]);
    $('#sn_audio_enc').val(localStorage["gc_sn_audio_raw"]);
-   
+
    $('#sn_audio').change(function () {
       if (this.value == "custom") {
          $('#sn_audio_src').show();
@@ -237,7 +238,7 @@ function add_account() {
 
         var acc_sel = document.getElementById("accounts");
         acc_sel.add(new Option(newacc_domain), null);
-        //acc_sel.size = accounts.length + 1;        
+        //acc_sel.size = accounts.length + 1;
     }
 }
 
@@ -265,7 +266,7 @@ function add_label() {
     "\n\nDo not enter anything but the label name!");
 
     if (newlabel != null && newlabel != "" && newlabel != "yourdomain.com") {
-        //accounts.push({"label":newlabel}); 
+        //accounts.push({"label":newlabel});
 
         var labels_sel = document.getElementById("labels");
         labels_sel.add(new Option(newlabel), null);
@@ -332,14 +333,14 @@ function handleAudioFile(fileList) {
 	   } catch(e) {
 		   alert("The file you have chosen is too large, please select a shorter sound alert.");
 		   return;
-	   } finally {		   
+	   } finally {
 		   localStorage["temp"] = null;
 		   delete localStorage["temp"];
-	   }		
-	   
+	   }
+
       $('#sn_audio_enc').val(this.result);
-	   
-	   
+
+
 	  $('#submit').val('Save &amp; Reload');
 	  $('#submit').removeAttr('disabled');
    }
@@ -362,14 +363,14 @@ function handleAudioFile(fileList) {
             alert("An error occured while reading the file!");
             break;
       }
-	  
+
 	  $('#submit').val('Save &amp; Reload');
 	  $('#submit').removeAttr('disabled');
    }
 
    $('#submit').val('Processing...');
    $('#submit').attr('disabled', 'disabled');
-   
+
    fileReader.readAsDataURL(file);
 }
 

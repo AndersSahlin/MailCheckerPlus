@@ -2,7 +2,7 @@
 /// <reference path="jquery-1.4.2.js" />
 /// <reference path="encoder.js" />
 
-/* 
+/*
 *********************************
 MailAccount class
 by Anders Sahlin a.k.a. destructoBOT (malakeen@gmail.com)
@@ -50,6 +50,12 @@ function MailAccount(settingsObj) {
       inboxLabel = unreadLabel = "#mbox";
    }
 
+   if (localStorage["gc_open_mbox"] != null
+        && localStorage["gc_open_mbox"] == "true") {
+      // Check normal inbox for unread mail, but open priority inbox
+      inboxLabel = "#mbox";
+   }
+
    var mailArray = new Array();
    var newestMail;
    var unreadCount = -1;
@@ -70,9 +76,9 @@ function MailAccount(settingsObj) {
 
    // Without this/that, no internal calls to onUpdate or onError can be made...
    var that = this;
-   
+
    function onGetInboxSuccess(data) {
-      var foundNewMail = false; 
+      var foundNewMail = false;
       var parser = new DOMParser();
       xmlDocument = $(parser.parseFromString(data, "text/xml"));
       var fullCount = xmlDocument.find('fullcount').text();
@@ -141,7 +147,7 @@ function MailAccount(settingsObj) {
             newMailArray.push(mailObject);
          }
       });
-      
+
       // Sort new mail by date
       newMailArray.sort(function (a, b) {
          if (a.issued > b.issued)
@@ -184,7 +190,7 @@ function MailAccount(settingsObj) {
       window.clearTimeout(abortTimerId);
       errorLives = 5;
       updateUnreadCount(count);
-      //scheduleRequest(); 
+      //scheduleRequest();
    }
 
    // Handles a unsuccessful getInboxCount call and schedules a new one
@@ -365,7 +371,7 @@ function MailAccount(settingsObj) {
    }
    // Opens the inbox
    this.openInbox = function () {
-      // See if there is any Gmail tab open	
+      // See if there is any Gmail tab open
       logToConsole('Opening inbox');
       chrome.windows.getAll({ populate: true }, function (windows) {
          for (var w in windows) {
@@ -389,7 +395,7 @@ function MailAccount(settingsObj) {
 
    // Opens unread label
    this.openUnread = function () {
-      // See if there is any Gmail tab open		
+      // See if there is any Gmail tab open
       chrome.windows.getAll({ populate: true }, function (windows) {
          for (var w in windows) {
             for (var i in windows[w].tabs) {

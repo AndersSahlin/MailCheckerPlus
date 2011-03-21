@@ -18,7 +18,7 @@
        <form>
        <table>
            <tr>
-               <td style="background-color: #ffffff">                
+               <td style="background-color: #ffffff">
                    <span class="top_right"><img src="img/icon_48.png" alt="Icon" /></span>
                    <h1>Options</h1>
                    <p>Please take a moment and configure the extension to fit your needs. If you have an account at a Google Apps domain, fill in the correct URL in the Account-section below.</p>
@@ -63,13 +63,13 @@
                   <br /><input type="file" id="sn_audio_src" accept="audio/wav, audio/x-wav, audio/mpeg, audio/vorbis, application/ogg" onchange="handleAudioFile(this.files)" />
                   <input type="hidden" id="sn_audio_enc" />
                </fieldset>
-               <br />				   
+               <br />
                <fieldset>
-                  <legend>Desktop notifications</legend>                  
+                  <legend>Desktop notifications</legend>
 				      <input type="checkbox" id="show_notification" onchange="requestUserPermission()" /> <label for="show_notification">Show desktop notifications</label>  <a title="Enable this setting to show a notification when new mail arrives" style="cursor: help">?</a>
 				      <br />
                   <br />
-                  Timeout:  
+                  Timeout:
 				      <select id="dn_timeout">
 				          <option id="dn_timeout_3000" value="3000">3 seconds</option>
 				          <option id="dn_timeout_15000" value="15000">15 seconds</option>
@@ -79,7 +79,7 @@
 				          <option id="dn_timeout_18000000" value="18000000">5 hours</option>
 				          <option id="dn_timeout_0" value="0">Indefinitely</option>
 				      </select>
-                  <a title="This setting determines how long the desktop notification window will be visible" style="cursor: help">?</a>	
+                  <a title="This setting determines how long the desktop notification window will be visible" style="cursor: help">?</a>
                </fieldset>
 			   </div>
 			   <div id="content_2" class="content invisible">
@@ -87,18 +87,19 @@
 				   <p>
 					   <select id="accounts"></select><br />
 					   <a href="javascript:add_account()" title="Add a new account">Add</a> | <a href="javascript:remove_account()" title="Remove selected account">Remove</a>
-				   </p>	
+				   </p>
 				   <input type="checkbox" id="check_gmail_off" /> <label for="check_gmail_off">Turn off regular Gmail checking</label> <a title="Enable this setting if you don't have an account at gmail.com" style="cursor: help">?</a>
 				   <br /><input type="checkbox" id="check_all" onclick="toggleCheckBox('check_priority', this.checked)" /> <label for="check_all">Check all folders for unread mail</label> <a title="Enable this setting to check all folders, not only your inbox, for unread mail" style="cursor: help">?</a>
-				   <br /><input type="checkbox" id="check_priority" onclick="toggleCheckBox('check_all', this.checked)" /> <label for="check_priority"><strong>Check priority mail</strong></label> <a title="Enable this setting to only check for unread priority mail" style="cursor: help">?</a>
+				   <br /><input type="checkbox" id="check_priority" onclick="toggleCheckBox('check_all', this.checked); toggleCheckBox('open_mbox', this.checked)" /> <label for="check_priority"><strong>Check priority mail</strong></label> <a title="Enable this setting to only check for unread priority mail" style="cursor: help">?</a>
+				   <br /><input type="checkbox" id="open_mbox" onclick="toggleCheckBox('check_priority', this.checked)" /> <label for="open_mbox">Open priority mail, but check normal inbox</label> <a title="Enable this setting to check for unread mail in normal inbox, but open the priority inbox insted normal inbox" style="cursor: help">?</a>
                    <!--<br /><input type="checkbox" id="is_default" /> <label for="is_default">This is my default account</label> <a title="Your default account will be used when clicking on mailto-links" style="cursor: help">?</a>!-->
 				   <!--<p>
 					   <span><strong>Label whitelist</strong> <a title="Add all labels here that you want to check for new mail" style="cursor: help">?</a></span>
 					   <select id="labels" multiple style="width: 100%"></select>
 					   <span style="float: right; clear: both;"><a href="javascript:add_label()" title="Add new label to whitelist">Add</a> | <a href="javascript:remove_label()" title="Remove selected label from whitelist">Remove</a></span>
-				   </p>!-->	
+				   </p>!-->
 				   <br /><br />
-				   Polling interval:  
+				   Polling interval:
 				   <select id="poll">
 				       <option id="poll_15000" value="15000">15 seconds</option>
 				       <option id="poll_30000" value="30000">30 seconds</option>
@@ -110,7 +111,7 @@
 				       <option id="poll_7200000" value="7200000">2 hours</option>
 				       <option id="poll_18000000" value="18000000">5 hours</option>
 				   </select>
-               <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>		
+               <a title="This setting determines how often to check for new mail" style="cursor: help">?</a>
 			   </div>
 			   <div id="content_3" class="content invisible">
 				   <h2>Visual settings</h2>
