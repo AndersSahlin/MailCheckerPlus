@@ -19,8 +19,8 @@
         "48": "img/icon_48.png",
         "128": "img/icon_128.png"
    },
-   "name": "Mail Checker Plus for Google Mail™",
+   "name": "Mail Checker Plus for Google Mail™ (Beta)",
    "options_page": "options.html",
    "permissions": [ "notifications", "tabs", "http://*/*", "https://*/*", "http://*.google.com/*", "https://*.google.com/*" ],
-   "version": "1.2.3.3"
+   "version": "1.2.4"
 }

@@ -7,11 +7,11 @@ var mailAccounts = backgroundPage.accounts;
 //var mailArray = mailAccount.getMail();
 var mailCount = 0;
 var mailCache = new Array();
-var allMail;
+var allMailMap;
+var allMailArray;
 var scrollbar;
-
 var unreadCount = 0;
-allMail = new Array();
+
 $.each(mailAccounts, function (i, account) {
    unreadCount += account.getUnreadCount();
 });
@@ -124,7 +124,7 @@ function starThread(accountId, mailid) {
 }
 
 function replyTo(accountId, mailid) {
-   mailAccounts[accountId].replyTo(allMail[mailid]);
+   mailAccounts[accountId].replyTo(allMailMap[mailid]);
 }
 
 function showReply(mailid) {
@@ -158,17 +158,7 @@ function getThread(accountId, mailid) {
    }
 
    if (accountId != null) {
-      window.setTimeout(mailAccounts[accountId].getThread(accountId, mailid, showBody), 0);
-      //		
-      //		var mailElement = document.getElementById(mailid);
-      //		if(mailElement != null) {
-      //			var mailHeaderReadLink = document.getElementById(mailid + "_read-link");
-      //			if(mailHeaderReadLink != null) {
-      //				mailHeaderReadLink.href = "javascript:unreadThread('" + accountId + "', '" + mailid + "');";
-      //				mailHeaderReadLink.innerHTML = i18n.get('unreadLink');
-      //				mailHeaderReadLink.title = i18n.get('unreadLinkTitle');
-      //			}
-      //		}    
+      mailAccounts[accountId].getThread(accountId, mailid, showBody);  
    }
 }
 
@@ -177,30 +167,49 @@ function showBody(accountid, mailid, mailbody) {
    //   hideElement(mailid + "_more-link");
 
    if (mailbody != null) {
-      var mail = allMail[mailid];
+
+      var previousMail = null;
+      var nextMail = null;
+      var currentMail = allMailMap[mailid];
+      var currentMailIndex = 0;
+      
+      $.each(allMailArray, function(index, _mail) {
+         if(_mail.id === mailid) {
+            currentMailIndex = index + 1;
+            if(index > 0) {
+               previousMail = allMailArray[index - 1];
+            }
+            if(index + 1 < allMailArray.length) {
+               nextMail = allMailArray[index + 1];
+            }
+            // Break loop
+            return false;
+         }
+      });
 
       var fullscreenContainer = $("#fullscreenContainer");
       var fullscreenContent = $("#fullscreenContent");
       var fullscreenControl = $("#fullscreenControls");
 
-
-      fullscreenControl.find('.openLink').html(mail.shortTitle);
-      fullscreenControl.find('.openLink').attr('title', Encoder.htmlDecode(mail.title));
-      fullscreenControl.find('.authorLink').html(mail.authorName);
-      fullscreenControl.find('.authorLink').attr('title', Encoder.htmlDecode(mail.authorMail));
-      fullscreenControl.find('.issuedLink').html(formatDateTime(mail.issued, i18n.selected_lang.months, true));
-      fullscreenControl.find('.issuedLink').attr('title', mail.issued);
+      fullscreenControl.find('.openLink').html(currentMail.shortTitle);
+      fullscreenControl.find('.openLink').attr('title', Encoder.htmlDecode(currentMail.title));
+      fullscreenControl.find('.authorLink').html(currentMail.authorName);
+      fullscreenControl.find('.authorLink').attr('title', Encoder.htmlDecode(currentMail.authorMail));
+      fullscreenControl.find('.issuedLink').html(formatDateTime(currentMail.issued, i18n.selected_lang.months, true));
+      fullscreenControl.find('.issuedLink').attr('title', currentMail.issued);
 
       fullscreenControl.find('.readLink').text(i18n.get('readLink'));
       fullscreenControl.find('.deleteLink').text(i18n.get('deleteLink'));
       fullscreenControl.find('.spamLink').text(i18n.get('spamLink'));
       fullscreenControl.find('.archiveLink').text(i18n.get('archiveLink'));
+      fullscreenControl.find('.countLabel').text(currentMailIndex + ' of ' + allMailArray.length);
       fullscreenControl.find('.starLink').attr('title', i18n.get('starLinkTitle'));
       fullscreenControl.find('.replyLink').attr('title', i18n.get('replyLinkTitle'));
       fullscreenControl.find('.readLink').attr('title', i18n.get('readLinkTitle'));
       fullscreenControl.find('.deleteLink').attr('title', i18n.get('deleteLinkTitle'));
       fullscreenControl.find('.spamLink').attr('title', i18n.get('spamLinkTitle'));
       fullscreenControl.find('.archiveLink').attr('title', i18n.get('archiveLinkTitle'));
+
 
       // Insert the full mail body and full screen controls
       fullscreenContent.empty();
@@ -211,32 +220,54 @@ function showBody(accountid, mailid, mailbody) {
       fullscreenContainer.append(fullscreenContent);
 
       // Set event handlers
+
+      if(previousMail) {
+         fullscreenControl.find('.previousLink').css('visibility','visible');
+         fullscreenControl.find('.previousLink').click(function () {
+            getThread(previousMail.accountId, previousMail.id);
+         });
+      } else {
+         fullscreenControl.find('.previousLink').css('visibility','hidden');
+      }
+
+      if(nextMail) {
+         fullscreenControl.find('.nextLink').css('visibility','visible');
+         fullscreenControl.find('.nextLink').click(function () {
+            getThread(nextMail.accountId, nextMail.id);
+         });
+      } else {
+         fullscreenControl.find('.nextLink').css('visibility','hidden');
+      }
+
       fullscreenControl.find('.closeLink').click(function () {
-         setTimeout(hideBody(), 0);
+         window.close();
+      });
+      fullscreenControl.find('.hideLink').click(function () {
+         hideBody();
       });
       fullscreenControl.find('.readLink').click(function () {
          readThread(accountid, mailid);
-         setTimeout(hideBody(), 0);
+         hideBody();
       });
       fullscreenControl.find('.replyLink').click(function () {
          replyTo(accountid, mailid);
-         setTimeout(hideBody(), 0);
+         hideBody();
       });
       fullscreenControl.find('.deleteLink').click(function () {
          deleteThread(accountid, mailid);
-         setTimeout(hideBody(), 0);
+         hideBody();
       });
       fullscreenControl.find('.spamLink').click(function () {
          spamThread(accountid, mailid);
-         setTimeout(hideBody(), 0);
+         hideBody();
       });
       fullscreenControl.find('.archiveLink').click(function () {
          archiveThread(accountid, mailid);
-         setTimeout(hideBody(), 0);
+         hideBody();
       });
       fullscreenControl.find('.openLink').click(function () {
          openMail(accountid, mailid);
-         setTimeout(hideBody(), 0);
+         hideBody();
       });
       fullscreenControl.find('.starLink').click(function () {
          $(this).css('opacity', '1');
@@ -387,7 +418,11 @@ function renderAccount(account) {
 
    if (account.getMail() != null) {
       $.each(account.getMail(), function (j, mail) {
-         allMail[mail.id] = mail;
+
+         mail.accountId = account.id;
+
+         allMailMap[mail.id] = mail;
+         allMailArray.push(mail);
             
          // Render mail
          var mailHtml = parseTemplate($("#MailTemplate").html(), {
@@ -432,7 +467,9 @@ function renderAccount(account) {
 
 $(document).ready(function () {
    var unreadCount = 0;
-   allMail = new Array();
+   allMailMap = {};
+   allMailArray = new Array();
+
    $.each(mailAccounts, function (i, account) {
       unreadCount += account.getUnreadCount();
    });

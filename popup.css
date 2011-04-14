@@ -116,7 +116,9 @@ img
 
 #fullscreenControls a.openLink
 {
-   font-size: 110%;
+   font-size: 120%;
+   margin-top: 4px;
+   display: block;
 }
 
  /*
