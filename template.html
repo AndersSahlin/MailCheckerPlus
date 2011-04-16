@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title></title>
+   <link href="template.css" rel="stylesheet" type="text/css" />
+   <script src="src/jquery-1.4.2.js" type="text/javascript"></script>
+   <script language="javascript" type="text/javascript">
+      $(function () {
+         if (localStorage.templateTitle) {
+            $("#title").html(localStorage.templateTitle);
+            delete localStorage.templateTitle;
+         }
+         if (localStorage.templateText) {
+            $("#text").html(localStorage.templateText);
+            delete localStorage.templateText;
+         }
+
+         $("body").click(function () {
+            if (chrome.extension.getBackgroundPage().templateCallback) {
+               chrome.extension.getBackgroundPage().templateCallback();
+            }
+
+            window.close();
+         });
+      });      
+
+   </script>
+</head>
+<body>
+
+   <table>
+      <tr>
+         <td id="icon"><img src="img/icon_48.png" alt="Icon" /></td>
+         <td>
+            <div id="message">
+               <div id="title">Title placeholder</div>
+               <div id="text">Text placeholder</div>
+            </div>
+         </td>
+      </tr>
+   </table>
+
+</body>
+</html>

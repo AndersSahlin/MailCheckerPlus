@@ -1,0 +1,36 @@
+/* CSS for Gmail Checker template.html */
+
+html, body
+{
+   margin: 0;
+   padding: 0;
+}
+
+body
+{
+   font-family: arial, sans-serif;
+   font-size: 0.8em;
+}
+
+#icon, #message
+{
+   float: left;
+}
+
+#message
+{
+   padding-top: 10px;
+   padding-left: 5px;
+}
+
+#title
+{
+   font-weight: bold;
+}
+
+#text
+{
+   padding-top: 2px;
+   padding-bottom: 10px;
+   clear:both;
+}

@@ -116,6 +116,20 @@ function init() {
    reloadSettings();
 }
 
+function showNotification(title, message, callback) {
+   localStorage.templateTitle = title;
+   localStorage.templateText = message;
+   window.templateCallback = callback;
+
+   var notification = webkitNotifications.createHTMLNotification(chrome.extension.getURL("template.html"));
+   notification.onclose = function () {
+      delete localStorage.templateTitle;
+      delete localStorage.templateText;
+      window.templateCallback = null;
+   };
+   notification.show();
+}
+
 function reloadSettings() {
    unreadCount = 0;
 
@@ -170,9 +184,17 @@ function reloadSettings() {
    }
 
    if (localStorage["gc_version"] == null ||
-        localStorage["gc_version"] != "1.2.2") {
-      localStorage["gc_version"] = "1.2.2";
-      chrome.tabs.create({ url: "about.html" });
+        localStorage["gc_version"] != "1.2.4.1") {
+      localStorage["gc_version"] = "1.2.4.1";
+
+      var updateTitle = "New version installed";
+      var updateMessage = "The extension has been updated to the latest version (" + localStorage["gc_version"] + ")." +
+         "<br />" + "<br />" +
+         "Click to view the change log.";
+
+      showNotification(updateTitle, updateMessage, function () {
+         chrome.tabs.create({ url: "about.html" });
+      });
    }
 
    if (accounts != null) {
@@ -196,7 +218,7 @@ function reloadSettings() {
          success: function (data) {
             // Multiple accounts active
             var matches = data.match(/<li>([\S]+?@[\S]+)[<|\S]/ig);
-            console.log(matches);
+            //console.log(matches);
 
             if (matches != null && matches.length > 0) {
                for (var n = 0; n < matches.length; n++) {
