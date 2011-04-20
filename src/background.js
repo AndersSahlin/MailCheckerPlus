@@ -2,6 +2,8 @@
 /// <reference path="jquery-1.4.2.js" />
 /// <reference path="mailaccount.class.js" />
 
+var VERSION = "1.2.4.2";
+
 var img_notLoggedInSrc = "not_logged_in";
 var img_noNewSrc = "no_new";
 var img_newSrc = "new";
@@ -184,8 +186,8 @@ function reloadSettings() {
    }
 
    if (localStorage["gc_version"] == null ||
-        localStorage["gc_version"] != "1.2.4.1") {
-      localStorage["gc_version"] = "1.2.4.1";
+        localStorage["gc_version"] != VERSION) {
+      localStorage["gc_version"] = VERSION;
 
       var updateTitle = "New version installed";
       var updateMessage = "The extension has been updated to the latest version (" + localStorage["gc_version"] + ")." +

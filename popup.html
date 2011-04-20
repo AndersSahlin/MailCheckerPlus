@@ -19,6 +19,7 @@
 <body id="body">
     <!-- Template for an account !-->
     <script id="AccountTemplate" type="text/html">
+    <ul id="labels_<#= account.id #>" class="labels"></ul>
     <div id="content_<#= account.id #>" class="indicator i<#= account.id % 4 #> account">
        <div id="inbox_<#= account.id #>" class="vbox rounded">
            <div class="hbox padded inbox">
@@ -42,17 +43,21 @@
    <script id="MailTemplate" type="text/html">
    <div class="vbox mail" id="<#= mail.id #>"> 
       <div class="hbox border-top padded sender">
-         <div class="hbox wide ">
+         <div class="hbox wide">
             <label class="author" title="<#= mail.authorMail  #>"><#= mail.authorName  #></label>
          </div>
+
          <div class="hbox mailActions">
             <label title="<#= mail.issued #>"><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
+            <a class="labelLink imageLink" mailId="<#= mail.id #>" href="#" title="Show labels"><img src="img/label.png" /></a>
             <a class="readLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
             <a class="deleteLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
             <a class="spamLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
             <a class="archiveLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('archiveLinkTitle') #>"><#= i18n.get('archiveLink') #></a>
          </div>
       </div>  
+
+      <div class="hbox mailLabels" id="labelBox_<#= mail.id #>" mailId="<#= mail.id #>"></div>
 
       <div class="hbox title padded">
          <!--<div class="hbox">

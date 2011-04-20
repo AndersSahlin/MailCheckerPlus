@@ -148,6 +148,41 @@ div#menu:hover
    /*top: -8px;     padding-bottom: 2px;     background: white none;*/
 }
 
+.mailLabels
+{
+   display: none;
+}
+
+ul.labels 
+{
+   padding: 0;
+   margin: 0;
+   list-style-type: none;
+}
+
+ul.labels li
+{
+   display: block;
+   float: right;
+   padding-left: 5px;
+   padding-right: 5px;
+   margin: 2px;
+   
+   border-radius: 6px;
+   border: 1px solid #ccc;
+   background-color: #F9F9F9;
+   
+   cursor: pointer;
+   color: #333;
+}
+
+ul.labels li.applied, ul.labels li:hover
+{
+   border: 1px solid #111;
+   color: #000;
+   background-color: #eee;
+}
+
 a.imageLink
 {
    opacity: 0.5;

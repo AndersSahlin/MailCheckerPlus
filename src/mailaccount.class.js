@@ -46,12 +46,15 @@ function MailAccount(settingsObj) {
    var isStopped = false;
    var requestTimer;
 
+   var GLOBALS = null;
+   var LABELS = null;
+
    this.onUpdate;
    this.onError;
    this.isDefault;
 
    // Debug output (if enabled, might cause memory leaks)
-   var verbose = false;
+   var verbose = true;
 
    // Without this/that, no internal calls to onUpdate or onError can be made...
    var that = this;
@@ -167,6 +170,35 @@ function MailAccount(settingsObj) {
       }
    }
 
+   function getGLOBALS() {
+      $.ajax({
+         type: "GET",
+         dataType: "text",
+         url: mailURL,
+         timeout: 25000,
+         success: function (data) {
+            try {
+               var startIndex = data.lastIndexOf('var GLOBALS=') + 12;
+               var endIndex = data.lastIndexOf(';GLOBALS[0]');
+               var length = endIndex - startIndex;
+
+               GLOBALS = eval(data.substr(startIndex, length));
+
+               // Parse labels from GLOBALS
+               LABELS = new Array();
+               $.each(GLOBALS[17][1][2], function (i, val) { LABELS.push(val[0]); });
+            } catch (e) {
+               console.error("An error occured while parsing GLOBALS: " + e);
+            }
+         },
+         error: function (xhr, status, err) {
+            console.error("An error occured while fetching GLOBALS: " + xhr + " " + text + " " + err);
+            // Try again in 30 seconds
+            //window.setTimeout(getGLOBALS, 30 * 1000);
+         }
+      });
+   }
+
    // Handles a successful getInboxCount call and schedules a new one
    function handleSuccess(count) {
       logToConsole("success!");
@@ -208,6 +240,10 @@ function MailAccount(settingsObj) {
 
          if (gmailAt == null) {
             getAt();
+         }
+
+         if (GLOBALS == null) {
+            getGLOBALS();
          }
       } catch (e) {
          console.error("exception: " + e);
@@ -531,6 +567,13 @@ function MailAccount(settingsObj) {
       }
    }
 
+   // Applies a label to a thread
+   this.applyLabel = function (threadid, label) {
+      if (threadid != null) {
+         postAction({ "threadid": threadid, "action": "ac_" + label });
+      }
+   }
+
    // Retrieves unread count
    this.getUnreadCount = function () {
       return Number(unreadCount);
@@ -637,6 +680,10 @@ function MailAccount(settingsObj) {
       } else {
          window.open(urlToOpen, 'Compose new message', 'width=640,height=480');
       }
+   }
+
+   this.getLabels = function () {
+      return LABELS;
    }
 
    // Opens the Compose window with pre-filled data

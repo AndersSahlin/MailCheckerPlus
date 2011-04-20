@@ -140,6 +140,10 @@ function starThread(accountId, mailid) {
    mailAccounts[accountId].starThread(mailid);
 }
 
+function applyLabelToThread(accountId, mailId, label) {
+   mailAccounts[accountId].applyLabel(mailId, label);
+}
+
 function replyTo(accountId, mailid) {
    mailAccounts[accountId].replyTo(allMailMap[mailid]);
 }
@@ -455,7 +459,9 @@ function renderAccount(account) {
 
    // Add to page
    $(accountHtml).fadeIn("fast").appendTo("#content");
+
    var inboxElement = $('#inbox_' + account.id);
+   var labels = account.getLabels();
 
    if (account.getMail() != null) {
       $.each(account.getMail(), function (j, mail) {
@@ -470,7 +476,7 @@ function renderAccount(account) {
             account: account,
             mail: mail,
             i18n: i18n
-         });
+         });         
 
          // Add to account element
          $(mailHtml).fadeIn("fast").appendTo(inboxElement);
@@ -490,6 +496,49 @@ function renderAccount(account) {
       });
    }
 
+//   if(account.getLabels() != null) {
+//      var labels = account.getLabels();
+//      var labelPopout = $('#labels_' + account.id);
+
+//      $.each(labels, function(_index, _label) {
+//         var labelElement = $('<li>');
+
+//         labelElement.text(_label);
+//         labelElement.click(function() {
+//            //alert(_label);
+//         });
+
+//         labelElement.appendTo(labelPopout);
+//      });
+//   }
+
+   $.each(inboxElement.find(".mailLabels"), function(_index, _mailLabels) {
+      var labelContainer = $(_mailLabels);
+      var mailId = labelContainer.attr('mailId');
+
+      if(labels != null) {
+         var labelPopout = $('<ul>');
+         labelPopout.addClass('labels');
+
+         $.each(labels, function(_index, _label) {
+            var labelElement = $('<li>');
+
+            labelElement.text(_label);
+            labelElement.attr("title", "Apply label '" + _label + "'");
+
+            labelElement.click(function() {
+               $(this).toggleClass("applied");               
+               labelContainer.slideUp(100);
+               applyLabelToThread(account.id, mailId, _label);
+            });
+
+            labelElement.appendTo(labelPopout);
+         });
+
+         labelPopout.appendTo(labelContainer);
+      }
+   });
+
    // Hook up event handlers
    inboxElement.find(".readLink").click(function () { readThread(account.id, $(this).attr('mailId')); });
    inboxElement.find(".deleteLink").click(function () { deleteThread(account.id, $(this).attr('mailId')); });
@@ -499,6 +548,12 @@ function renderAccount(account) {
    inboxElement.find(".summary").click(function () { getThread(account.id, $(this).attr('mailId')); });
    inboxElement.find(".replyLink").click(function () { replyTo(account.id, $(this).attr('mailId')); });
    inboxElement.find(".openLink").click(function () { openMail(account.id, $(this).attr('mailId')); });
+
+   
+   inboxElement.find(".labelLink").click(function () { 
+      var mailId = $(this).attr('mailId');
+      $("#labelBox_" + mailId).slideToggle(100);
+   });
       
    inboxElement.find(".starLink").click(function () {
       $(this).css('opacity', '1');
