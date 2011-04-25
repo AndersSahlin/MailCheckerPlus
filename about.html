@@ -5,7 +5,7 @@
 	<title>About Mail Checker Plus for Google Mail™</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
-	<link rel="stylesheet" type="text/css" media="screen" href="general.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="css/general.css" />
 </head>
 <body>
 
@@ -14,7 +14,7 @@
     <table>
         <tr>
             <td>
-                <span class="top_right"><img src="img/icon_48.png"></span>
+                <span class="top_right"><img src="img/icon_48.png" alt="Icon" /></span>
                 <h1>Thank you...</h1>
                 <p>... for installing (or updating to) the latest version of <strong>Mail Checker Plus for Google Mail™</strong>!</p>
                 <p>Make sure you check the <a href="options.html" title="Go to the options page"><strong>options page</strong></a> for visual and functional configuration of the extension.</p>
@@ -33,6 +33,12 @@
         <tr>
             <td>
                 <h2>Changelog</h2>     
+                <h4> 1.2.4.3 (2011-04-26)</h4>
+                <ul>     
+                    <li>Added a loading animation on the popup page when the extension is waiting for an outgoing request</li>
+                    <li>Client storage backend rewritten (bye LocalStorage, hello <a href="https://developer.mozilla.org/en/IndexedDB">IndexedDB</a>). <br />You will have to re-enter any custom settings, <strong>sorry</strong>!</li>
+                    <li>New icon set, OSX (thanks to Marijn van der Werf)</li>
+                </ul>  
                 <h4> 1.2.4.2 (2011-04-21)</h4>
                 <ul>     
                     <li>Added experimental one-way label support</li>

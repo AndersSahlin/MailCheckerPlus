@@ -12,12 +12,13 @@ https://chrome.google.com/extensions/detail/gffjhibehnempbkeheiccaincokdjbfe
 */
 
 function MailAccount(settingsObj) {
-   // Check global settings
-   var pollInterval = localStorage["gc_poll"];
    var requestTimeout = 10000;
-   var openInTab = (localStorage["gc_open_tabs"] != null && localStorage["gc_open_tabs"] == "true");
-   var archiveAsRead = (localStorage["gc_archive_read"] != null && localStorage["gc_archive_read"] == "true");
-   // var mailURL = (localStorage["gc_force_ssl"] != null && localStorage["gc_force_ssl"] == "true") ? "https://" : "http://";
+
+   // Check global settings
+   var pollInterval = Settings.read("poll");
+   var openInTab = Settings.read("open_tabs");
+   var archiveAsRead = Settings.read("archive_read");
+
    // Always use SSL, things become messy otherwise
    var mailURL = "https://mail.google.com";
 
@@ -32,8 +33,8 @@ function MailAccount(settingsObj) {
       mailURL += "/mail/";
    }
 
-   var inboxLabel = localStorage["gc_open_label"];
-   var atomLabel = localStorage["gc_check_label"];
+   var inboxLabel = Settings.read("open_label");
+   var atomLabel = Settings.read("check_label");
    
    var mailArray = new Array();
    var newestMail;
@@ -65,8 +66,13 @@ function MailAccount(settingsObj) {
       xmlDocument = $(parser.parseFromString(data, "text/xml"));
       var fullCount = xmlDocument.find('fullcount').text();
 
-      mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");
-      mailAddress = mailTitle.match(/([\S]+@[\S]+)/ig)[0];
+      try {
+         mailTitle = $(xmlDocument.find('title')[0]).text().replace("Gmail - ", "");
+         mailAddress = mailTitle.match(/([\S]+@[\S]+)/ig)[0];
+      } catch (e) {
+         console.error(e);
+         return;
+      }
 
       //newestMail = null;
       var newMailArray = new Array();
@@ -95,8 +101,8 @@ function MailAccount(settingsObj) {
 
          if (title == null || title.length < 1) {
             shortTitle = title = "(No subject)";
-         } else if (title.length > 63) {
-            shortTitle = title.substr(0, 60) + "...";
+         } else if (title.length > 55) {
+            shortTitle = title.substr(0, 55).trim() + "...";
          }
 
          // Encode content to prevent XSS attacks
@@ -277,8 +283,7 @@ function MailAccount(settingsObj) {
             try {
                logToConsole("trying to call onUpdate...");
                that.onUpdate(that);
-            }
-            catch (e) {
+            } catch (e) {
                console.error(e);
             }
          }
@@ -307,9 +312,9 @@ function MailAccount(settingsObj) {
    }
 
    // Send a POST action to Gmail
-   function postAction(postObj) {
+   function postAction(postObj, callback) {
       if (gmailAt == null) {
-         getAt(postAction, postObj);
+         getAt(function() { postAction(postObj, callback); });
       } else {
          var threadid = postObj.threadid;
          var action = postObj.action;
@@ -325,13 +330,19 @@ function MailAccount(settingsObj) {
          postXHR.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
                // Post successful! Refresh once
-               window.setTimeout(getInboxCount, 0);
+               getInboxCount();
+               if(callback != null)
+                  callback();
             } else if (this.readyState == 4 && this.status == 401) {
-
+               if(callback != null)
+                  callback("Unauthorized");
             }
          }
          postXHR.onerror = function (error) {
-            logToConsole("mark as read error: " + error);
+            logToConsole("post action error: " + error);
+            
+            if(callback != null)
+               callback("Error: " + error);
          }
 
          postXHR.open("POST", postURL, true);
@@ -341,7 +352,7 @@ function MailAccount(settingsObj) {
    }
 
    // Opens the basic HTML version of Gmail and fetches the Gmail_AT value needed for POST's
-   function getAt(callback, tag) {
+   function getAt(callback) {
       var getURL = mailURL + "h/" + Math.ceil(1000000 * Math.random()) + "/?ui=html&zy=c";
       var gat_xhr = new XMLHttpRequest();
       gat_xhr.onreadystatechange = function () {
@@ -354,7 +365,7 @@ function MailAccount(settingsObj) {
                //logToConsole(gmailAt);
 
                if (callback != null) {
-                  callback(tag);
+                  callback();
                }
             }
          } else if (this.readyState == 4 && this.status == 401) {
@@ -450,13 +461,13 @@ function MailAccount(settingsObj) {
          var gt_xhr = new XMLHttpRequest();
          gt_xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-//               var markAsRead = (localStorage["gc_showfull_read"] != null && localStorage["gc_showfull_read"] == "true");
+//               var markAsRead = (Settings.read("showfull_read") != null && Settings.read("showfull_read") == "true");
 
 //               if(markAsRead)
 //                  that.readThread(threadid);
 
                var matches = this.responseText.match(/<hr>[\s\S]?<table[^>]*>([\s\S]*?)<\/table>(?=[\s\S]?<hr>)/gi);
-               //var matches = matchRecursiveRegExp(this.responseText, "<div class=[\"]?msg[\"]?>", "</div>", "gi")
+               //var matches = matchRecursiveRegExp(this.responseText, "<div class=[\")?msg[\")?>", "</div>", "gi")
                //logToConsole(this.responseText);
                //logToConsole(matches[matches.length - 1]);
                //logToConsole(matches);
@@ -522,55 +533,57 @@ function MailAccount(settingsObj) {
    }
 
    // Marks a thread as read
-   this.readThread = function (threadid) {
+   this.readThread = function (threadid, callback) {
       if (threadid != null) {
-         postAction({ "threadid": threadid, "action": "rd" });
+         postAction({ "threadid": threadid, "action": "rd" }, callback);
       }
    }
 
    // Marks a thread as read
-   this.unreadThread = function (threadid) {
+   this.unreadThread = function (threadid, callback) {
       if (threadid != null) {
-         postAction({ "threadid": threadid, "action": "ur" });
+         postAction({ "threadid": threadid, "action": "ur" }, callback);
       }
    }
 
    // Archives a thread
-   this.archiveThread = function (threadid) {
+   this.archiveThread = function (threadid, callback) {
       if (threadid != null) {
-         postAction({ "threadid": threadid, "action": "arch" });
          if (archiveAsRead) {
             postAction({ "threadid": threadid, "action": "rd" });
+            postAction({ "threadid": threadid, "action": "arch" }, callback);
+         } else {
+            postAction({ "threadid": threadid, "action": "rd" }, callback);
          }
       }
    }
 
    // Deletes a thread
-   this.deleteThread = function (threadid) {
+   this.deleteThread = function (threadid, callback) {
       if (threadid != null) {
          postAction({ "threadid": threadid, "action": "rd" });
-         postAction({ "threadid": threadid, "action": "tr" });
+         postAction({ "threadid": threadid, "action": "tr" }, callback);
       }
    }
 
    // Deletes a thread
-   this.spamThread = function (threadid) {
+   this.spamThread = function (threadid, callback) {
       if (threadid != null) {
-         postAction({ "threadid": threadid, "action": "sp" });
+         postAction({ "threadid": threadid, "action": "sp" }, callback);
       }
    }
 
    // Stars a thread
-   this.starThread = function (threadid) {
+   this.starThread = function (threadid, callback) {
       if (threadid != null) {
-         postAction({ "threadid": threadid, "action": "st" });
+         postAction({ "threadid": threadid, "action": "st" }, callback);
       }
    }
 
    // Applies a label to a thread
-   this.applyLabel = function (threadid, label) {
+   this.applyLabel = function (threadid, label, callback) {
       if (threadid != null) {
-         postAction({ "threadid": threadid, "action": "ac_" + label });
+         postAction({ "threadid": threadid, "action": "ac_" + label }, callback);
       }
    }
 

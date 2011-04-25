@@ -2,10 +2,10 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-   <link rel="stylesheet" type="text/css" media="screen" href="popup.css" />
+   <link rel="stylesheet" type="text/css" media="screen" href="css/popup.css" />
    <style type="text/css">
    html, body { margin: 0; padding: 0; width: 100%; overflow: hidden; min-height: 120px; }
-   .border, .rounded { border: 0; }
+   .border, .rounded { border: 0; margin-top: 0; }
    .indicator { border-radius: 0; border: none; }
    .address {
       background-image: -webkit-gradient(linear,
@@ -39,88 +39,12 @@
    
 }
 </style>
-   <script type="text/javascript" src="src/i18n.js"></script>
    <script type="text/javascript" src="src/date.js"></script>
    <script type="text/javascript" src="src/jquery-1.4.2.js"></script>
    <script type="text/javascript" src="src/template-engine.js"></script>
    <script type="text/javascript" src="src/mailaccount.class.js"></script>
-   <script type="text/javascript">
-      var mailAccount;
-
-      $(document).ready(function () {
-         var backgroundPage = chrome.extension.getBackgroundPage();
-
-         mailAccount = backgroundPage.accountWithNewestMail;
-
-         mailAccount.id = backgroundPage.accounts.indexOf(mailAccount);
-         var mail = backgroundPage.accountWithNewestMail.getNewestMail();
-         var mailURL = backgroundPage.accountWithNewestMail.getURL();
-         var profilePhotos = backgroundPage.profilePhotos;
-
-         var fullDateTime = mail.issued.toLocaleString();
-         var datetime = formatDateTime(mail.issued, i18n.selected_lang.months);
-
-         var mailHtml = parseTemplate($("#MailTemplate").html(), {
-            account: mailAccount,
-            mail: mail,
-            i18n: i18n
-         });
-
-         $('body').append(mailHtml);
-
-         $('body').hover(function () {
-            $(this).find('.hiddenSummaryActions').fadeIn('fast');
-         }, function () {
-            $(this).find('.hiddenSummaryActions').fadeOut('fast');
-         });
-
-         $('body').find(".readLink").click(function () { readMail(); });
-         $('body').find(".deleteLink").click(function () { deleteMail(); });
-         $('body').find(".spamLink").click(function () { spamMail(); });
-         $('body').find(".archiveLink").click(function () { archiveMail(); });
-         $('body').find(".openLink").click(function () { openMail(); });
-         $('body').find(".inboxLink").click(function () { openInbox(); });
-
-         $('body').find(".starLink").click(function () {
-            $(this).css('opacity', '1');
-            starMail();
-         });
-      });
-
-      // Opens a mail and closes this window
-      function openMail() {
-         window.close();
-         mailAccount.openNewestMail();
-      }
-      // Marks mail as read and closes this window
-      function readMail() {
-         window.close();
-         mailAccount.readNewestMail();
-      }
-      // Deletes mail and closes this window
-      function deleteMail() {
-         window.close();
-         mailAccount.deleteNewestMail();
-      }
-      // Marks mail as spam and closes this window
-      function spamMail() {
-         window.close();
-         mailAccount.spamNewestMail();
-      }
-      // Archives mail and closes this window
-      function archiveMail() {
-         window.close();
-         mailAccount.archiveNewestMail();
-      }
-      // Star mail
-      function starMail() {
-         mailAccount.starNewestMail();
-      }
-      // Star mail
-      function openInbox() {
-         mailAccount.openInbox();
-      }
-   </script>
+   <script src="src/notify.js" type="text/javascript"></script>
+   <script type="text/javascript" src="src/i18n.js"></script>
 </head>
 <body id="body">
    <!-- Template for a mail !-->

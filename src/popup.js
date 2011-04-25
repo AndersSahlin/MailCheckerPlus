@@ -1,9 +1,13 @@
 /// <reference path="jquery-1.4.2.js" />
 /// <reference path="chrome-api-vsdoc.js" />
 /// <reference path="encoder.js" />
+/// <reference path="settings.js" />
+/// <reference path="mailaccount.class.js" />
 
 var backgroundPage = chrome.extension.getBackgroundPage();
+var Settings = backgroundPage.getSettings();
 var mailAccounts = backgroundPage.accounts;
+
 //var mailArray = mailAccount.getMail();
 var mailCount = 0;
 var mailCache = new Array();
@@ -33,13 +37,13 @@ $.each(mailAccounts, function (i, account) {
 //   return 0;
 //});
 
-var previewSetting = localStorage["gc_preview_setting"];
+var previewSetting = Settings.read("preview_setting");
 
-if (previewSetting == "0") {
+if (previewSetting === 0) {
    // Preview setting set to "Always off" =
    // Go to first mail inbox with unread items
    openInbox(0);
-} else if (previewSetting == "1" && unreadCount == 0) {
+} else if (previewSetting === 1 && unreadCount === 0) {
    // Preview setting set to "Automatic" + no unread mail =
    // Go to first mail inbox
    openInbox(0);
@@ -103,9 +107,17 @@ function sendPage(accountId) {
    });
 }
 
+function showLoading(mailid) {
+   $("#loadingBox_" + mailid).fadeIn(100);
+}
+
+function hideLoading(mailid) {
+   $("#loadingBox_" + mailid).hide();
+}
+
 function readThread(accountId, mailid, stayOpen) {
-   hideMail(accountId, mailid, stayOpen);
-   mailAccounts[accountId].readThread(mailid);
+   showLoading(mailid);
+   mailAccounts[accountId].readThread(mailid, function() { hideMail(accountId, mailid, stayOpen); });
 }
 
 function unreadThread(accountId, mailid) {
@@ -122,18 +134,18 @@ function unreadThread(accountId, mailid) {
 }
 
 function archiveThread(accountId, mailid) {
-   hideMail(accountId, mailid);
-   mailAccounts[accountId].archiveThread(mailid);
+   showLoading(mailid);
+   mailAccounts[accountId].archiveThread(mailid, function() { hideMail(accountId, mailid); });
 }
 
 function deleteThread(accountId, mailid) {
-   hideMail(accountId, mailid);
-   mailAccounts[accountId].deleteThread(mailid);
+   showLoading(mailid);
+   mailAccounts[accountId].deleteThread(mailid, function() { hideMail(accountId, mailid); });
 }
 
 function spamThread(accountId, mailid) {
-   hideMail(accountId, mailid);
-   mailAccounts[accountId].spamThread(mailid);
+   showLoading(mailid);
+   mailAccounts[accountId].spamThread(mailid, function() { hideMail(accountId, mailid); });
 }
 
 function starThread(accountId, mailid) {
@@ -167,8 +179,7 @@ function sendReply(mailid) {
 
 function getThread(accountId, mailid) {
 
-   var markAsRead = (localStorage["gc_showfull_read"] != null && localStorage["gc_showfull_read"] == "true");
-   if (markAsRead) {
+   if (Settings.read("showfull_read")) {
 	  readThread(accountId, mailid, true);
    }
 
@@ -179,11 +190,13 @@ function getThread(accountId, mailid) {
    }
 
    if (accountId != null) {
+      showLoading(mailid);
       mailAccounts[accountId].getThread(accountId, mailid, showBody);  
    }
 }
 
 function showBody(accountid, mailid, mailbody) {
+   hideLoading(mailid);
    //   showElement(mailid + "_less-link");
    //   hideElement(mailid + "_more-link");
 

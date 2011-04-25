@@ -1,46 +1,53 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-    <link rel="stylesheet" type="text/css" media="screen" href="scrollbar.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="popup.css" />
+   <link rel="stylesheet" type="text/css" media="screen" href="css/scrollbar.css" />
+   <link rel="stylesheet" type="text/css" media="screen" href="css/popup.css" />
+    
+   <script type="text/javascript" src="src/global.js"></script>
+   <script type="text/javascript" src="src/jquery-1.4.2.js"></script>
+   <script type="text/javascript" src="src/encoder.js"></script>
+   <script type="text/javascript" src="src/date.js"></script>
+   <script type="text/javascript" src="src/template-engine.js"></script>
+   <script type="text/javascript" src="src/mailaccount.class.js"></script>
+   <script type="text/javascript" src="src/popup.js"></script>
+   <script type="text/javascript" src="src/i18n.js"></script>
 
-    <script type="text/javascript" src="src/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="src/encoder.js"></script>
-    <script type="text/javascript" src="src/date.js"></script>
-    <script type="text/javascript" src="src/template-engine.js"></script>
-    <script type="text/javascript" src="src/i18n.js"></script>
-    <script type="text/javascript" src="src/mailaccount.class.js"></script>
-    <script type="text/javascript" src="src/popup.js"></script>
-
-    <title>Mail Checker Plus for Google Mail™ - Popup page</title>
+   <title>Mail Checker Plus for Google Mail™ - Popup page</title>
 </head>
 <body id="body">
-    <!-- Template for an account !-->
-    <script id="AccountTemplate" type="text/html">
-    <ul id="labels_<#= account.id #>" class="labels"></ul>
-    <div id="content_<#= account.id #>" class="indicator i<#= account.id % 4 #> account">
-       <div id="inbox_<#= account.id #>" class="vbox rounded">
-           <div class="hbox padded inbox">
-               <div class="hbox padded wide">
-                  <a class="toggleLink imageLink" accountId="<#= account.id #>" href="#" title=""><img src="img/arrow_down.png" /></a>
+   <!-- Template for an account !-->
+   <script id="AccountTemplate" type="text/html">
+
+   <div id="content_<#= account.id #>" class="indicator i<#= account.id % 4 #> account">
+      <div id="inbox_<#= account.id #>" class="vbox rounded">
+         <div class="hbox wide">
+            <div class="hbox padded toggleLink contrast border-right">
+               <a class="imageLink" accountId="<#= account.id #>" href="#" title=""><img src="img/arrow_down.png" /></a>
+            </div>
+            <div class="hbox padded wide inbox">
+               <div class="hbox padded wide">            
                   <a class="inboxLink" accountId="<#= account.id #>" href="#" title="<#= account.getInboxLink() #>">
                      <#= account.getInboxLink() #>
                      <# if(account.unreadCount > 0) { #><span class="unreadCount">(<#= account.unreadCount #>)</span><# } #>
                   </a>
                </div>
                <div class="hbox padded" style="padding-right: 0">
-                   <a class="composeLink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><img src="img/compose.png" /></a>
-                   <a class="sendpageLink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('sendPageLinkTitle') #>"><img src="img/send_page.png" /></a>
+                  <a class="composeLink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('composeLinkTitle') #>"><img src="img/compose.png" /></a>
+                  <a class="sendpageLink imageLink" accountId="<#= account.id #>" href="#" title="<#= i18n.get('sendPageLinkTitle') #>"><img src="img/send_page.png" /></a>
                </div>
-           </div>
-       </div>
-    </div>
-    </script>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   </script>
     
    <!-- Template for a mail !-->
    <script id="MailTemplate" type="text/html">
+
    <div class="vbox mail" id="<#= mail.id #>"> 
       <div class="hbox border-top padded sender">
          <div class="hbox wide">
@@ -49,7 +56,6 @@
 
          <div class="hbox mailActions">
             <label title="<#= mail.issued #>"><#= formatDateTime(mail.issued, i18n.selected_lang.months) #></label>
-            <a class="labelLink imageLink" mailId="<#= mail.id #>" href="#" title="Show labels"><img src="img/label.png" /></a>
             <a class="readLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('readLinkTitle') #>"><#= i18n.get('readLink') #></a>
             <a class="deleteLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('deleteLinkTitle') #>"><#= i18n.get('deleteLink') #></a>
             <a class="spamLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('spamLinkTitle') #>"><#= i18n.get('spamLink') #></a>
@@ -58,7 +64,7 @@
       </div>  
 
       <div class="hbox mailLabels" id="labelBox_<#= mail.id #>" mailId="<#= mail.id #>"></div>
-
+      
       <div class="hbox title padded">
          <!--<div class="hbox">
             <a class="starlink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('starLinkTitle') #>"><#= i18n.get('starLinkTitle') #></a>
@@ -68,15 +74,19 @@
             <a class="openLink" mailId="<#= mail.id #>" href="#" title="<#= mail.title #>"><#= mail.shortTitle #></a>            
          </div>
          <div class="hbox">
+            <a class="labelLink imageLink" mailId="<#= mail.id #>" href="#" title="Show labels"><img src="img/label.png" /></a>
             <a class="fullLink imageLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('fullLinkTitle') #>"><img src="img/more.png" /></a>
             <a class="replyLink imageLink" mailId="<#= mail.id #>" href="#" title="<#= i18n.get('replyLinkTitle') #>"><img src="img/reply.png" /></a>
          </div>
-      </div> 
+      </div>
 
       <div class="vbox summary padded" mailId="<#= mail.id #>">
          <#= mail.summary #>
       </div>
+
+      <div class="overlay loading" id="loadingBox_<#= mail.id #>"></div>
    </div>
+   
    </script>
     
     <div id="fullscreenContainer">

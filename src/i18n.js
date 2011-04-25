@@ -1834,10 +1834,6 @@ languages["uz"] = {
     "popupText" : "Yangi xat keldi!"
 };
 
-if(localStorage["gc_language"] == null) {
-    localStorage["gc_language"] = "en";
-}
-
 function get_lang_string(name)
 {
 	if ( this.selected_lang[name] == null)
@@ -1852,11 +1848,11 @@ function get_lang_string(name)
 }
 
 i18n = new Object();
-i18n.selected_lang = languages[localStorage["gc_language"]];
+i18n.selected_lang = languages[Settings.read("language")];
 i18n.default_lang = languages['en']; // Fall back to English if there is no translation
 i18n.get = get_lang_string;
 
 function reloadLanguage() {
-    i18n.selected_lang = languages[localStorage["gc_language"]];
+   i18n.selected_lang = languages[Settings.read("language")];
 	i18n.default_lang = languages['en']; // Fall back to English if there is no translation
 }

@@ -1,43 +1,15 @@
 /// <reference path="chrome-api-vsdoc.js" />
 /// <reference path="jquery-1.4.2.js" />
 /// <reference path="mailaccount.class.js" />
+/// <reference path="utility.js" />
+/// <reference path="settings.js" />
 
-/* Extensions to the local storage class for object storage */
-Storage.prototype.setObject = function (key, value) {
-    this.setItem(key, JSON.stringify(value));
-}
+var backgroundPage = chrome.extension.getBackgroundPage();
+var Settings = backgroundPage.getSettings();
 
-Storage.prototype.getObject = function (key) {
-    return this.getItem(key) && JSON.parse(this.getItem(key));
-}
+$(restore_options);
 
-function sortlist(lb) {
-    var arrTexts = new Array();
-    for (i = 0; i < lb.length; i++) {
-        arrTexts[i] = lb.options[i].text + ':' + lb.options[i].value + ':' + lb.options[i].selected;
-    }
-    arrTexts.sort(charOrdA);
-    for (i = 0; i < lb.length; i++) {
-        var el = arrTexts[i].split(':');
-        lb.options[i].text = el[0];
-        lb.options[i].value = el[1];
-        lb.options[i].selected = (el[2] == "true") ? true : false;
-    }
-}
-
-function charOrdA(a, b) {
-    a = a.toLowerCase();
-    b = b.toLowerCase();
-    if (a > b) return 1;
-    if (a < b) return -1;
-    return 0;
-}
-
-// Saves options to localStorage.
 var boolIdArray = new Array("hide_count",
-//                            "check_all",
-//                            "check_priority",
-//"force_ssl",
                             "showfull_read",
                             "check_gmail_off",
                             "open_tabs",
@@ -53,7 +25,7 @@ function save_options() {
       var id = boolIdArray[i];
       var element = document.getElementById(id);
       var value = element.checked;
-      localStorage["gc_" + id] = value;
+      Settings.store(id, value);
 
       console.log("saved: " + id + " as " + value);
    }
@@ -61,7 +33,7 @@ function save_options() {
    var iconRadios = document.forms[0].icon_set;
    for (var i in iconRadios) {
       if (iconRadios[i].checked) {
-         localStorage["gc_icon_set"] = iconRadios[i].value;
+         Settings.store("icon_set", iconRadios[i].value);
          break;
       }
    }
@@ -69,49 +41,45 @@ function save_options() {
    var previewRadios = document.forms[0].preview_setting;
    for (var i in previewRadios) {
       if (previewRadios[i].checked) {
-         localStorage["gc_preview_setting"] = previewRadios[i].value;
+         Settings.store("preview_setting", Number(previewRadios[i].value));
          break;
       }
    }
 
-   delete localStorage["gc_poll"];
-   delete localStorage["gc_dn_timeout"];
-   delete localStorage["gc_accounts"];
-
-   localStorage["gc_poll"] = parseInt(document.getElementById("poll").value);
-   localStorage["gc_dn_timeout"] = parseInt(document.getElementById("dn_timeout").value);
-   localStorage["gc_language"] = document.getElementById("languages").value;
-   localStorage["gc_check_label"] = document.getElementById("check_label").value;
-   localStorage["gc_open_label"] = document.getElementById("open_label").value;
+   Settings.store("poll", parseInt(document.getElementById("poll").value));
+   Settings.store("dn_timeout", parseInt(document.getElementById("dn_timeout").value));
+   Settings.store("language", document.getElementById("languages").value);
+   Settings.store("check_label", document.getElementById("check_label").value);
+   Settings.store("open_label", document.getElementById("open_label").value);
 
    if (accounts.length > 0) {
-      localStorage.setObject("gc_accounts", accounts);
+      Settings.store("accounts", accounts);
    }
 
-   localStorage["gc_sn_audio"] = document.getElementById("sn_audio").value;
-   if (localStorage["gc_sn_audio"] == "custom") {
-	   try{
-		localStorage["gc_sn_audio_raw"] = document.getElementById("sn_audio_enc").value;
+   Settings.store("sn_audio", document.getElementById("sn_audio").value);
+   if (Settings.read("sn_audio") == "custom") {
+	   try {
+	      Settings.store("sn_audio_raw", document.getElementById("sn_audio_enc").value);
 	   } catch (e) {
-		alert(e);   
+	      console.error(e);
+		   alert("Could not save notification sound in storage. Please select a smaller audio file!");   
 	   }
    } else {
-      localStorage["gc_sn_audio_raw"] = null;
+      Settings.store("sn_audio_raw", null);
    }
 
-   var backgroundPage = chrome.extension.getBackgroundPage();
-   backgroundPage.init();
+   backgroundPage.reloadSettings();
 }
 
-// Restores input states to saved values from localStorage.
+// Restores input states to saved values from stored settings.
 function restore_options() {
    showContent(0);
 
    for (var i in boolIdArray) {
       var id = boolIdArray[i];
-      var value = localStorage["gc_" + id];
+      var value = Settings.read(id);
 
-      if (value == "true") {
+      if (value === true) {
          var element = document.getElementById(id);
          element.checked = true;
       }
@@ -131,11 +99,12 @@ function restore_options() {
    spawnIconRow("set5", "Alternative 2");
    spawnIconRow("set6", "Chromified Classic");
    spawnIconRow("set7", "Chromified Grey");
+   spawnIconRow("set13", "OSX");
 
    var iconRadios = document.forms[0].icon_set;
    var iconFound = false;
    for (var i in iconRadios) {
-      if (iconRadios[i].value == localStorage["gc_icon_set"]) {
+      if (iconRadios[i].value == Settings.read("icon_set")) {
          iconRadios[i].checked = true;
          iconFound = true;
          break;
@@ -147,29 +116,18 @@ function restore_options() {
 
    var previewRadios = document.forms[0].preview_setting;
    for (var i in previewRadios) {
-      if (previewRadios[i].value == localStorage["gc_preview_setting"]) {
+      if (previewRadios[i].value == Number(Settings.read("preview_setting"))) {
          previewRadios[i].checked = true;
          break;
       }
    }
 
-   if (localStorage["gc_poll"] != null) {
-      document.getElementById("poll_" + localStorage["gc_poll"]).selected = true;
-   }
+   document.getElementById("poll_" + Settings.read("poll")).selected = true;
+   document.getElementById("dn_timeout_" + Settings.read("dn_timeout")).selected = true;
+   document.getElementById("check_label_" + Settings.read("check_label")).selected = true;
+   document.getElementById("open_label_" + Settings.read("open_label")).selected = true;
 
-   if (localStorage["gc_dn_timeout"] != null) {
-      document.getElementById("dn_timeout_" + localStorage["gc_dn_timeout"]).selected = true;
-   }
-
-   if (localStorage["gc_check_label"] != null) {
-      document.getElementById("check_label_" + localStorage["gc_check_label"]).selected = true;
-   }
-
-   if (localStorage["gc_open_label"] != null) {
-      document.getElementById("open_label_" + localStorage["gc_open_label"]).selected = true;
-   }
-
-   accounts = localStorage.getObject("gc_accounts");
+   accounts = Settings.read("accounts");
    if (accounts == null) {
       accounts = new Array();
    }
@@ -178,8 +136,7 @@ function restore_options() {
    for (var i in languages) {
       langSel.add(new Option(languages[i].what, languages[i].id), languages[i].id);
    }
-   langSel.value = localStorage["gc_language"];
-
+   langSel.value = Settings.read("language");
    sortlist(langSel);
 
    var acc_sel = document.getElementById("accounts");
@@ -189,10 +146,8 @@ function restore_options() {
       acc_sel.add(new Option(accounts[i].domain), null);
    }
 
-   //chrome.extension.getBackgroundPage().getLabels("https://mail.google.com/mail/", loadLabels);
-
-   $('#sn_audio').val(localStorage["gc_sn_audio"]);   
-   $('#sn_audio_enc').val(localStorage["gc_sn_audio_raw"]);
+   $('#sn_audio').val(Settings.read("sn_audio"));
+   $('#sn_audio_enc').val(Settings.read("sn_audio_raw"));
    
    $('#sn_audio').change(function () {
       if (this.value == "custom") {
@@ -202,7 +157,7 @@ function restore_options() {
       }
    });
 
-   if (localStorage["gc_sn_audio"] != "custom") {
+   if (Settings.read("sn_audio") != "custom") {
       $('#sn_audio_src').hide();
    }
 }
@@ -390,7 +345,7 @@ function playNotificationSound() {
       if (document.getElementById("sn_audio_enc").value) {
          source = document.getElementById("sn_audio_enc").value;
       } else {
-         source = localStorage["gc_sn_audio_raw"];
+         source = Settings.read("sn_audio_raw");
       }
    } else {
       source = document.getElementById("sn_audio").value;
