@@ -133,7 +133,7 @@ function reloadSettings() {
       
       var storedVersion = Settings.read("version");
       if (storedVersion == null || storedVersion != VERSION) {
-         storeSetting("version", VERSION);
+         Settings.store("version", VERSION);
 
          var updateTitle = "New version installed";
          var updateMessage = "The extension has been updated to the latest version (" + VERSION + ")." +

@@ -22,7 +22,7 @@ var Settings = function() {
       "show_notification": true,
       "showfull_read": false,
       "animate_off": false,
-      "open_tabs": true,
+      "open_tabs": false,
       "no_mailto": false,
       "archive_read": true,
    };
