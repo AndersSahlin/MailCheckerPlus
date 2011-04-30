@@ -222,9 +222,10 @@ function reloadSettings_complete() {
 // Sets the browser action icon
 var currentIcon;
 function setIcon(iconName) {
-   currentIcon = "icons/" + iconSet + "/" + iconName + iconFormat;
+   currentIcon = iconName;
+   var iconPath = "icons/" + iconSet + "/" + iconName + iconFormat;
    try {
-      chrome.browserAction.setIcon({ path: currentIcon });
+      chrome.browserAction.setIcon({ path: iconPath });
    } catch (e) {
       console.error("Could not set browser action icon '" + currentIcon + "'.");
    }
