@@ -52,9 +52,7 @@ function save_options() {
    Settings.store("check_label", document.getElementById("check_label").value);
    Settings.store("open_label", document.getElementById("open_label").value);
 
-   if (accounts.length > 0) {
-      Settings.store("accounts", accounts);
-   }
+   Settings.store("accounts", accounts);
 
    Settings.store("sn_audio", document.getElementById("sn_audio").value);
    if (Settings.read("sn_audio") == "custom") {
