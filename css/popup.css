@@ -138,8 +138,7 @@ img
    background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.1, rgb(245,245,245)), color-stop(0.8, rgb(255,255,255)));
 }
 
-#fullscreenControls a
-{
+a {
    cursor: pointer;
 }
 

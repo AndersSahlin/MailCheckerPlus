@@ -238,7 +238,7 @@ function MailAccount(settingsObj) {
          $.ajax({
             type: "GET",
             dataType: "text",
-            url: mailURL + "feed/atom/" + atomLabel,
+            url: mailURL + "feed/atom/" + atomLabel + "?timestamp=" + Date.now(),
             timeout: requestTimeout,
             success: function (data) { onGetInboxSuccess(data, callback); },
             error: function (xhr, status, err) { handleError(xhr, status, err); }
