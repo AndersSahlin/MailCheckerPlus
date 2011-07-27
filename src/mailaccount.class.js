@@ -26,7 +26,11 @@ function MailAccount(settingsObj) {
       mailURL += "/a/" + settingsObj.domain + "/";
    } else if (settingsObj.accountNr != null) {
       // This is a Google account with multiple sessions activated
-      mailURL += "/mail/u/" + settingsObj.accountNr + "/";
+      if (settingsObj.accountNr[0] === '/') {
+        mailURL += settingsObj.accountNr;
+      } else {
+        mailURL += "/mail/u/" + settingsObj.accountNr + "/";
+      }
    } else {
       // Standard one-session Gmail account
       mailURL += "/mail/";
