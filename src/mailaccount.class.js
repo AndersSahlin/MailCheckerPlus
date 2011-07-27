@@ -23,14 +23,14 @@ function MailAccount(settingsObj) {
 
    if (settingsObj.domain != null) {
       // This is a GAFYD account
-      mailURL += "/a/" + settingsObj.domain + "/";
+      if (settingsObj.domain[0] === '/') {
+        mailURL += settingsObj.domain;
+      } else {
+        mailURL += "/a/" + settingsObj.domain + "/";
+      }
    } else if (settingsObj.accountNr != null) {
       // This is a Google account with multiple sessions activated
-      if (settingsObj.accountNr[0] === '/') {
-        mailURL += settingsObj.accountNr;
-      } else {
-        mailURL += "/mail/u/" + settingsObj.accountNr + "/";
-      }
+      mailURL += "/mail/u/" + settingsObj.accountNr + "/";
    } else {
       // Standard one-session Gmail account
       mailURL += "/mail/";
