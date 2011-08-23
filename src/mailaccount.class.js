@@ -6,7 +6,7 @@
 *********************************
 MailAccount class
 by Anders Sahlin a.k.a. destructoBOT (malakeen@gmail.com)
-for Mail Checker Plus for Google Mail™
+for Mail Checker Plus for Google Mailï¿½
 https://chrome.google.com/extensions/detail/gffjhibehnempbkeheiccaincokdjbfe
 *********************************
 */
@@ -358,7 +358,7 @@ function MailAccount(settingsObj) {
       gat_xhr.onreadystatechange = function () {
          if (this.readyState == 4 && this.status == 200) {
             //logToConsole(this.responseText);
-            var matches = this.responseText.match(/\?at=([^"]+)/);
+            var matches = this.responseText.match(/\at=([^"]+)/);
             //logToConsole(matches);
             if (matches != null && matches.length > 0) {
                gmailAt = matches[1];
