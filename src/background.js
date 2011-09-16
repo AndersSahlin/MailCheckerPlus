@@ -195,7 +195,7 @@ function reloadSettings() {
          url: "https://www.google.com/accounts/AddSession",
          success: function (data) {
             // Multiple accounts active
-            var matches = data.match(/<li>([\S]+?@[\S]+)[<|\S]/ig);
+            var matches = data.match(/([\S]+?@[\S]+)/ig);
             console.log(matches);
 
             if (matches != null && matches.length > 0) {
