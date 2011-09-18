@@ -130,17 +130,20 @@ function reloadSettings() {
 
    if (localStorage["gc_open_label"] == null ||
          localStorage["gc_check_label"] == null) {
-      // Backwards compatability with previous checkboxes
+         // Backwards compatability with previous checkboxes
+         delete localStorage["gc_open_label"];   
       if (localStorage["gc_check_all"] != null &&
             localStorage["gc_check_all"] == "true") {
          // Check all mail
          localStorage["gc_check_label"] = "unread";
          localStorage["gc_open_label"] = "#search/l:unread";
+         delete localStorage["gc_check_all"];
       } else if (localStorage["gc_check_priority"] != null &&
             localStorage["gc_check_priority"] == "true") {
          // Check priority mail
          localStorage["gc_check_label"] = "important";
          localStorage["gc_open_label"] = "#mbox";
+         delete localStorage["gc_check_priority"];
       } else {
          // Default settings (inbox)
          localStorage["gc_check_label"] = "";
@@ -152,7 +155,7 @@ function reloadSettings() {
 
    iconSet = localStorage["gc_icon_set"];
    if (iconSet == null || iconSet == "")
-      iconSet = localStorage["gc_icon_set"] = "set1";
+      iconSet = localStorage["gc_icon_set"] = "set12";
 
    setIcon(img_notLoggedInSrc);
    chrome.browserAction.setBadgeBackgroundColor({ color: [190, 190, 190, 255] });
