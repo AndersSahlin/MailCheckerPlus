@@ -195,7 +195,7 @@ function reloadSettings() {
         localStorage["gc_check_gmail_off"] == "false") {
       // Check if user has enabled multiple sessions
       $.ajax({
-         url: "https://www.google.com/accounts/AddSession",
+         url: "https://accounts.google.com/AddSession",
          success: function (data) {
             // Multiple accounts active
             var matches = data.match(/([\S]+?@[\S]+)/ig);
